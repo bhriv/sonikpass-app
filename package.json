@@ -1,0 +1,15 @@
+{
+  "name": "Sonikpass App",
+  "version": "0.0.1",
+  "description": "Basic Backbone.Marionette App for exploring features",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhriv/sonikpass-app"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-less": "latest",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}
