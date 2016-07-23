@@ -1,0 +1,90 @@
+$measure: 30px;
+$red: #ce3745;
+$blue: #4aa3da;
+$black: #252525;
+$white: #FFFFFF;
+$smoke: #f7f7f7;
+$border_color: #D8D8D8;
+
+$transition_time: 0.75s;
+
+body{
+  background-color: $smoke;
+}
+
+
+.js-fadeIn,
+.section-num-label{
+  opacity: 1;
+}
+
+#intro{
+  text-align: center;
+}
+
+button{
+  color: $black;
+  border: 1px solid $border_color;
+  cursor: pointer;
+  border-radius: $measure;
+  padding: $measure/2.1 $measure;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  background-color: transparent;
+  font-size: 0.83em;
+  &:hover{
+    border-color: $black;
+    transition : border $transition_time ease-out;
+  }
+}
+
+.button-gradient {
+  border-radius: $measure;
+  background-size: 100%;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  @include background-image-gradient(right, $red, $blue, $red);
+  &:before {
+    border-radius: inherit;
+    content: '';    
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0; 
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -1;
+    transition: opacity $transition_time;
+    @include background-image-gradient(right, $blue, $red, $blue);
+  }
+  &:hover {
+    &:before {
+      opacity: 1;
+    }
+  }
+  button{
+    border: none;   
+    color: $white;
+  }
+}
+
+.circle-num-label{
+  border-radius: 50%;
+  border: 1px solid $red;
+  display: inline-flex;
+  @include background-image-gradient(right, $red, $blue, $red);
+  &:hover{
+    cursor: pointer;
+    @include background-image-gradient(right, $blue, $red, $blue);
+  }
+  span{
+    color: $black;
+    padding: $measure;
+    border-radius: 50%;
+    margin: 1px;
+    background-color: $white;
+  }
+}

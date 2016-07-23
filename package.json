@@ -1,5 +1,5 @@
 {
-  "name": "Sonikpass App",
+  "name": "skeleton",
   "version": "0.0.1",
   "description": "Basic Backbone.Marionette App for exploring features",
   "repository": {
@@ -8,8 +8,10 @@
   },
   "devDependencies": {
     "grunt": "~0.4.5",
+    "grunt-contrib-compass": "^1.1.1",
     "grunt-contrib-less": "latest",
     "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-watch": "^0.6.1"
   }
 }
