@@ -15,7 +15,7 @@
     }
   }
 }
-
+ 
 @mixin background-image-gradient($direction, $start_color, $middle_color, $stop_color){
   background-image: linear-gradient(to $direction, $start_color 0%, $middle_color 100%, $stop_color 0%);
 }

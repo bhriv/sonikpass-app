@@ -4,19 +4,18 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'views/dashboard/page'
+  'views/dashboard/page',
   // 'router', // Request router.js
 ], function($, _, Backbone, Marionette,template){
   console.log('doing appjs');
-
+  
 
   window.App = new Marionette.Application();
 
   App.addRegions({
       appRegion: '#app-hook',
-      titleRegion: '#intro .col-8'
-      // modalRegion: '#modal',
-      // homeRegion: '#home'
+      titleRegion: '#intro .col-8',
+      header: '#navbar',
   });
 
   App.Router = Marionette.AppRouter.extend({
@@ -51,13 +50,13 @@ define([
   App.AboutView = Marionette.ItemView.extend({
       tagName: 'h1',
       template: _.template('<span class="headline-big">About View</span>')
+      // template: require('./templates/layout.html')
   });
 
   App.DashboardView = Marionette.ItemView.extend({
       tagName: 'div',
       template: template
   });
-
 
 
   var AppView = Backbone.View.extend({
@@ -68,12 +67,18 @@ define([
       App.router = new App.Router({
           controller: App.controller
       });
-          
+
       Backbone.history.start();
       console.log( 'app.js says: Backbone is working!' );
     }
   });
 
+
   return AppView;
 
 });
+
+// require(['hbs!App/Template/One'], function ( tmplOne ) {
+//   // Use whatever you would to render the template function
+//   document.body.innerHTML = tmplOne({adjective: "favorite"});
+// });
