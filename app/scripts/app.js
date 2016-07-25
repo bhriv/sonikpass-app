@@ -14,15 +14,17 @@ define([
 
   App.addRegions({
       appRegion: '#app-hook',
-      titleRegion: '#intro .col-8',
-      modalRegion: '#modal',
-      homeRegion: '#home'
+      titleRegion: '#intro .col-8'
+      // modalRegion: '#modal',
+      // homeRegion: '#home'
   });
 
   App.Router = Marionette.AppRouter.extend({
       appRoutes: {
           '': 'index',
-          'home': 'home'
+          'about': 'about',
+          'dashboard': 'dashboard',
+          '*path': 'index',
       }
   });
 
@@ -31,36 +33,31 @@ define([
           var view = new App.IndexView();
           App.titleRegion.show(view);
       },
-      home: function() {
-          var view = new App.HomeView();
-          App.homeRegion.show(view);
+      about: function() {
+          var view = new App.AboutView();
+          App.titleRegion.show(view);
       },
-      modal: function() {
-          var view = new App.ModalView();
-          App.modalRegion.show(view);
+      dashboard: function() {
+          var view = new App.DashboardView();
+          App.appRegion.show(view);
       },
   });
 
   App.IndexView = Marionette.ItemView.extend({
       tagName: 'h1',
-      template: _.template('<span class="headline-big">About Sonikpass</span>')
+      template: _.template('<span class="headline-big">Index View</span>')
   });
 
-  App.HomeView = Marionette.ItemView.extend({
-      tagName: 'h2',
-      template: _.template('<span class="headline-big">(2) About Sonikpass</span>')
-  });  
-
-  App.ModalView = Marionette.ItemView.extend({
-    //   $.get('templates/layout.html', function (data) {
-    //     el: '#modal',
-    //     tagName: 'div',
-    //     template = _.template(data, {
-    //          data: ''
-    //     });
-    //     this.$el.html(template);  
-    // }, 'html');
+  App.AboutView = Marionette.ItemView.extend({
+      tagName: 'h1',
+      template: _.template('<span class="headline-big">About View</span>')
   });
+
+  App.DashboardView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: template
+  });
+
 
 
   var AppView = Backbone.View.extend({
