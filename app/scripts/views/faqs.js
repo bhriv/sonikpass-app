@@ -64,7 +64,7 @@ define(['jquery','underscore','bootstrap'],
                 );
                 // send compiled template data to DOM
                 faqsList.append( list );
-                // var Content = _.template(faqsList);
+                // var Content = _.template(content_html);
     			// return Content;
             });
         }

@@ -57,7 +57,7 @@ define([
 
   App.IndexView = Marionette.ItemView.extend({
       tagName: 'h1',
-      template: _.template('<span class="headline-big">Index View</span>'),
+      template: _.template('<span class="headline-big">FAQ</span>'),
       onShow: function(){
         console.log('default IndexView shown')
       }
@@ -85,7 +85,7 @@ define([
       tagName: 'h1',
       template: _.template('<span class="headline-big">FAQ View</span>'),
       onShow: function(){
-        console.log('FaqsView shown')
+        console.log('FaqsView content shown')
       }
   });
 

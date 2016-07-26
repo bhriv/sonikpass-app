@@ -38,6 +38,7 @@ require.config({
   //           "underscore": "lodash"
   //       }
   // },
+  urlArgs: "bust=" +  (new Date()).getTime(),
   deps: ['jquery', 'underscore']
 });
 
