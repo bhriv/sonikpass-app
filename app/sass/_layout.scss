@@ -73,18 +73,31 @@ button{
 
 .circle-num-label{
   border-radius: 50%;
-  border: 1px solid $red;
+  border: 0.005em solid transparent;
   display: inline-flex;
   @include background-image-gradient(right, $red, $blue, $red);
   &:hover{
     cursor: pointer;
     @include background-image-gradient(right, $blue, $red, $blue);
   }
+  .viewed{
+    @include background-image-gradient(right, $blue, $red, $blue); 
+  }
+  a{
+    text-decoration: none;
+    &:hover{
+      text-decoration: none;
+    }
+  }
   span{
     color: $black;
-    padding: $measure;
+    /*padding: $measure;*/
     border-radius: 50%;
-    margin: 1px;
+    margin: 0.005em;
     background-color: $white;
+    min-width: $measure;
+    min-height: $measure;
+    line-height: $measure;
+    text-align: center;
   }
 }

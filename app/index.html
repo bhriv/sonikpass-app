@@ -7,68 +7,47 @@
     <meta name="description" content="A simple app for Sonikpass ">
     <meta name="viewport" content="width=device-width">
     <!-- import sonikpass.com as style base - merge with SASS later on -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" media="screen" href="styles/sonikpass.css" type="text/css" />
     <!-- main app specific styles -->
     <link rel="stylesheet" media="screen" href="css/screen.css" type="text/css" />
-    
+
   </head>
 
   <body>
-    <!-- <div id="app"></div> -->
-    <div id="app-hook"></div>
-    <div id="modal"></div>
-    <div id="home"></div>
+    
+    <div id="app-hook">
+      
+      <div id="header-region"></div>
+      <div id="main-region"></div>
+      <div id="footer-region"></div>
+      <div class="main faq-section">
+        
+      </div>
+      
+    </div>
 
 
     <div class="global-container">
-      <a class="logo" href="#intro">
-        <div class="logo-icon"></div>
-        <div class="logo-type"></div>
-      </a> <!-- end logo -->
 
-      <div class="hamburger-menu">
-        <div class="hamburger"></div>
-      </div><!-- end hamburger-menu -->
-
-      <div class="request">
-        <a data-mode="2" href="https://sonikpass.typeform.com/to/GQgcHX?typeform-welcome=0" target="_blank">Get Started</a> 
-      </div>
-
-      <ul class="sidebar">
-        <li>
-          <a class="sidebar-item" href="#intro"><span class="sidebar-line"></span></a>
-        </li>
-        <li>
-          <a class="sidebar-item" href="#problem"><span class="sidebar-line"></span></a>
-        </li>
-        <li>
-          <a class="sidebar-item" href="#solution"><span class="sidebar-line"></span></a>
-        </li>
-        <li>
-          <a class="sidebar-item" href="#usecases"><span class="sidebar-line"></span></a>
-        </li>
-        <li>
-          <a class="sidebar-item" href="#partner"><span class="sidebar-line"></span></a>
-        </li>
-      </ul>
-
-      <div class="meter">
-        0.00001dB
-      </div>
-
-      <div class="copyright">
-        — &copy; <span class="date">2016</span> by Sonikpass. All rights reserved. <a href="privacypolicy.html" target="_blank">| Privacy
-        Policy</a> <a href="https://www.twitter.com/sonikpass">| <img alt=
-        "Twitter" height="13" src="/assets/icons/Twitter_logo_grey.png" style=
-        "margin-bottom:-3px" width="16"></a>
-      </div>
-
+      <div class="content-container">
+        <div class="inner-container">
+          <div class="col-8 col-center">
+              
+              <div class="accordion">
+                <div id="faqs-region"></div>
+                <!-- faqs via js  -->
+              </div>
+          </div>
+        </div><!-- end faqs -->
+      </div><!-- end content-container -->
+        
       <div class="content-container">
         <div id="intro">
           <div class="inner-container">
             <div class="intro-message">
               <div class="col-8 col-center">
-                <!-- <h1 class="headline-big">About Sonikpass</h1> -->
+                <!-- title via js -->
               </div>
               <div class="col-4 col-center">
                 <div class="type-divider"></div>
@@ -78,10 +57,12 @@
               </div>
             </div>
           </div>
-          <!-- <canvas class="logo-illustration" id="canvas"></canvas> -->
         </div><!-- end intro -->
         
-        <div id="faq">
+
+
+
+        <div id="">
           <div class="inner-container">
             <div class="col-6 col-center col-right">
             <!-- faq illustration here -->
@@ -91,22 +72,6 @@
               <span class="circle-num-label">
                 <span>004</span>
               </span> 
-              <div class="section-num">
-
-
-                <span class="section-num-label">005</span> 
-
-                <svg viewbox="0 0 50 50">
-                <defs>
-                  <lineargradient id="linear" x1="0%" x2="0%" y1="0%" y2="100%">
-                    <stop offset="0%" stop-color="#ce3745"></stop>
-                    <stop offset="100%" stop-color="#4aa3da"></stop>
-                  </lineargradient>
-                </defs>
-                <circle class='circle' cx='25' cy='25' fill='transparent' r='24'
-                stroke='url(#linear)' stroke-dasharray='200' stroke-width='1'>
-                </circle></svg>
-              </div>
 
               <h1 class="headline">Get Sonikpass</h1>
               <p class="copy">
@@ -118,59 +83,13 @@
             </div>
           </div>
         </div><!-- end partner -->
-
+        <div class="copyright">
+          — &copy; <span class="date">2016</span> by Sonikpass. All rights reserved. <a href="privacypolicy.html" target="_blank">| Privacy Policy</a> <a href="https://www.twitter.com/sonikpass">| <img alt="Twitter" height="13" src="/assets/icons/Twitter_logo_grey.png" style="margin-bottom:-3px" width="16"></a>
+        </div>
         <div class="footer"></div><!-- end footer -->
       </div><!-- end content-container -->
-      <div class="background-title-container">
-        <div class="upper-container">
-          <div class="upper-type"></div>
-        </div>
-        <div class="lower-container">
-          <div class="lower-type"></div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="global-background"></div>
+      
 
-      <div class="menu-container">
-        <ul class="menu">
-          <li class="menu-item">
-            <a href="#intro">Home</a>
-          </li>
-          <li class="menu-item">
-            <a href="faq.html" target="_blank">Frequently Asked Questions</a>
-          </li>
-          <li class="menu-item">
-            <a data-mode="2" href=
-            "https://sonikpass.typeform.com/to/FzLhiw?typeform-welcome=0" target=
-            "_blank">Partner With Us</a> 
-            <script>
-            (function(){var qs,js,q,s,d=document,gi=d.getElementById,ce=d.createElement,gt=d.getElementsByTagName,id='typef_orm',b='https://s3-eu-west-1.amazonaws.com/share.typeform.com/';if(!gi.call(d,id)){js=ce.call(d,'script');js.id=id;js.src=b+'share.js';q=gt.call(d,'script')[0];q.parentNode.insertBefore(js,q)}})()
-            </script>
-          </li>
-          <li class="menu-item copy col-5" style=
-          "color:white; font-size: 100%; margin-top:-20px">At Sonikpass, we
-          strongly believe that the next generation of technology must have
-          security built from the very start. We’d love to hear from you if you
-          are interested in partnering with us.</li>
-          <li class="menu-item menu-line"></li>
-          <li class="menu-item">
-            <ul class="menu-ctas">
-              <li class="menu-cta">
-                <a href="mailto:hello@sonikpass.com?subject=Hello">Contact Us</a>
-              </li>
-              <li class="menu-cta">
-                <a href="https://www.twitter.com/sonikpass">Twitter</a>
-              </li>
-              <!--<li class="menu-cta"><a href="mailto:supporto@sonikpass.com?subject=Hello">Support</a></li>-->
-            </ul>
-          </li>
-        </ul>
-        <div class="address">
-          Sonikpass - Los Angeles • San Francisco • (650) 567-6645, <a href=
-          "mailto:hello@sonikpass.com?subject=Hello">hello@sonikpass.com</a>
-        </div>
-      </div>
     </div><!-- end global-container -->
     <script data-main="scripts/main.js" src="scripts/vendor/requirejs/require.js"></script>
   </body>

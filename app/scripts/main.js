@@ -10,7 +10,9 @@ require.config({
     'backbone.wreqr': 'vendor/backbone.wreqr/lib/backbone.wreqr',
     'marionette': 'vendor/marionette/lib/core/backbone.marionette',
     'viewManager': 'vendor/backbone-viewmanager/src/backbone-viewmanager',
-    'hbs': 'vendor/handlebars/handlebars'
+    'hbs': 'vendor/handlebars/handlebars',
+    'text': 'vendor/requirejs-text/text',
+    'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
   },
   shim: {
     underscore: {
@@ -40,7 +42,7 @@ require.config({
 });
 
 
-require(['app','views/dashboard/page'], function(AppView){
+require(['app','views/header','views/main','views/footer'], function(AppView){
   new AppView;
-}); // 6
+}); 
 
