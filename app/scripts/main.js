@@ -1,6 +1,7 @@
 // Filename: main.js
 // Conventions from: https://cdnjs.com/libraries/backbone.js/tutorials/organizing-backbone-using-modules
 require.config({
+  
   paths: {
     'jquery': 'vendor/jquery/dist/jquery',
     'underscore': 'vendor/underscore/underscore',
@@ -10,8 +11,8 @@ require.config({
     'backbone.wreqr': 'vendor/backbone.wreqr/lib/backbone.wreqr',
     'marionette': 'vendor/marionette/lib/core/backbone.marionette',
     'viewManager': 'vendor/backbone-viewmanager/src/backbone-viewmanager',
-    'hbs': 'vendor/handlebars/handlebars',
-    'text': 'vendor/requirejs-text/text',
+    'hbs': 'vendor/hbs/hbs',
+    'text': 'vendor/text/text',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
   },
   shim: {

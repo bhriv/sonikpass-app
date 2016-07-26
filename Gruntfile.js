@@ -142,7 +142,8 @@ module.exports = function(grunt) {
   
 
   // Task definition
-  grunt.registerTask('default', ['watch' ]);
+  grunt.registerTask('default', ['requirejs' ]);
+  // grunt.registerTask('default', ['requirejs','watch' ]);
   grunt.registerTask('dev', ['sass' ]);
 
 };
