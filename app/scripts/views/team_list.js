@@ -18,13 +18,13 @@ function($, _, Backbone, Marionette,Bootstrap,team_content){
       id: 1,
       name: "Carey D'Souza", 
       about: "Founder @Sonikpass , @Spending Karma,• Worked at @Electronic Arts, @Nexon America", 
-      image_url: '../assets/carey.jpg'
+      image_url: 'assets/carey.jpg'
     },
     { 
       id: 2,
       name: "Jeshua Nanthakumar", 
       about: " UX/UI @Fantasy, @Mark One, @Mercedes-Benz Research & Development", 
-      image_url: '../assets/jesh.jpg'
+      image_url: 'assets/jesh.jpg'
     }, 
   ];
 
