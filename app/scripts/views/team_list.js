@@ -48,12 +48,7 @@ function($, _, Backbone, Marionette,Bootstrap,team_content){
     template: '#team-template'
   });
 
-  // template for each single item row (put in index.html)
-// <script type="text/template" id="stooge-template">
-//   <td id="name"><%= name %></td>
-//   <td id="age"><%= age%></td>
-//   <td id="userid"><%= userid%></td>
-// </script>
+// template for each single item row (put in index.html)
 
 // END Collection
 
