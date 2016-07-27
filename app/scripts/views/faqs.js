@@ -1,8 +1,7 @@
-//Filequestion: views/header.js
+//Filequestion: views/faqs.js
 define(['jquery','underscore','bootstrap'], 
-  function($, _) {
+  function($, _, Bootstrap) {
   	console.log('views/faqs loaded');
-  	
     define("faqs.data",[ /** no dependencies. **/ ],
         [
             {
@@ -42,8 +41,8 @@ define(['jquery','underscore','bootstrap'],
             }
         ]
     );
-    
-    require(["faqs.data","text!../templates/faq-accordion.html"],
+
+    require(["faqs.data","text!../templates/faq-accordion.html",'app'],
     	// @fixme - replace using Marionette Collection
         function( Data, templateHtml ){
             $(function(){

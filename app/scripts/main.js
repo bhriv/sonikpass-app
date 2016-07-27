@@ -44,7 +44,9 @@ require.config({
 });
 
 
-require(['app','views/header','views/main','views/footer'], function(AppView){
+require(['app'], function(AppView){
   new AppView;
-}); 
+});
+
+
 

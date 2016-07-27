@@ -1,5 +1,6 @@
 @mixin background-image-retina($file, $type, $width, $height) {
-  background-image: url('../images/' + $file + '.' + $type);
+  background-image: url('../assets/' + $file + '.' + $type);
+  background-repeat: no-repeat;
   @media only screen and (-webkit-min-device-pixel-ratio: 2),
     only screen and (-moz-min-device-pixel-ratio: 2),
     only screen and (-o-min-device-pixel-ratio: 2/1),
@@ -7,7 +8,7 @@
     only screen and (min-resolution: 192dpi),
     only screen and (min-resolution: 2dppx){
     & {
-      background-image: url('../images/' + $file + '@2x.' + $type);
+      background-image: url('../assets/' + $file + '@2x.' + $type);
       -webkit-background-size: $width $height;
       -moz-background-size: $width $height;
       -o-background-size: $width $height;
