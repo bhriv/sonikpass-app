@@ -10,10 +10,11 @@ define([
   'text!../templates/footer.html',
   'text!../templates/about.html',
   'text!../templates/team.html',
+  'text!../templates/growth.html',
   'views/team_list',
   'views/faq_list',
 ], 
-function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list){
+function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,growth_content,team_list,faq_list){
   console.log('doing appjs');
   
   // var faqs = require('views/faqs');  
@@ -26,6 +27,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
   
   var about_content = require('text!../templates/about.html'); 
   var team_content = require('text!../templates/team.html'); 
+  var growth_content = require('text!../templates/growth.html'); 
   
   var team_list = require('views/team_list'); 
   var faq_list = require('views/faq_list'); 
@@ -39,6 +41,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           
           'about':      'about',
           'team':       'team',
+          'growth':     'growth',
           'faqs':       'faqs',
           '*path':      'team',
           '':           'team',
@@ -55,6 +58,10 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           var view = new App.TeamlistView();
           App.mainRegion.show(view);
       },
+      growth: function() {
+          var view = new App.GrowthView();
+          App.mainRegion.show(view);
+      },
       faqs: function() {
           var view = new App.FaqlistView();
           App.mainRegion.show(view);
@@ -67,7 +74,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
   // Add targeted regions
   App.addRegions({
-      ctaRegion:        "#cta-region",
+      ctaRegion:            "#cta-region",
       headerRegion:         "#header-region",
       footerRegion:         "#footer-region",
       mainRegion:           "#main-region #top",
@@ -102,6 +109,21 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
       },
       onShow: function(){
         console.log('Teamlist shown')
+      }
+  });
+
+
+  App.GrowthView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: growth_content,
+      onBeforeShow: function(){
+        $('body').removeClass();
+        $('body').addClass('view-growth');
+        $('#team_list').hide();
+        $('#faq_list').hide();
+      },
+      onShow: function(){
+        console.log('AboutView shown')
       }
   });
 
