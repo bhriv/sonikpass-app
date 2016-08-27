@@ -4,17 +4,19 @@ define([
   'underscore',
   'backbone',
   'marionette',
+  'chartjs',
   'text!../templates/navigation.html',
   'text!../templates/layout.html',
   'text!../templates/cta.html',
   'text!../templates/footer.html',
   'text!../templates/about.html',
   'text!../templates/team.html',
-  'text!../templates/growth.html',
   'views/team_list',
   'views/faq_list',
+  'views/growth',
+  // 'text!../templates/growth.html',
 ], 
-function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,growth_content,team_list,faq_list){
+function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content){
   console.log('doing appjs');
   
   // var faqs = require('views/faqs');  
@@ -27,10 +29,11 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
   
   var about_content = require('text!../templates/about.html'); 
   var team_content = require('text!../templates/team.html'); 
-  var growth_content = require('text!../templates/growth.html'); 
+  // var growth_content = require('text!../templates/growth.html'); 
   
   var team_list = require('views/team_list'); 
   var faq_list = require('views/faq_list'); 
+  var growth_content = require('views/growth'); 
    
   // Define a new app
   window.App = new Marionette.Application();
@@ -123,7 +126,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         $('#faq_list').hide();
       },
       onShow: function(){
-        console.log('AboutView shown')
+        console.log('GrowthView shown')
       }
   });
 

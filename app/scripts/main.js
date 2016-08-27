@@ -14,6 +14,7 @@ require.config({
     'hbs': 'vendor/hbs/hbs',
     'text': 'vendor/text/text',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
+    'chartjs': 'chart',
   },
   shim: {
     underscore: {
