@@ -14,7 +14,7 @@ require.config({
     'hbs': 'vendor/hbs/hbs',
     'text': 'vendor/text/text',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
-    'chartjs': 'chart',
+    'chartjs': 'vendor/chart.js/dist/Chart',
   },
   shim: {
     underscore: {
@@ -27,6 +27,10 @@ require.config({
     marionette: {
       deps: ['backbone'],
       exports: 'Marionette'
+    },
+    chartjst: {
+      deps: ['jquery'],
+      exports: 'Chartjs'
     }
   },
   hbs: { // optional

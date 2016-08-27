@@ -23,10 +23,12 @@
     <!-- <div id="sidebar-region"></div> -->
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-8 col-md-offset-2" id="center_content"> 
+        <div class="col-md-8 col-md-offset-2"> 
           <div id="main-region">
             <!-- content via js   -->
-            <div id="top"></div>
+            <div id="top">
+              <h2>Charts</h2>
+            </div>
             <div id="team_list"></div>
             <div id="faq_list"></div>
           </div>
@@ -36,27 +38,15 @@
     </div>
     
 
-    <script type="text/template" id="team-template">
-      <ul id="team-<%= id %>">
-        <li><img src="<%= image_url %>" alt="<%= name %>"></li>
-        <li><h3><%= name %></h3></li>  
-        <li><p class="copy"><%= about %></p></li>  
-      </ul>    
-    </script>
-
-    <script type="text/template" id="accordion-template">
-      <div>
-        <a class="trigger" data-toggle="collapse" data-target="#answer-<%= id %>">
-          <span class="circle-num-label"><span><%= id %></span></span>
-          <span class="question"><%= question %></span>
-        </a>
-        <div id="answer-<%= id %>" class="collapse answer"><%= answer%></div>
-      </div>
-    </script>
-
     <div id="footer-region" class="copyright">
       <p>— &copy; <span class="date">2016</span> by Sonikpass. All rights reserved. <a href="https://sonikpass.com/privacypolicy.html" target="_blank">| Privacy Policy</a> <a href="https://www.twitter.com/sonikpass">| <img alt="Twitter" height="13" src="assets/icons/Twitter_logo_grey.png" style="margin-bottom:-3px" width="16"></a></p>
     </div>
+    <!-- 
     <script data-main="scripts/main.js" src="scripts/vendor/requirejs/require.js"></script>
+ -->
+    <script src="/scripts/vendor/jquery/dist/jquery.js"></script>
+    <script src="/scripts/vendor/underscore/underscore.js"></script>
+    <script src="/scripts/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/scripts/vendor/chart.js/dist/Chart.bundle.js"></script>
   </body>
 </html>

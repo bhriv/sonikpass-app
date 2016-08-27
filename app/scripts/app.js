@@ -14,9 +14,10 @@ define([
   'views/team_list',
   'views/faq_list',
   'views/growth',
+  'views/growth_data',
   // 'text!../templates/growth.html',
 ], 
-function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content){
+function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,growth_data){
   console.log('doing appjs');
   
   // var faqs = require('views/faqs');  
@@ -34,6 +35,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
   var team_list = require('views/team_list'); 
   var faq_list = require('views/faq_list'); 
   var growth_content = require('views/growth'); 
+  var growth_data = require('views/growth_data'); 
    
   // Define a new app
   window.App = new Marionette.Application();
@@ -126,9 +128,143 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         $('#faq_list').hide();
       },
       onShow: function(){
-        console.log('GrowthView shown')
-      }
-  });
+        console.log('GrowthView shown');
+        var content_div = $('#center_content');
+        // $(content_div).removeClass();
+        
+        // Debugging only
+          // $('#growth_chart').css('background-color','pink');
+        var years = ["2017", "2018", "2019", "2020", "2021"];
+        var number_of_users = [
+            "88333",
+            "1230123",
+            "5185160",
+            "16609191",
+            "31387762"
+        ];
+        var annual_revenue = [
+            "542410",
+            "7673638",
+            "32497020",
+            "104631400",
+            "197231400"
+        ];
+
+      // CHART
+      var ctx = document.getElementById("growth_chart");
+
+      var custom_options = {
+          animation: false,
+          stacked: true,
+          scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+      };
+
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: years,
+              datasets: [{
+                    label: 'Number of Users',
+                    data: number_of_users,
+                    backgroundColor: [
+                        '#4E9FD4',
+                        '#4E9FD4',
+                        '#4E9FD4',
+                        '#4E9FD4',
+                        '#4E9FD4',
+                    ],
+                    borderColor: [
+                        // 'rgba(255,99,132,1)',
+                    ],
+                    borderWidth: 0
+                },
+                {
+                    label: 'Annual Revenue',
+                    data: annual_revenue,
+                    backgroundColor: [
+                        '#C03441',
+                        '#C03441',
+                        '#C03441',
+                        '#C03441',
+                        '#C03441',
+                    ],
+                    borderColor: [
+                        // 'rgba(255,99,132,1)',
+                    ],
+                    borderWidth: 0
+                }
+              ]
+          },
+          options: custom_options
+      });
+      // Test Bar Chart    
+        // var chart_data = {
+        //     labels: combined_dates,
+        //     datasets: [{
+        //                     fillColor: "transparent",
+        //                     strokeColor: "#fe5f55",
+        //                     pointColor: "rgba(220,220,220,1)",
+        //                     pointStrokeColor: "#fff",
+        //                     data: number_of_users
+        //                 },
+        //                 {
+        //                     fillColor: "transparent",
+        //                     strokeColor: "#82bfd8",
+        //                     pointColor: "rgba(220,220,220,1)",
+        //                     pointStrokeColor: "#fff",
+        //                     data: annual_revenue
+        //                 }
+        //             ]
+        // };
+        // var ctx = document.getElementById("growth_chart");
+        // var myChart = new Chart(ctx, {
+        //     type: 'line',
+        //     data: chart_data,
+        //     options: {
+        //         scales: {
+        //             yAxes: [{
+        //                 ticks: {
+        //                     beginAtZero:true
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // });
+        
+
+        // var canvas = document.getElementById('growth_chart');
+        // ctx = canvas.getContext('2d'),
+        // startingData = {
+        //   labels: combined_dates,
+        //   datasets: [
+        //       {
+        //           fillColor: "transparent",
+        //           strokeColor: "#fe5f55",
+        //           pointColor: "rgba(220,220,220,1)",
+        //           pointStrokeColor: "#fff",
+        //           data: number_of_users
+        //       },
+        //       {
+        //           fillColor: "transparent",
+        //           strokeColor: "#82bfd8",
+        //           pointColor: "rgba(220,220,220,1)",
+        //           pointStrokeColor: "#fff",
+        //           data: annual_revenue
+        //       }
+        //   ]
+        // },
+        // latestLabel = startingData.labels[5];
+        // // Reduce the animation steps for demo clarity.
+        // var myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+
+
+      } // end onShow
+
+      // Combined Chart
+      //Chart Data
+  
+    
+  }); // end GrowthView
 
   App.FaqlistView = Marionette.ItemView.extend({
       tagName: 'div',

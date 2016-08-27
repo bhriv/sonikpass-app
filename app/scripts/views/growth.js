@@ -2,8 +2,14 @@
 define(['jquery','underscore','chartjs'], 
   function($, _,chartjs) {
   	console.log('views/growth loaded');
+// inject into DOM
+  // $('#faq_list').append(myFaqsView.el);
 
-    var Content = _.template('<h3>Growth Main</h3>');
-    return Content;
+  var headline = '<h1 class="headline-big">Growth</h1>';
+  var copy =      '<p class="copy">Sonikpass growth charts.</p>';
+  var chart =     '<canvas id="growth_chart" width="400" height="400" style="margin:20px;"></canvas>';
+  
+  var Content = _.template(headline+copy+chart);
+  return Content;
 });
 
