@@ -132,8 +132,8 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         var content_div = $('#center_content');
         // $(content_div).removeClass();
         
-        // Debugging only
-          // $('#growth_chart').css('background-color','pink');
+        
+        // Traction Graph
         var years = ["2017", "2018", "2019", "2020", "2021"];
         var number_of_users = [
             "88333",
@@ -150,113 +150,138 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             "197231400"
         ];
 
-      // CHART
-      var ctx = document.getElementById("growth_chart");
+        // CHART
+        var ctx = document.getElementById("growth_chart");
 
-      var custom_options = {
-          animation: false,
-          stacked: true,
-          scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
-      };
+        var custom_options = {
+            animation: false,
+            stacked: true,
+            scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        };
 
-      var myChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-              labels: years,
-              datasets: [{
-                    label: 'Number of Users',
-                    data: number_of_users,
-                    backgroundColor: [
-                        '#4E9FD4',
-                        '#4E9FD4',
-                        '#4E9FD4',
-                        '#4E9FD4',
-                        '#4E9FD4',
-                    ],
-                    borderColor: [
-                        // 'rgba(255,99,132,1)',
-                    ],
-                    borderWidth: 0
-                },
-                {
-                    label: 'Annual Revenue',
-                    data: annual_revenue,
-                    backgroundColor: [
-                        '#C03441',
-                        '#C03441',
-                        '#C03441',
-                        '#C03441',
-                        '#C03441',
-                    ],
-                    borderColor: [
-                        // 'rgba(255,99,132,1)',
-                    ],
-                    borderWidth: 0
-                }
-              ]
-          },
-          options: custom_options
-      });
-      // Test Bar Chart    
-        // var chart_data = {
-        //     labels: combined_dates,
-        //     datasets: [{
-        //                     fillColor: "transparent",
-        //                     strokeColor: "#fe5f55",
-        //                     pointColor: "rgba(220,220,220,1)",
-        //                     pointStrokeColor: "#fff",
-        //                     data: number_of_users
-        //                 },
-        //                 {
-        //                     fillColor: "transparent",
-        //                     strokeColor: "#82bfd8",
-        //                     pointColor: "rgba(220,220,220,1)",
-        //                     pointStrokeColor: "#fff",
-        //                     data: annual_revenue
-        //                 }
-        //             ]
-        // };
-        // var ctx = document.getElementById("growth_chart");
-        // var myChart = new Chart(ctx, {
-        //     type: 'line',
-        //     data: chart_data,
-        //     options: {
-        //         scales: {
-        //             yAxes: [{
-        //                 ticks: {
-        //                     beginAtZero:true
-        //                 }
-        //             }]
-        //         }
-        //     }
-        // });
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                      label: 'Number of Users',
+                      data: number_of_users,
+                      backgroundColor: [
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  },
+                  {
+                      label: 'Annual Revenue',
+                      data: annual_revenue,
+                      backgroundColor: [
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  }
+                ]
+            },
+            options: custom_options
+        });
+
+
+        /* Margin Graph 
+        ---------------------------
+                2017  2018  2019  /
+        Sales   27    36    63    /
+        Margins 55    43    80    /
+        Profits 50    70    90    /
+        ---------------------------
+        */
+
+        var three_years = ["2017", "2018", "2019"];
+        var sales = [
+            "27",
+            "36",
+            "63",
+        ];
+        var margins = [
+            "55",
+            "43",
+            "80",
+        ];
+        var profits = [
+            "50",
+            "70",
+            "90",
+        ];
+
+        // CHART
+        var ctx = document.getElementById("chart_financial_summary");
+
+        var custom_options = {
+            animation: false,
+            stacked: true,
+            scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: three_years,
+                datasets: [{
+                      label: 'Sales',
+                      data: sales,
+                      backgroundColor: [
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  },
+                  {
+                      label: 'Margins',
+                      data: margins,
+                      backgroundColor: [
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  },
+                  {
+                      label: 'Profits',
+                      data: profits,
+                      backgroundColor: [
+                          '#8A6E91',
+                          '#8A6E91',
+                          '#8A6E91',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  }
+                ]
+            },
+            options: custom_options
+        });
         
-
-        // var canvas = document.getElementById('growth_chart');
-        // ctx = canvas.getContext('2d'),
-        // startingData = {
-        //   labels: combined_dates,
-        //   datasets: [
-        //       {
-        //           fillColor: "transparent",
-        //           strokeColor: "#fe5f55",
-        //           pointColor: "rgba(220,220,220,1)",
-        //           pointStrokeColor: "#fff",
-        //           data: number_of_users
-        //       },
-        //       {
-        //           fillColor: "transparent",
-        //           strokeColor: "#82bfd8",
-        //           pointColor: "rgba(220,220,220,1)",
-        //           pointStrokeColor: "#fff",
-        //           data: annual_revenue
-        //       }
-        //   ]
-        // },
-        // latestLabel = startingData.labels[5];
-        // // Reduce the animation steps for demo clarity.
-        // var myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
-
 
       } // end onShow
 

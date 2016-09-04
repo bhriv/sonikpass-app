@@ -8,8 +8,9 @@ define(['jquery','underscore','chartjs'],
   var headline = '<h1 class="headline-big">Growth</h1>';
   var copy =      '<p class="copy">Sonikpass growth charts.</p>';
   var chart =     '<canvas id="growth_chart" width="400" height="400" style="margin:20px;"></canvas>';
+  var chart_financial_summary =     '<canvas id="chart_financial_summary" width="400" height="400" style="margin:20px;"></canvas>';
   
-  var Content = _.template(headline+copy+chart);
+  var Content = _.template(headline+copy+chart+chart_financial_summary);
   return Content;
 });
 
