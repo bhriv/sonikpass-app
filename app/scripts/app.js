@@ -5,6 +5,7 @@ define([
   'backbone',
   'marionette',
   'chartjs',
+  'vendor/consoleclass/consoleclass',
   'text!../templates/navigation.html',
   'text!../templates/layout.html',
   'text!../templates/cta.html',
@@ -15,10 +16,15 @@ define([
   'views/faq_list',
   'views/growth',
   'views/growth_data',
+  'views/transactions/2016/07',
+  'views/transactions/2016/08',
+  'views/finance_data',
   // 'text!../templates/growth.html',
 ], 
-function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,growth_data){
+function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,growth_data,finance_data){
   console.log('doing appjs');
+  cc('consoleclass working');
+
   
   // var faqs = require('views/faqs');  
   
@@ -132,23 +138,29 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         var content_div = $('#center_content');
         // $(content_div).removeClass();
         
-        
-        // Traction Graph
-        var years = ["2017", "2018", "2019", "2020", "2021"];
-        var number_of_users = [
-            "88333",
-            "1230123",
-            "5185160",
-            "16609191",
-            "31387762"
-        ];
-        var annual_revenue = [
-            "542410",
-            "7673638",
-            "32497020",
-            "104631400",
-            "197231400"
-        ];
+        var data_2016 = [].concat(data_2016_07, data_2016_08)
+        console.log(data_2016);
+
+
+        cc('Category and Amount');
+        var Categories = _.pluck(data_2016, 'Category');
+        var All_Categories = _.uniq(Categories);
+
+        cc('All Categories: ','info');
+        console.log(All_Categories);
+
+        var Amounts = _.pluck(data_2016, 'Amount');
+        var Categories_Amounts = _.zip(Categories, Amounts);
+        console.log(Categories_Amounts);
+
+        var Coffee_Shops = _.where(data_2016, {Category: "Coffee Shops"});
+        cc('Coffee_Shops');
+        var Coffee_Shops_Amounts = _.pluck(Coffee_Shops,'Amount');
+        var Coffee_Shops_Amounts_sum = _.reduce(Coffee_Shops_Amounts, function(memo, num){ return memo + num; }, 0);
+        // console.log(Coffee_Shops_Amounts);
+        cc('Coffee_Shops_Amounts_sum: $'+Coffee_Shops_Amounts_sum,'success');
+
+        // var _.where(data_2016, {Category: "Coffee Shops", year: 1611});
 
         // CHART
         var ctx = document.getElementById("growth_chart");
@@ -197,33 +209,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             },
             options: custom_options
         });
-
-
-        /* Margin Graph 
-        ---------------------------
-                2017  2018  2019  /
-        Sales   27    36    63    /
-        Margins 55    43    80    /
-        Profits 50    70    90    /
-        ---------------------------
-        */
-
-        var three_years = ["2017", "2018", "2019"];
-        var sales = [
-            "27",
-            "36",
-            "63",
-        ];
-        var margins = [
-            "55",
-            "43",
-            "80",
-        ];
-        var profits = [
-            "50",
-            "70",
-            "90",
-        ];
 
         // CHART
         var ctx = document.getElementById("chart_financial_summary");

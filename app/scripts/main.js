@@ -15,6 +15,7 @@ require.config({
     'text': 'vendor/text/text',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
     'chartjs': 'vendor/chart.js/dist/Chart',
+    'cc': 'vendor/consoleclass/consoleclass',
   },
   shim: {
     underscore: {
@@ -31,6 +32,10 @@ require.config({
     chartjst: {
       deps: ['jquery'],
       exports: 'Chartjs'
+    },
+    consoleclass: {
+      deps: ['jquery'],
+      exports: 'cc'
     }
   },
   hbs: { // optional
