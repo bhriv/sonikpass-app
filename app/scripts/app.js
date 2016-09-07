@@ -16,8 +16,8 @@ define([
   'views/faq_list',
   'views/growth',
   'views/growth_data',
-  'views/transactions/2016/07',
-  'views/transactions/2016/08',
+  // 'views/transactions/2016/07',
+  // 'views/transactions/2016/08',
   'views/finance_data',
   // 'text!../templates/growth.html',
 ], 
@@ -138,27 +138,178 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         var content_div = $('#center_content');
         // $(content_div).removeClass();
         
-        var data_2016 = [].concat(data_2016_07, data_2016_08)
-        console.log(data_2016);
+        // Chart Options
+        var custom_chart_options = {
+          animation: false,
+          stacked: true,
+          scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        };
+
+        var data_2016_all = [].concat(data_2016[7], data_2016[8]);
+        var month_label = null;
+
+        for (m = 1; m < 13; m++) { 
 
 
-        cc('Category and Amount');
-        var Categories = _.pluck(data_2016, 'Category');
-        var All_Categories = _.uniq(Categories);
+          // Initialize Arrays 
+          var Category_Data = [];
+          var chart_categories = [];
+          var chart_totals = [];
 
-        cc('All Categories: ','info');
-        console.log(All_Categories);
+          // Add Readable Month Label
+          switch(m) {
+            case 1:
+                month_label = 'January'
+                break;
+            case 2:
+                month_label = 'February'
+                break;
+            case 3:
+                month_label = 'March'
+                break;
+            case 4:
+                month_label = 'April'
+                break;
+            case 5:
+                month_label = 'May'
+                break;
+            case 6:
+                month_label = 'June'
+                break;
+            case 7:
+                month_label = 'July'
+                break;
+            case 8:
+                month_label = 'August'
+                break;
+            case 9:
+                month_label = 'September'
+                break;
+            case 10:
+                month_label = 'October'
+                break;
+            case 11:
+                month_label = 'November'
+                break;
+            case 12:
+                month_label = 'December'
+                break;
+            default:
+                month_label = 'error'
+          }
 
-        var Amounts = _.pluck(data_2016, 'Amount');
-        var Categories_Amounts = _.zip(Categories, Amounts);
-        console.log(Categories_Amounts);
+          // CATEGORIES
 
-        var Coffee_Shops = _.where(data_2016, {Category: "Coffee Shops"});
-        cc('Coffee_Shops');
-        var Coffee_Shops_Amounts = _.pluck(Coffee_Shops,'Amount');
-        var Coffee_Shops_Amounts_sum = _.reduce(Coffee_Shops_Amounts, function(memo, num){ return memo + num; }, 0);
-        // console.log(Coffee_Shops_Amounts);
-        cc('Coffee_Shops_Amounts_sum: $'+Coffee_Shops_Amounts_sum,'success');
+          // Get Data from Mint Exports
+          var Categories = _.pluck(data_2016[m], 'Category');
+          // Only Load Category Label Once
+          var All_Categories = _.uniq(Categories);
+          var category_count = _.size(All_Categories);
+          cc('# of Unique Categories in 2016 Month['+month_label+']: '+category_count, 'highlight');
+          var Category_Flag = category_count-1;
+          cc('Category_Flag: '+Category_Flag,'highlight',true);
+          
+
+          // Iterate Through categories, add total spent per category
+          for (i = 0; i < category_count; i++) { 
+            var current_category = All_Categories[i];
+            var total = totalSpent(current_category, data_2016[m]);  
+            cc('Category['+i+']: '+current_category +' $'+total,'success',true);
+
+            var data = [];
+                 
+            // if (current_category != "Income" || current_category != "Transfer to PFCU") {
+              data = [{
+                  "category" : current_category,
+                  "total" : total
+                }];  
+              Category_Data = Category_Data.concat(data);  
+            // }             
+            
+            var Category_Data_Size = _.size(Category_Data);
+
+            // When all category total spending complete, then show on Chart
+            if (i == Category_Flag) {
+              console.log(Category_Data);
+              Category_Data = cleanCategories(Category_Data);
+              // Category_Data = _.omit(Category_Data, {category : 'Income'});
+              // Build Dataset
+              Category_Data = _.sortBy(Category_Data,"category");
+              chart_categories = _.pluck(Category_Data, 'category');
+              chart_totals = _.pluck(Category_Data, 'total');
+
+              // Build Chart
+              var ctx = document.getElementById("chart-"+month_label);
+              var myChart = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                      labels: chart_categories,
+                      datasets: [{
+                            label: month_label+' Spending Category',
+                            data: chart_totals,
+                        }
+                      ]
+                  },
+                  options: custom_chart_options
+              });
+            }
+          } // end for loop
+        }
+
+        function cleanCategories(data){
+          // Remove Income from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Income'; 
+          });
+          // Remove Transfers from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Transfer to PFCU'; 
+          });
+          // Remove Payments to Credit Accounts from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Credit Card Payment'; 
+          });
+          return data;
+        }
+        // function buildChart(labels,data){
+        //   var ctx = document.getElementById("finance_chart");
+
+        //   var custom_options = {
+        //       animation: false,
+        //       stacked: true,
+        //       scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        //   };
+
+        //   var myChart = new Chart(ctx, {
+        //       type: 'bar',
+        //       data: {
+        //           labels: years,
+        //           datasets: [{
+        //                 label: 'Number of Users',
+        //                 data: number_of_users,
+        //             },
+        //             {
+        //                 label: 'Annual Revenue',
+        //                 data: annual_revenue,
+        //             }
+        //           ]
+        //       },
+        //       options: custom_options
+        //   });
+        // }
+
+
+        function totalSpent(category,period){
+          var category_data = _.where(period, {Category: category});        
+          var category_amounts = _.pluck(category_data,'Amount');
+          var category_sum = _.reduce(category_amounts, function(memo, num){ return memo + num; }, 0); 
+          var category_total_spent = parseFloat(category_sum).toFixed(2);
+          cc('Category Total Spent('+category+'): $'+category_total_spent,'success',true);
+          return category_total_spent;
+        }
+
+        
+
 
         // var _.where(data_2016, {Category: "Coffee Shops", year: 1611});
 
