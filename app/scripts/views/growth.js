@@ -8,7 +8,7 @@ define(['jquery','underscore','chartjs'],
   var headline = '<h1 class="headline-big">Finance</h1>';
   var copy =      '<p class="copy">finance charts.</p>';
   
-  var jan =     '<canvas id="chart-Jan" width="400" height="400" style="margin:20px;"></canvas>';
+  var jan =     '<canvas id="chart-January" width="400" height="400" style="margin:20px;"></canvas>';
   var feb =     '<canvas id="chart-February" width="400" height="400" style="margin:20px;"></canvas>';
   var march =     '<canvas id="chart-March" width="400" height="400" style="margin:20px;"></canvas>';
   var april =     '<canvas id="chart-April" width="400" height="400" style="margin:20px;"></canvas>';
@@ -25,18 +25,20 @@ define(['jquery','underscore','chartjs'],
   var chart_financial_summary =     '<canvas id="chart_financial_summary" width="400" height="400" style="margin:20px;"></canvas>';
   
   var Content = _.template(headline+copy
-  	+jan
-  	+feb
-  	+march
-  	+april
-  	+may
-  	+june
-  	+july
+
+  	// +dec
+  	// +nov
+  	// +oct
+  	// +sept
   	+august
-  	+sept
-  	+oct
-  	+nov
-  	+dec
+  	+july
+  	+june
+  	+may
+  	+april
+  	+march
+  	+feb
+  	+jan
+
   	+chart+chart_financial_summary);
   return Content;
 });

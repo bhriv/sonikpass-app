@@ -145,10 +145,16 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
         };
 
-        var data_2016_all = [].concat(data_2016[7], data_2016[8]);
-        var month_label = null;
 
-        for (m = 1; m < 13; m++) { 
+        // Get Data from Mint Exports
+        var Categories_2016 = [];
+        var Data_By_Month_2016 = [];
+
+        var month_label = null;
+        var current_month_count = 8;
+        var last_month_count = 9;
+
+        for (m = 1; m < last_month_count; m++) { 
 
 
           // Initialize Arrays 
@@ -218,12 +224,11 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
             var data = [];
                  
-            // if (current_category != "Income" || current_category != "Transfer to PFCU") {
-              data = [{
-                  "category" : current_category,
-                  "total" : total
-                }];  
-              Category_Data = Category_Data.concat(data);  
+            data = [{
+                "category" : current_category,
+                "total" : total
+              }];  
+            Category_Data = Category_Data.concat(data);  
             // }             
             
             var Category_Data_Size = _.size(Category_Data);
@@ -231,8 +236,19 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             // When all category total spending complete, then show on Chart
             if (i == Category_Flag) {
               console.log(Category_Data);
-              Category_Data = cleanCategories(Category_Data);
-              // Category_Data = _.omit(Category_Data, {category : 'Income'});
+
+              // Data_By_Month_2016 = Data_By_Month_2016.concat(Category_Data);
+              var month_data = [];
+                   
+              month_data = [{
+                  "month" : m,
+                  "data" : Category_Data
+                }];  
+              Data_By_Month_2016 = Data_By_Month_2016.concat(month_data); 
+
+              // Remove Income categories
+              Category_Data = removeIncomeCategories(Category_Data);
+              
               // Build Dataset
               Category_Data = _.sortBy(Category_Data,"category");
               chart_categories = _.pluck(Category_Data, 'category');
@@ -252,11 +268,53 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                   },
                   options: custom_chart_options
               });
+
+              // Add uniq categories to All Categories
+              Categories_2016 = Categories_2016.concat(chart_categories);
+              // console.log(Categories_2016);
             }
-          } // end for loop
+          } // end for loop for this month categories
+          if (m == current_month_count) {
+            cc('unique Categories_2016: ','done');
+            Categories_2016 = _.uniq(Categories_2016);
+            console.log(Categories_2016);
+
+            cc('Data_By_Month_2016: ','done');
+            console.log(Data_By_Month_2016);
+
+            // for each month
+              for (m = 0; m < current_month_count; m++) { 
+                var getData = Data_By_Month_2016[m]["data"];
+                // getData = getData["data"];
+                var totalCategoriesThisMonth = Data_By_Month_2016[m]["data"].length;
+
+                cc('totalCategoriesThisMonth: '+totalCategoriesThisMonth,'success');
+                for (c = 0; c < totalCategoriesThisMonth; c++) {
+                  // getData = getData[c];
+                  cc('Found Category in Month['+m+']: '+Data_By_Month_2016[m]["data"][c]["category"]+ ' total: '+Data_By_Month_2016[m]["data"][c]["total"],'done');
+                }
+                
+              }
+              // for each unique category
+              
+                // find category total
+                // save to total.
+
+            // for each category
+            // find 
+          }
+        } // end loo through all months
+
+        function findCategorySpend(data){
+          // Remove Income from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Income'; 
+          });
+          
+          return data;
         }
 
-        function cleanCategories(data){
+        function removeIncomeCategories(data){
           // Remove Income from Spending Categories
           var data = $.grep(data, function(e){ 
              return e.category != 'Income'; 
