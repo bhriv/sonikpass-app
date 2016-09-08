@@ -282,16 +282,21 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             cc('Data_By_Month_2016: ','done');
             console.log(Data_By_Month_2016);
 
+            
             // for each month
               for (m = 0; m < current_month_count; m++) { 
+                var coffee_spend = 0;
                 var getData = Data_By_Month_2016[m]["data"];
-                // getData = getData["data"];
                 var totalCategoriesThisMonth = Data_By_Month_2016[m]["data"].length;
 
                 cc('totalCategoriesThisMonth: '+totalCategoriesThisMonth,'success');
                 for (c = 0; c < totalCategoriesThisMonth; c++) {
                   // getData = getData[c];
                   cc('Found Category in Month['+m+']: '+Data_By_Month_2016[m]["data"][c]["category"]+ ' total: '+Data_By_Month_2016[m]["data"][c]["total"],'done');
+                  var cat_data = Data_By_Month_2016[m]["data"][c]["category"];
+                  // var this_category = 'Coffee Shops';
+                  // var s = findCategorySpend(cat_data,this_category);
+                  // cc('Spent on '+this_category+ ' $'+s,'done');
                 }
                 
               }
@@ -305,14 +310,18 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           }
         } // end loo through all months
 
-        function findCategorySpend(data){
-          // Remove Income from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Income'; 
-          });
-          
-          return data;
-        }
+        // function findCategorySpend(data,this_category){
+        //   // Remove Income from Spending Categories
+        //   var spent = 0;
+        //   var data = $.grep(data, function(e){ 
+        //     if (e.category == this_category) {
+        //       cc('Category: '+this_category+' found','info');
+        //       cc('Category total: '+data.total);
+        //     }
+        //      return e.category = this_category; 
+        //   });
+        //   return data;
+        // }
 
         function removeIncomeCategories(data){
           // Remove Income from Spending Categories
