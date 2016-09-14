@@ -145,14 +145,78 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
         };
 
+       
+        var Grouped_categories = [
+          {
+            "parent_category" : "Eating Out",
+            "child_category" : [
+              {
+                "category" : "Food & Dining"
+              },
+              {
+                "category" : "Fast Food"
+              },
+              {
+                "category" : "Restaurants"
+              },
+            ]
+          },
+          {
+            "parent_category" : "Entertainment",
+            "child_category" : [
+              {
+                "category" : "Alcohol & Bars"
+              },
+              {
+                "category" : "Coffee Shops"
+              },
+              {
+                "category" : "Movies & DVDs"
+              },
+              {
+                "category" : "Sporting Goods"
+              },
+              {
+                "category" : "Books"
+              },
+              {
+                "category" : "Music"
+              },
+              {
+                "category" : "Shopping"
+              },
+              {
+                "category" : "Gift"
+              },
+              {
+                "category" : "Amusement"
+              },
+              {
+                "category" : "Entertainment"
+              },
+              {
+                "category" : "Arts"
+              }
+            ]
+          }
+          ];
+        var Grouped_categories_size = _.size(Grouped_categories);
+        Grouped_categories_size--;
+
+        // 
+        var Yearly_Totals = [];
+        var Yearly_Totals_size = _.size(Yearly_Totals);
+        Yearly_Totals_size--;
 
         // Get Data from Mint Exports
         var Categories_2016 = [];
         var Data_By_Month_2016 = [];
+        var Subcategory_Data_2016 = [];
 
         var month_label = null;
         var current_month_count = 8;
         var last_month_count = 9;
+
 
         for (m = 1; m < last_month_count; m++) { 
 
@@ -163,6 +227,202 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           var chart_totals = [];
 
           // Add Readable Month Label
+          var month_label = getMonthLabel(m);
+
+          // CATEGORIES
+
+          // Get Data from Mint Exports
+          var Categories = _.pluck(data_2016[m], 'Category');
+          // Only Load Category Label Once
+          var All_Categories = _.uniq(Categories);
+          var category_count = _.size(All_Categories);
+          cc('# of Unique Categories in 2016 Month['+month_label+']: '+category_count, 'highlight');
+          var Category_Flag = category_count-1;
+          cc('Category_Flag: '+Category_Flag,'highlight',true);
+          
+
+          // Iterate Through categories, add total spent per category
+          for (i = 0; i < category_count; i++) { 
+            var current_category = All_Categories[i];
+            var total = totalSpent(current_category, data_2016[m]);  
+            cc('Category['+i+']: '+current_category +' $'+total,'success',true);
+
+            var data = [];
+                 
+            data = [{
+                "category" : current_category,
+                "total" : total
+              }];  
+            Category_Data = Category_Data.concat(data);  
+            // }             
+            
+            var Category_Data_Size = _.size(Category_Data);
+
+            // When all category total spending complete, then show on Chart
+            if (i == Category_Flag) {
+              // console.log(Category_Data);
+
+              // Data_By_Month_2016 = Data_By_Month_2016.concat(Category_Data);
+              var month_data = [];
+                   
+              month_data = [{
+                  "month" : m,
+                  "data" : Category_Data
+                }];  
+              Data_By_Month_2016 = Data_By_Month_2016.concat(month_data); 
+
+              // Remove Income categories
+              Category_Data = removeIncomeCategories(Category_Data);
+              
+              // Build Dataset
+              Category_Data = _.sortBy(Category_Data,"category");
+              
+              // groupSubCategories(Category_Data,category_count);
+
+              chart_categories = _.pluck(Category_Data, 'category');
+              chart_totals = _.pluck(Category_Data, 'total');
+
+              // Build Chart
+              var ctx = document.getElementById("chart-"+month_label);
+              var myChart = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                      labels: chart_categories,
+                      datasets: [{
+                            label: month_label+' Spending Category',
+                            data: chart_totals,
+                        }
+                      ]
+                  },
+                  options: custom_chart_options
+              });
+
+              // Add uniq categories to All Categories
+              Categories_2016 = Categories_2016.concat(chart_categories);
+              // console.log(Categories_2016);
+            }
+          } // end for loop for this month categories
+          if (m == current_month_count) {
+            
+            Categories_2016 = _.uniq(Categories_2016);
+            var Categories_2016_size = _.size(Categories_2016);
+            
+            cc('Nubmer of Categories_2016: '+Categories_2016_size,'highlight');
+            cc('unique Categories_2016: ','highlight');
+            // console.log(Categories_2016);
+            
+            $('p.copy').append('<ul id="category_list"></ul>')
+            for (c = 0; c < Categories_2016_size; c++) { 
+              // console.log(Categories_2016[c]);
+              $('#category_list').append('<li>'+Categories_2016[c]+'</li>');
+            }
+            
+            cc('Data_By_Month_2016: ','done');
+            for (m = 0; m < current_month_count; m++) { 
+              var getData = Data_By_Month_2016[m]["data"];
+              var totalCategoriesThisMonth = Data_By_Month_2016[m]["data"].length;
+              cc('totalCategoriesThisMonth['+m+']: '+totalCategoriesThisMonth,'success');
+              var totalCategoriesThisMonth_flag = totalCategoriesThisMonth--;
+
+              var year_month_data = [];
+              var month_data = []
+              
+              for (c = 0; c < totalCategoriesThisMonth_flag; c++) {
+                // cc('Found Category in Month['+m+']: '+Data_By_Month_2016[m]["data"][c]["category"]+ ' total: '+Data_By_Month_2016[m]["data"][c]["total"],'done');
+                var this_month_data = [
+                  {
+                    category : Data_By_Month_2016[m]["data"][c]["category"],
+                    total : Data_By_Month_2016[m]["data"][c]["total"]
+                  }
+                ];
+                month_data = month_data.concat(this_month_data);
+                // console.log(month_data);
+                if (c == totalCategoriesThisMonth) {
+                  var month_count = m+1;
+                  var this_month_data = [
+                    {
+                      month : getMonthLabel(month_count),
+                      data : month_data
+                    }
+                  ];
+                  Yearly_Totals = Yearly_Totals.concat(this_month_data);
+                  var all_months_done = current_month_count-1;
+                  if (m == all_months_done) {
+                    cc('TOTAL Grouped by Month','fatal')
+                    console.log(Yearly_Totals);  
+                    console.log(Yearly_Totals.length);  
+                    
+                    containsCategory(Yearly_Totals,Yearly_Totals.length, 'Web Services');
+                  }
+                }
+              }
+            }
+          }
+        } // end loo through all months
+
+
+        function containsCategory(Yearly_Totals,size,find_category){
+
+          cc('containsCategory['+find_category+'] total months['+size+']','run');
+
+          for (x = 0; x < size; x++) {
+            var category_count = Yearly_Totals[x]["data"].length;
+            for (y = 0; y < category_count; y++) {
+              var current = Yearly_Totals[x]["data"];
+              cc('Month['+Yearly_Totals[x]["month"]+'] Category['+Yearly_Totals[x]["data"][y]["category"]+'] Total['+Yearly_Totals[x]["data"][y]["total"]+']');
+              if (Yearly_Totals[x]["data"][y]["category"] == find_category) {
+                cc('category MATCHED','success');
+              }
+            }
+          }
+        }
+
+        function groupSubCategories(Category_Data,category_count) {
+          cc('groupSubCategories','run');
+          // console.log(Category_Data);
+          // cc('Category_Data[0]["data"][0]["category"] '+Category_Data[0]["data"][0]["category"],'info')
+          var size = _.size(Category_Data);
+          var loop_end = size;
+          // cc('size'+size,'highlight')
+          // cc('Categories_2016_size: '+Categories_2016_size,'done');
+          
+          var st = 0;
+          var Entertainment_Total = 0;
+          var Eating_Out_Total = 0;
+
+          for (c = 0; c < size; c++) {
+            
+          }
+          cc('post','info')
+          
+        }
+
+        function removeIncomeCategories(data){
+          // Remove Income from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Income'; 
+          });
+          // Remove Transfers from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Transfer to PFCU'; 
+          });
+          // Remove Payments to Credit Accounts from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Credit Card Payment'; 
+          });
+          return data;
+        }
+
+        function totalSpent(category,period){
+          var category_data = _.where(period, {Category: category});        
+          var category_amounts = _.pluck(category_data,'Amount');
+          var category_sum = _.reduce(category_amounts, function(memo, num){ return memo + num; }, 0); 
+          var category_total_spent = parseFloat(category_sum).toFixed(2);
+          cc('Category Total Spent('+category+'): $'+category_total_spent,'success',true);
+          return category_total_spent;
+        }
+
+        function getMonthLabel(m) {
           switch(m) {
             case 1:
                 month_label = 'January'
@@ -203,192 +463,16 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             default:
                 month_label = 'error'
           }
-
-          // CATEGORIES
-
-          // Get Data from Mint Exports
-          var Categories = _.pluck(data_2016[m], 'Category');
-          // Only Load Category Label Once
-          var All_Categories = _.uniq(Categories);
-          var category_count = _.size(All_Categories);
-          cc('# of Unique Categories in 2016 Month['+month_label+']: '+category_count, 'highlight');
-          var Category_Flag = category_count-1;
-          cc('Category_Flag: '+Category_Flag,'highlight',true);
-          
-
-          // Iterate Through categories, add total spent per category
-          for (i = 0; i < category_count; i++) { 
-            var current_category = All_Categories[i];
-            var total = totalSpent(current_category, data_2016[m]);  
-            cc('Category['+i+']: '+current_category +' $'+total,'success',true);
-
-            var data = [];
-                 
-            data = [{
-                "category" : current_category,
-                "total" : total
-              }];  
-            Category_Data = Category_Data.concat(data);  
-            // }             
-            
-            var Category_Data_Size = _.size(Category_Data);
-
-            // When all category total spending complete, then show on Chart
-            if (i == Category_Flag) {
-              console.log(Category_Data);
-
-              // Data_By_Month_2016 = Data_By_Month_2016.concat(Category_Data);
-              var month_data = [];
-                   
-              month_data = [{
-                  "month" : m,
-                  "data" : Category_Data
-                }];  
-              Data_By_Month_2016 = Data_By_Month_2016.concat(month_data); 
-
-              // Remove Income categories
-              Category_Data = removeIncomeCategories(Category_Data);
-              
-              // Build Dataset
-              Category_Data = _.sortBy(Category_Data,"category");
-              chart_categories = _.pluck(Category_Data, 'category');
-              chart_totals = _.pluck(Category_Data, 'total');
-
-              // Build Chart
-              var ctx = document.getElementById("chart-"+month_label);
-              var myChart = new Chart(ctx, {
-                  type: 'bar',
-                  data: {
-                      labels: chart_categories,
-                      datasets: [{
-                            label: month_label+' Spending Category',
-                            data: chart_totals,
-                        }
-                      ]
-                  },
-                  options: custom_chart_options
-              });
-
-              // Add uniq categories to All Categories
-              Categories_2016 = Categories_2016.concat(chart_categories);
-              // console.log(Categories_2016);
-            }
-          } // end for loop for this month categories
-          if (m == current_month_count) {
-            cc('unique Categories_2016: ','done');
-            Categories_2016 = _.uniq(Categories_2016);
-            console.log(Categories_2016);
-
-            cc('Data_By_Month_2016: ','done');
-            console.log(Data_By_Month_2016);
-
-            
-            // for each month
-              for (m = 0; m < current_month_count; m++) { 
-                var coffee_spend = 0;
-                var getData = Data_By_Month_2016[m]["data"];
-                var totalCategoriesThisMonth = Data_By_Month_2016[m]["data"].length;
-
-                cc('totalCategoriesThisMonth: '+totalCategoriesThisMonth,'success');
-                for (c = 0; c < totalCategoriesThisMonth; c++) {
-                  // getData = getData[c];
-                  cc('Found Category in Month['+m+']: '+Data_By_Month_2016[m]["data"][c]["category"]+ ' total: '+Data_By_Month_2016[m]["data"][c]["total"],'done');
-                  var cat_data = Data_By_Month_2016[m]["data"][c]["category"];
-                  // var this_category = 'Coffee Shops';
-                  // var s = findCategorySpend(cat_data,this_category);
-                  // cc('Spent on '+this_category+ ' $'+s,'done');
-                }
-                
-              }
-              // for each unique category
-              
-                // find category total
-                // save to total.
-
-            // for each category
-            // find 
-          }
-        } // end loo through all months
-
-        // function findCategorySpend(data,this_category){
-        //   // Remove Income from Spending Categories
-        //   var spent = 0;
-        //   var data = $.grep(data, function(e){ 
-        //     if (e.category == this_category) {
-        //       cc('Category: '+this_category+' found','info');
-        //       cc('Category total: '+data.total);
-        //     }
-        //      return e.category = this_category; 
-        //   });
-        //   return data;
-        // }
-
-        function removeIncomeCategories(data){
-          // Remove Income from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Income'; 
-          });
-          // Remove Transfers from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Transfer to PFCU'; 
-          });
-          // Remove Payments to Credit Accounts from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Credit Card Payment'; 
-          });
-          return data;
+          return month_label
         }
-        // function buildChart(labels,data){
-        //   var ctx = document.getElementById("finance_chart");
-
-        //   var custom_options = {
-        //       animation: false,
-        //       stacked: true,
-        //       scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
-        //   };
-
-        //   var myChart = new Chart(ctx, {
-        //       type: 'bar',
-        //       data: {
-        //           labels: years,
-        //           datasets: [{
-        //                 label: 'Number of Users',
-        //                 data: number_of_users,
-        //             },
-        //             {
-        //                 label: 'Annual Revenue',
-        //                 data: annual_revenue,
-        //             }
-        //           ]
-        //       },
-        //       options: custom_options
-        //   });
-        // }
-
-
-        function totalSpent(category,period){
-          var category_data = _.where(period, {Category: category});        
-          var category_amounts = _.pluck(category_data,'Amount');
-          var category_sum = _.reduce(category_amounts, function(memo, num){ return memo + num; }, 0); 
-          var category_total_spent = parseFloat(category_sum).toFixed(2);
-          cc('Category Total Spent('+category+'): $'+category_total_spent,'success',true);
-          return category_total_spent;
-        }
-
-        
-
-
-        // var _.where(data_2016, {Category: "Coffee Shops", year: 1611});
 
         // CHART
         var ctx = document.getElementById("growth_chart");
-
         var custom_options = {
             animation: false,
             stacked: true,
             scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
         };
-
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
