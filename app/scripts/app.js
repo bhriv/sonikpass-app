@@ -146,62 +146,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         };
 
        
-        var Grouped_categories = [
-          {
-            "parent_category" : "Eating Out",
-            "child_category" : [
-              {
-                "category" : "Food & Dining"
-              },
-              {
-                "category" : "Fast Food"
-              },
-              {
-                "category" : "Restaurants"
-              },
-            ]
-          },
-          {
-            "parent_category" : "Entertainment",
-            "child_category" : [
-              {
-                "category" : "Alcohol & Bars"
-              },
-              {
-                "category" : "Coffee Shops"
-              },
-              {
-                "category" : "Movies & DVDs"
-              },
-              {
-                "category" : "Sporting Goods"
-              },
-              {
-                "category" : "Books"
-              },
-              {
-                "category" : "Music"
-              },
-              {
-                "category" : "Shopping"
-              },
-              {
-                "category" : "Gift"
-              },
-              {
-                "category" : "Amusement"
-              },
-              {
-                "category" : "Entertainment"
-              },
-              {
-                "category" : "Arts"
-              }
-            ]
-          }
-          ];
-        var Grouped_categories_size = _.size(Grouped_categories);
-        Grouped_categories_size--;
 
         // 
         var Yearly_Totals = [];
@@ -220,7 +164,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
         for (m = 1; m < last_month_count; m++) { 
 
-
           // Initialize Arrays 
           var Category_Data = [];
           var chart_categories = [];
@@ -230,7 +173,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           var month_label = getMonthLabel(m);
 
           // CATEGORIES
-
           // Get Data from Mint Exports
           var Categories = _.pluck(data_2016[m], 'Category');
           // Only Load Category Label Once
@@ -240,7 +182,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           var Category_Flag = category_count-1;
           cc('Category_Flag: '+Category_Flag,'highlight',true);
           
-
           // Iterate Through categories, add total spent per category
           for (i = 0; i < category_count; i++) { 
             var current_category = All_Categories[i];
@@ -248,23 +189,16 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             cc('Category['+i+']: '+current_category +' $'+total,'success',true);
 
             var data = [];
-                 
             data = [{
                 "category" : current_category,
                 "total" : total
               }];  
             Category_Data = Category_Data.concat(data);  
-            // }             
-            
             var Category_Data_Size = _.size(Category_Data);
 
             // When all category total spending complete, then show on Chart
             if (i == Category_Flag) {
-              // console.log(Category_Data);
-
-              // Data_By_Month_2016 = Data_By_Month_2016.concat(Category_Data);
               var month_data = [];
-                   
               month_data = [{
                   "month" : m,
                   "data" : Category_Data
@@ -273,11 +207,8 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
               // Remove Income categories
               Category_Data = removeIncomeCategories(Category_Data);
-              
-              // Build Dataset
+              // Order Dataset
               Category_Data = _.sortBy(Category_Data,"category");
-              
-              // groupSubCategories(Category_Data,category_count);
 
               chart_categories = _.pluck(Category_Data, 'category');
               chart_totals = _.pluck(Category_Data, 'total');
@@ -299,7 +230,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
               // Add uniq categories to All Categories
               Categories_2016 = Categories_2016.concat(chart_categories);
-              // console.log(Categories_2016);
             }
           } // end for loop for this month categories
           if (m == current_month_count) {
@@ -329,12 +259,15 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               
               for (c = 0; c < totalCategoriesThisMonth_flag; c++) {
                 // cc('Found Category in Month['+m+']: '+Data_By_Month_2016[m]["data"][c]["category"]+ ' total: '+Data_By_Month_2016[m]["data"][c]["total"],'done');
-                var this_month_data = [
-                  {
-                    category : Data_By_Month_2016[m]["data"][c]["category"],
+                var child_category = Data_By_Month_2016[m]["data"][c]["category"];
+                var parent_category = findParentCategory(child_category);
+                var this_month_data = {
+                  parent_category : parent_category,
+                  data : {
+                    category : child_category,
                     total : Data_By_Month_2016[m]["data"][c]["total"]
                   }
-                ];
+                };
                 month_data = month_data.concat(this_month_data);
                 // console.log(month_data);
                 if (c == totalCategoriesThisMonth) {
@@ -348,11 +281,11 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                   Yearly_Totals = Yearly_Totals.concat(this_month_data);
                   var all_months_done = current_month_count-1;
                   if (m == all_months_done) {
-                    cc('TOTAL Grouped by Month','fatal')
-                    console.log(Yearly_Totals);  
-                    console.log(Yearly_Totals.length);  
+                    cc('TOTAL Grouped Data:('+Yearly_Totals.length+') Month\'s Total','fatal')
                     
-                    containsCategory(Yearly_Totals,Yearly_Totals.length, 'Web Services');
+                    console.log(Yearly_Totals);
+                    
+                    // containsCategory(Yearly_Totals,Yearly_Totals.length, 'Web Services');
                   }
                 }
               }
@@ -360,6 +293,206 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           }
         } // end loo through all months
 
+
+        var EO = [
+              {
+                "category" : "Food & Dining"
+              },
+              {
+                "category" : "Fast Food"
+              },
+              {
+                "category" : "Restaurants"
+              },
+          ];
+        var Grouped_categories = [
+          {
+            "parent_category" : "Eating Out",
+            "child_category" : [
+              {
+                "category" : "Food & Dining"
+              },
+              {
+                "category" : "Fast Food"
+              },
+              {
+                "category" : "Restaurants"
+              },
+            ]
+          },
+          {
+            "parent_category" : "Entertainment",
+            "child_category" : [
+              {
+                "category" : "Alcohol & Bars"
+              },
+              
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              },
+              {
+                "category" : ""
+              }
+            ]
+          }
+          ];
+        console.log(Grouped_categories);
+        console.log(EO);
+        var Grouped_categories_size = _.size(Grouped_categories);
+        Grouped_categories_size--;
+
+        function findParentCategory(child_category) {
+          // cc('findParentCategory for ['+child_category+']','run');
+          var parent_category =  null;
+
+          if (child_category == 'Coffee Shops' || 
+              child_category == 'Cafe' ) { 
+            parent_category = 'Coffee Shops';
+          }
+
+          if (child_category == 'Temporary Loan' || 
+              child_category == 'Cash & ATM' ||
+              child_category == 'Income' ||
+              child_category == 'Uncategorized' ) { 
+            parent_category = 'Ignore';
+          }
+
+          if (child_category == 'Groceries' || 
+              child_category == 'Food' ) { 
+            parent_category = 'Groceries';
+          }
+
+          if (child_category == 'Travel' || 
+              child_category == 'Rental Car & Taxi' ||
+              child_category == 'Air Travel' ) { 
+            parent_category = 'Travel Related';
+          }
+
+          if (child_category == 'Home Improvement' || 
+              child_category == 'Home Services' ||
+              child_category == 'Home Supplies' ||
+              child_category == 'Furnishings' ) { 
+            parent_category = 'Home Improvement & Supplies';
+          }
+
+          if (child_category == 'Fees & Charges' || 
+              child_category == 'Bank Fee' ||  
+              child_category == 'Finance Charge' ||  
+              child_category == 'ATM Fee' ||  
+              child_category == 'Late Fee' ) { 
+            parent_category = 'Fees & Financial Charges';
+          }
+
+          if (child_category == 'Personal Care' || 
+              child_category == 'Health & Fitness' || 
+              child_category == 'Hair' || 
+              child_category == 'Essential Oils' || 
+              child_category == 'Doctor' || 
+              child_category == 'Sports' || 
+              child_category == 'Spa & Massage' || 
+              child_category == 'Hair and Skin Care' || 
+              child_category == 'Education' || 
+              child_category == 'Gym' || 
+              child_category == 'Clothing' ) { 
+            parent_category = 'Personal Care & Improvement';
+          }
+
+          if (child_category == 'Toys' || 
+              child_category == 'Baby Supplies' ||  
+              child_category == 'Babysitter & Daycare' ||  
+              child_category == 'Kids Activities' ||  
+              child_category == 'Kids' ) { 
+            parent_category = 'Utilities';
+          }
+          if (child_category == 'Business Services' || 
+              child_category == 'Web Services' || 
+              child_category == 'Subcontractors' || 
+              child_category == 'Shipping' || 
+              child_category == 'Equipment' || 
+              child_category == 'Financial Advisor' || 
+              child_category == 'Reimbursements' || 
+              child_category == 'Office Supplies' || 
+              child_category == 'Electronics & Software' ) { 
+            parent_category = 'Business Expenses';
+          }
+          if (child_category == 'Mobile Phone' || 
+              child_category == 'Internet' ||  
+              child_category == 'Utilities' ||  
+              child_category == 'Bills & Utilities' ||  
+              child_category == 'Internet' ||  
+              child_category == 'Home Phone' ) { 
+            parent_category = 'Utilities';
+          }
+          if (child_category == 'Gas & Fuel' || 
+              child_category == 'Highway Tolls' ||  
+              child_category == 'Auto Insurance' ||  
+              child_category == 'Auto & Transport' ||  
+              child_category == 'Parking' ||  
+              child_category == 'Service & Parts' ) { 
+            parent_category = 'Car & Driving';
+          }
+          if (child_category == 'Mortgage & Rent' || 
+              child_category == 'Federal Tax' ||  
+              child_category == 'State Tax' ||  
+              child_category == 'Health Insurance' ||  
+              child_category == 'Check' ) { 
+            parent_category = 'Fixed US Living Expenses';
+          }
+          if (child_category == 'Eating Out' || 
+              child_category == 'Food & Dining' ||  
+              child_category == 'Fast Food' ||  
+              child_category == 'Restaurants' ) { 
+            parent_category = 'Eating Out Expense';
+          }
+          if (child_category == 'Alcohol & Bars' || 
+              child_category == 'Arts ' ||  
+              child_category == 'Gift ' ||  
+              child_category == 'Shopping ' ||  
+              child_category == 'Entertainment ' ||  
+              child_category == 'Books ' ||  
+              child_category == 'Sporting Goods ' ||  
+              child_category == 'Movies & DVDs ' ||  
+              child_category == 'Music' ) { 
+              // alert('Found Entertainment')
+              parent_category = 'Entertainment & Arts';
+          }
+          if (child_category == 'Alcohol & Bars' || 
+              child_category == 'Arts ' ||  
+              child_category == 'Gift ' ||  
+              child_category == 'Shopping ' ||  
+              child_category == 'Entertainment ' ||  
+              child_category == 'Books ' ||  
+              child_category == 'Sporting Goods ' ||  
+              child_category == 'Movies & DVDs ' ||  
+              child_category == 'Music' ) { 
+              // alert('Found Entertainment')
+              parent_category = 'Entertainment & Arts';
+          }
+            
+          return parent_category;
+
+        }
 
         function containsCategory(Yearly_Totals,size,find_category){
 
