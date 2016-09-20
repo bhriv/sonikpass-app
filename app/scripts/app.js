@@ -147,7 +147,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
        
 
-        // 
+        // Setup VARIABLES
         var Yearly_Totals = [];
         var Yearly_Totals_size = _.size(Yearly_Totals);
         Yearly_Totals_size--;
@@ -163,7 +163,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
 
         for (m = 1; m < last_month_count; m++) { 
-
           // Initialize Arrays 
           var Category_Data = [];
           var chart_categories = [];
@@ -186,7 +185,10 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           for (i = 0; i < category_count; i++) { 
             var current_category = All_Categories[i];
             var total = totalSpent(current_category, data_2016[m]);  
-            cc('Category['+i+']: '+current_category +' $'+total,'success',true);
+            total = parseFloat(total);
+            total = total.toFixed(2);
+
+            // cc('Category['+i+']: '+current_category +' $'+total,'success');
 
             var data = [];
             data = [{
@@ -227,7 +229,6 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                   },
                   options: custom_chart_options
               });
-
               // Add uniq categories to All Categories
               Categories_2016 = Categories_2016.concat(chart_categories);
             }
@@ -251,7 +252,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             for (m = 0; m < current_month_count; m++) { 
               var getData = Data_By_Month_2016[m]["data"];
               var totalCategoriesThisMonth = Data_By_Month_2016[m]["data"].length;
-              cc('totalCategoriesThisMonth['+m+']: '+totalCategoriesThisMonth,'success');
+              cc('totalCategoriesThisMonth['+m+']: '+totalCategoriesThisMonth);
               var totalCategoriesThisMonth_flag = totalCategoriesThisMonth--;
 
               var year_month_data = [];
@@ -261,15 +262,19 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                 // cc('Found Category in Month['+m+']: '+Data_By_Month_2016[m]["data"][c]["category"]+ ' total: '+Data_By_Month_2016[m]["data"][c]["total"],'done');
                 var child_category = Data_By_Month_2016[m]["data"][c]["category"];
                 var parent_category = findParentCategory(child_category);
+                var total = Data_By_Month_2016[m]["data"][c]["total"];
+                total = parseFloat(total);
+                total = total.toFixed(2);
+                
                 var this_month_data = {
                   parent_category : parent_category,
                   data : {
                     category : child_category,
-                    total : Data_By_Month_2016[m]["data"][c]["total"]
+                    total : total
                   }
                 };
                 month_data = month_data.concat(this_month_data);
-                // console.log(month_data);
+                
                 if (c == totalCategoriesThisMonth) {
                   var month_count = m+1;
                   var this_month_data = [
@@ -280,12 +285,64 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                   ];
                   Yearly_Totals = Yearly_Totals.concat(this_month_data);
                   var all_months_done = current_month_count-1;
+
                   if (m == all_months_done) {
                     cc('TOTAL Grouped Data:('+Yearly_Totals.length+') Month\'s Total','fatal')
-                    
-                    console.log(Yearly_Totals);
-                    
-                    // containsCategory(Yearly_Totals,Yearly_Totals.length, 'Web Services');
+                    console.log('Yearly_Totals\n',Yearly_Totals);
+
+                    var current_month_count_end = current_month_count -1;
+
+                    for (m = 0; m < current_month_count; m++) { 
+                      // var CoffeeShops = getAllIndexes(Yearly_Totals[m]["data"], "Coffee Shops");
+
+                      // count sub categories in month
+                      var total_c = Yearly_Totals[m]["data"].length;
+                      var total_c_end = total_c - 1;
+                      // console.log('Sub Cats in Month '+Yearly_Totals[m]["month"],total_c);
+
+                      // check total monthly spending
+                      var monthly_total_out = null;
+                      var monthly_total_in = null;
+
+                      // SUBCATEGORIES
+                      for (x = 0; x < Yearly_Totals[m]["data"].length; x++) { 
+                        // console.log(Yearly_Totals[m]["month"]+' Spent: ',Yearly_Totals[m]["data"][x]["data"]["total"]);
+                        var d = _.sortBy(Yearly_Totals[m]["data"],'parent_category');
+                        // console.log('Sorted array\n',d);
+                        // check for adjacent matching categories
+                        if (x < Yearly_Totals[m]["data"].length -1) {
+                          if (d[x]["parent_category"] == d[x+1]["parent_category"]) {
+                            cc([x]+' MATCHED parent_category to next node','info');
+                            cc(d[x]["parent_category"] +' = '+d[x+1]["parent_category"] + ' : ' +d[x]["data"]["total"] +' + '+d[x+1]["data"]["total"]);
+                          }else{
+                            cc('No match');
+                          }
+                        }else{
+                          cc('@fix me - last item','error');
+                        }
+                        
+
+                        if (Yearly_Totals[m]["data"][x]["parent_category"] != 'Ignore') {
+                          monthly_total_out = monthly_total_out + parseFloat(Yearly_Totals[m]["data"][x]["data"]["total"]);
+                        }else{
+                          monthly_total_in = monthly_total_in + parseFloat(Yearly_Totals[m]["data"][x]["data"]["total"]);
+                        }
+
+                        if (x == total_c_end) {
+                          monthly_total_in = monthly_total_in.toFixed(2);
+                          monthly_total_out = monthly_total_out.toFixed(2);
+
+                          cc(Yearly_Totals[m]["month"]+' INCOME '+monthly_total_in);
+                          cc(Yearly_Totals[m]["month"]+' OUT '+monthly_total_out);
+                          cc(Yearly_Totals[m]["month"]+' NET GROWTH: $'+(monthly_total_in - monthly_total_out).toFixed(2),'info')
+                        }
+                      }
+                      if (m = current_month_count_end) {
+                        cc('Month END','fatal')
+                      }
+                      // var c_size = _.size(c);
+
+                    }
                   }
                 }
               }
@@ -293,74 +350,60 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           }
         } // end loo through all months
 
+        // http://stackoverflow.com/questions/14446511/what-is-the-most-efficient-method-to-groupby-on-a-javascript-array-of-objects
+        var data = [ 
+            Yearly_Totals[0]["data"][0],
+            Yearly_Totals[0]["data"][1],
+            Yearly_Totals[0]["data"][2],
+            Yearly_Totals[0]["data"][3],
+        ];
 
-        var EO = [
-              {
-                "category" : "Food & Dining"
-              },
-              {
-                "category" : "Fast Food"
-              },
-              {
-                "category" : "Restaurants"
-              },
-          ];
-        var Grouped_categories = [
-          {
-            "parent_category" : "Eating Out",
-            "child_category" : [
-              {
-                "category" : "Food & Dining"
-              },
-              {
-                "category" : "Fast Food"
-              },
-              {
-                "category" : "Restaurants"
-              },
-            ]
-          },
-          {
-            "parent_category" : "Entertainment",
-            "child_category" : [
-              {
-                "category" : "Alcohol & Bars"
-              },
-              
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              },
-              {
-                "category" : ""
-              }
-            ]
-          }
-          ];
-        console.log(Grouped_categories);
-        console.log(EO);
-        var Grouped_categories_size = _.size(Grouped_categories);
-        Grouped_categories_size--;
+        var DataGrouper = (function() {
+            var has = function(obj, target) {
+                return _.any(obj, function(value) {
+                    return _.isEqual(value, target);
+                });
+            };
+
+            var keys = function(data, names) {
+                return _.reduce(data, function(memo, item) {
+                    var key = _.pick(item, names);
+                    if (!has(memo, key)) {
+                        memo.push(key);
+                    }
+                    return memo;
+                }, []);
+            };
+
+            var group = function(data, names) {
+                var stems = keys(data, names);
+                return _.map(stems, function(stem) {
+                    return {
+                        key: stem,
+                        vals:_.map(_.where(data, stem), function(item) {
+                            return _.omit(item, names);
+                        })
+                    };
+                });
+            };
+
+            group.register = function(name, converter) {
+                return group[name] = function(data, names) {
+                    return _.map(group(data, names), converter);
+                };
+            };
+
+            return group;
+        }());
+
+        DataGrouper.register("sum", function(item) {
+            return _.extend({}, item.key, {Value: _.reduce(item.vals, function(memo, node) {
+                return memo + Number(node.Value);
+            }, 0)});
+        });
+
+        console.log(DataGrouper(data, ["parent_category"]));
+
 
         function findParentCategory(child_category) {
           // cc('findParentCategory for ['+child_category+']','run');
@@ -414,6 +457,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Hair and Skin Care' || 
               child_category == 'Education' || 
               child_category == 'Gym' || 
+              child_category == 'Shopping' || 
               child_category == 'Clothing' ) { 
             parent_category = 'Personal Care & Improvement';
           }
@@ -470,21 +514,9 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Gift ' ||  
               child_category == 'Shopping ' ||  
               child_category == 'Entertainment ' ||  
-              child_category == 'Books ' ||  
+              child_category == 'Books' ||  
               child_category == 'Sporting Goods ' ||  
-              child_category == 'Movies & DVDs ' ||  
-              child_category == 'Music' ) { 
-              // alert('Found Entertainment')
-              parent_category = 'Entertainment & Arts';
-          }
-          if (child_category == 'Alcohol & Bars' || 
-              child_category == 'Arts ' ||  
-              child_category == 'Gift ' ||  
-              child_category == 'Shopping ' ||  
-              child_category == 'Entertainment ' ||  
-              child_category == 'Books ' ||  
-              child_category == 'Sporting Goods ' ||  
-              child_category == 'Movies & DVDs ' ||  
+              child_category == 'Movies & DVDs' ||  
               child_category == 'Music' ) { 
               // alert('Found Entertainment')
               parent_category = 'Entertainment & Arts';
