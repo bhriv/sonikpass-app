@@ -1,10 +1,7 @@
 //Filename: views/finance_data.js
-            
-
+        
 var months_all = ["Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec"];
-var months_temp = ["April","May","June","July","Aug"];
-var months_two = ["July","Aug"];
-cc(months_temp, 'success');
+// cc(months_temp, 'success');
 
 var data_2016 = [{
   "1" : [

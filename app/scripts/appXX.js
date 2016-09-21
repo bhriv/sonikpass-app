@@ -15,17 +15,19 @@ define([
   'views/team_list',
   'views/faq_list',
   'views/growth',
-  // 'views/growth_data',
+  'views/growth_data',
   // 'views/transactions/2016/07',
   // 'views/transactions/2016/08',
   'views/finance_data',
-  'views/faqs',
   // 'text!../templates/growth.html',
 ], 
-function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
+function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,growth_data,finance_data){
   console.log('doing appjs');
   cc('consoleclass working');
+
+  
   // var faqs = require('views/faqs');  
+  
 
   var navigation = require('text!../templates/navigation.html'); 
   var layout = require('text!../templates/layout.html');  
@@ -39,7 +41,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
   var team_list = require('views/team_list'); 
   var faq_list = require('views/faq_list'); 
   var growth_content = require('views/growth'); 
-  // var growth_data = require('views/growth_data'); 
+  var growth_data = require('views/growth_data'); 
    
   // Define a new app
   window.App = new Marionette.Application();
@@ -154,16 +156,53 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
         var Data_By_Month_2016 = [];
         var Subcategory_Data_2016 = [];
         var Parent_Category_Data_2016 = [];
-        var Parent_Category_Total_2016 = [];
-
-        var Parent_Yearly_Totals = [];
-        var Parent_Category_Monthly_Spent = [];
-        var Parent_Category_Yearly_Spent = [];
-
 
         var month_label = null;
         var current_month_count = 8;
         var last_month_count = 9;
+
+        var parent_category_list = [];
+        var parent_category_list = [
+          {
+            "parent_category" : 'Coffee Shops'
+          },
+          {
+            "parent_category" : 'Groceries'
+          },
+          {
+            "parent_category" : 'zIgnore'
+          },
+          {
+            "parent_category" : 'Travel Related'
+          },
+          {
+            "parent_category" : 'Home Improvement & Supplies'
+          },
+          {
+            "parent_category" : 'Fees & Financial Charges'
+          },
+          {
+            "parent_category" : 'Personal Care & Improvement'
+          },
+          {
+            "parent_category" : 'Utilities'
+          },
+          {
+            "parent_category" : 'Car & Driving'
+          },
+          {
+            "parent_category" : 'Fixed US Living Expenses'
+          },
+          {
+            "parent_category" : 'Eating Out Expense'
+          },
+          {
+            "parent_category" : 'Entertainment & Arts'
+          },
+        ]
+
+        console.log('parent_category_list\n',parent_category_list)
+
 
 
         for (m = 1; m < last_month_count; m++) { 
@@ -180,13 +219,14 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           // Only Load Category Label Once
           var All_Categories = _.uniq(Categories);
           var category_count = _.size(All_Categories);
-          cc('Number of Unique Categories in 2016 Month['+month_label+']: '+category_count);
+          cc('Number of Unique Categories in 2016 Month['+month_label+']: '+category_count, 'highlight');
           
           // Iterate Through categories, add total spent per category
           for (i = 0; i < category_count; i++) { 
             var current_category = All_Categories[i];
             var current_category_parent = findParentCategory(current_category);
             // cc('current_category_parent: '+current_category_parent,'info');
+
             var total = totalSpent(current_category, data_2016[m]);  
             total = parseFloat(total);
             total = total.toFixed(2);
@@ -200,7 +240,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             Category_Data = Category_Data.concat(data);  
             var Category_Data_Size = _.size(Category_Data);
 
-            // After processing single transactions, when all category grouped total spending complete, then show on Chart
+            // When all category total spending complete, then show on Chart
             var ce = category_count-1;
 
             if (i == ce ) {
@@ -208,9 +248,9 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
               var sorted_month_data = _.groupBy(Category_Data,"parent");
               var sorted_month_data_size = _.size(sorted_month_data);
-              // var sorted_month_data_array = _.toArray(sorted_month_data);
+              var sorted_month_data_obj = _.object(sorted_month_data);
               // console.log('sorted_month PARENT Categories\n',sorted_month_data_size);
-              // console.log('sorted_month_data_array\n',sorted_month_data);
+              // console.log('sorted_month_data\n',sorted_month_data);
               Parent_Category_Data_2016 = Parent_Category_Data_2016.concat(sorted_month_data);
               // saveParent_Category_Data_2016(sorted_month_data);
 
@@ -234,15 +274,13 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             }
           } // end for loop for this month categories
 
-          // Single transactions are now grouped into categories
-          // Process categories
           if (m == current_month_count) {
             Categories_2016 = _.uniq(Categories_2016);
             var Categories_2016_size = _.size(Categories_2016);
-            cc('Number of Categories_2016: '+Categories_2016_size);
-            // cc('unique Categories_2016: ','highlight');
+            cc('Nubmer of Categories_2016: '+Categories_2016_size,'highlight');
+            cc('unique Categories_2016: ','highlight');
             
-            // Show list of Categories
+            // Add LABELS
             $('p.copy').append('<ul id="category_list"></ul>')
             for (c = 0; c < Categories_2016_size; c++) { 
               $('#category_list').append('<li>'+Categories_2016[c]+'</li>');
@@ -251,7 +289,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
             for (m = 0; m < current_month_count; m++) { 
               var getData = Data_By_Month_2016[m]["data"];
               var totalCategoriesThisMonth = Data_By_Month_2016[m]["data"].length;
-              // cc('totalCategoriesThisMonth['+m+']: '+totalCategoriesThisMonth);
+              cc('totalCategoriesThisMonth['+m+']: '+totalCategoriesThisMonth);
               var totalCategoriesThisMonth_flag = totalCategoriesThisMonth--;
 
               var year_month_data = [];
@@ -286,65 +324,63 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                   var all_months_done = current_month_count-1;
 
                   if (m == all_months_done) {
-                    cc('TOTAL Grouped Data:('+Yearly_Totals.length+') Month\'s Total','highlight');
-                    console.log('Single Transactions Grouped by Category\n',Yearly_Totals);
-                    processParentCategories(Parent_Category_Data_2016);
+                    cc('TOTAL Grouped Data:('+Yearly_Totals.length+') Month\'s Total','fatal')
+                    console.log('Yearly_Totals\n',Yearly_Totals);
+                    console.log('TOTAL Parent_Category_Data_2016\n',Parent_Category_Data_2016);
+                    console.log('TOTAL Parent_Category_Data_2016[0]\n',Parent_Category_Data_2016[0]["Business Expenses"].length);
+
+                    // var current_month_count_end = current_month_count -1;
+
+                    // for (m = 0; m < current_month_count; m++) { 
+                    //   // count sub categories in month
+                    //   var total_c = Yearly_Totals[m]["data"].length;
+                    //   // check total monthly spending
+                    //   var monthly_total_out = null;
+                    //   var monthly_total_in = null;
+
+                    //   // SUBCATEGORIES
+                    //   for (x = 0; x < Yearly_Totals[m]["data"].length; x++) { 
+                    //     console.log(Yearly_Totals[m]["month"]+' Spent: ',Yearly_Totals[m]["data"][x]["data"]["total"]);
+                    //     var d = _.sortBy(Yearly_Totals[m]["data"],'parent_category');
+                    //     // console.log('Sorted array\n',d);
+                    //     // check for adjacent matching categories
+                    //     if (x < Yearly_Totals[m]["data"].length -1) {
+                    //       if (d[x]["parent_category"] == d[x+1]["parent_category"]) {
+                    //         cc([x]+' MATCHED parent_category to next node','info');
+                    //         cc(d[x]["parent_category"] +' = '+d[x+1]["parent_category"] + ' : ' +d[x]["data"]["total"] +' + '+d[x+1]["data"]["total"]);
+                    //       }else{
+                    //         cc('No match');
+                    //       }
+                    //     }else{
+                    //       cc('@fix me - last item','error');
+                    //     }
+                        
+                    //     if (Yearly_Totals[m]["data"][x]["parent_category"] != 'Ignore') {
+                    //       monthly_total_out = monthly_total_out + parseFloat(Yearly_Totals[m]["data"][x]["data"]["total"]);
+                    //     }else{
+                    //       monthly_total_in = monthly_total_in + parseFloat(Yearly_Totals[m]["data"][x]["data"]["total"]);
+                    //     }
+
+                    //     if (x == total_c-1) {
+                    //       monthly_total_in = monthly_total_in.toFixed(2);
+                    //       monthly_total_out = monthly_total_out.toFixed(2);
+
+                    //       cc(Yearly_Totals[m]["month"]+' INCOME '+monthly_total_in);
+                    //       cc(Yearly_Totals[m]["month"]+' OUT '+monthly_total_out);
+                    //       cc(Yearly_Totals[m]["month"]+' NET GROWTH: $'+(monthly_total_in - monthly_total_out).toFixed(2),'info')
+                    //     }
+                    //   }
+                    //   if (m = current_month_count_end) {
+                    //     cc('Month END','fatal')
+                    //   }
+                      // var c_size = _.size(c);
+                    // }
                   }
                 }
               }
             } // end month loop for parent_categories
           } // end last month loop
         } // end loop through all months
-
-
-        function processParentCategories(obj) {
-          cc('processParentCategories','run');
-          for (m = 0; m < last_month_count-1; m++) { 
-            var total = null;
-            // var year_month_data = [];
-            var parent_month_data = []
-            // var all_months_done = last_month_count-1;
-            var sorted_month_data_array = _.toArray(obj[m]);
-            // console.log('Month ['+getMonthLabel(m+1)+'] Sorted Parent Data: \n',sorted_month_data_array);
-            cc('Total Sorted Parent Categories in '+getMonthLabel(m+1)+' : '+sorted_month_data_array.length);
-
-            // For each single category, group under Parent Category and get total spend in this Parent Category
-            for (i = 0; i < sorted_month_data_array.length; i++) { 
-              total = 0;
-              Parent_Category_Monthly_Spent = [];
-              // for each subcategory get the total spend and add to running total
-              for ( j = 0; j < sorted_month_data_array[i].length; j++) { 
-                var this_total = sorted_month_data_array[i][j]["total"];
-                total = total+parseFloat(this_total);
-                // if all subcategory totals added then store the parent category total data into a month array
-                if (j == sorted_month_data_array[i].length-1) {
-                  // cc(getMonthLabel(m+1)+' Running TOTAL for : '+sorted_month_data_array[i][j]["parent"]+ ' $' +total.toFixed(2),'highlight');
-                  var this_data = {
-                      parent_category : sorted_month_data_array[i][j]["parent"],
-                      total_spent : total.toFixed(2)
-                  };
-                  parent_month_data = parent_month_data.concat(this_data);
-                  parent_month_data = _.sortBy(parent_month_data,"parent_category");
-                } 
-              } // end [j]
-              // Put all Parent categories into an array for the month
-              if (i == sorted_month_data_array.length-1) {
-                // console.log(parent_month_data);
-                var this_data = {
-                    month : getMonthLabel(m+1),
-                    data : parent_month_data
-                  };
-                Parent_Yearly_Totals = Parent_Yearly_Totals.concat(this_data);
-                // if all of the monthly data has been added show the totals
-                if (m == last_month_count-2) {
-                  cc('DONE: Transactions Grouped into Parent Categories:','highlight');
-                  console.log(Parent_Yearly_Totals);
-                }
-              }
-            } // end [i]
-          } // end [m]
-        }
-
 
         function drawMonthChart(chart_categories,chart_totals,chart_label) {
           var ctx = document.getElementById("chart-"+month_label);
@@ -370,12 +406,12 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
 
           if (child_category == 'Coffee Shops' || 
               child_category == 'Cafe' ) { 
-            parent_category = 'Coffee Shops';
+            parent_category = 0;
           }
 
           if (child_category == 'Groceries' || 
               child_category == 'Food' ) { 
-            parent_category = 'Groceries';
+            parent_category = 1;
           }
 
           if (child_category == 'Temporary Loan' || 
@@ -384,20 +420,20 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Transfer to PFCU' ||
               child_category == 'Credit Card Payment' ||
               child_category == 'Uncategorized' ) { 
-            parent_category = 'zIgnore';
+            parent_category = 2;
           }
 
           if (child_category == 'Travel' || 
               child_category == 'Rental Car & Taxi' ||
               child_category == 'Air Travel' ) { 
-            parent_category = 'Travel Related';
+            parent_category = 3;
           }
 
           if (child_category == 'Home Improvement' || 
               child_category == 'Home Services' ||
               child_category == 'Home Supplies' ||
               child_category == 'Furnishings' ) { 
-            parent_category = 'Home Improvement & Supplies';
+            parent_category = 4;
           }
 
           if (child_category == 'Fees & Charges' || 
@@ -405,7 +441,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Finance Charge' ||  
               child_category == 'ATM Fee' ||  
               child_category == 'Late Fee' ) { 
-            parent_category = 'Fees & Financial Charges';
+            parent_category = 5;
           }
 
           if (child_category == 'Personal Care' || 
@@ -420,7 +456,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Gym' || 
               child_category == 'Shopping' || 
               child_category == 'Clothing' ) { 
-            parent_category = 'Personal Care & Improvement';
+            parent_category = 6;
           }
 
           if (child_category == 'Toys' || 
@@ -428,7 +464,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Babysitter & Daycare' ||  
               child_category == 'Kids Activities' ||  
               child_category == 'Kids' ) { 
-            parent_category = 'Utilities';
+            parent_category = 7;
           }
 
           if (child_category == 'Business Services' || 
@@ -440,7 +476,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Reimbursements' || 
               child_category == 'Office Supplies' || 
               child_category == 'Electronics & Software' ) { 
-            parent_category = 'Business Expenses';
+            parent_category = 8;
           }
           if (child_category == 'Mobile Phone' || 
               child_category == 'Internet' ||  
@@ -448,7 +484,7 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Bills & Utilities' ||  
               child_category == 'Internet' ||  
               child_category == 'Home Phone' ) { 
-            parent_category = 'Utilities';
+            parent_category = 9;
           }
           if (child_category == 'Gas & Fuel' || 
               child_category == 'Highway Tolls' ||  
@@ -456,20 +492,20 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Auto & Transport' ||  
               child_category == 'Parking' ||  
               child_category == 'Service & Parts' ) { 
-            parent_category = 'Car & Driving';
+            parent_category = 10;
           }
           if (child_category == 'Mortgage & Rent' || 
               child_category == 'Federal Tax' ||  
               child_category == 'State Tax' ||  
               child_category == 'Health Insurance' ||  
               child_category == 'Check' ) { 
-            parent_category = 'Fixed US Living Expenses';
+            parent_category = 11;
           }
           if (child_category == 'Eating Out' || 
               child_category == 'Food & Dining' ||  
               child_category == 'Fast Food' ||  
               child_category == 'Restaurants' ) { 
-            parent_category = 'Eating Out Expense';
+            parent_category = 12;
           }
           if (child_category == 'Alcohol & Bars' || 
               child_category == 'Arts' ||  
@@ -481,12 +517,13 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               child_category == 'Movies & DVDs' ||  
               child_category == 'Music' ) { 
               // alert('Found Entertainment')
-              parent_category = 'Entertainment & Arts';
+              parent_category = 13;
           }
-            
-          return parent_category;
+          var parent_category_label = parent_category_list[1]["parent_category"];
+          return parent_category_label;
 
         }
+
 
 
         function containsCategory(Yearly_Totals,size,find_category){
@@ -593,6 +630,111 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
           }
           return month_label
         }
+
+        // CHART
+        var ctx = document.getElementById("growth_chart");
+        var custom_options = {
+            animation: false,
+            stacked: true,
+            scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        };
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                      label: 'Number of Users',
+                      data: number_of_users,
+                      backgroundColor: [
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  },
+                  {
+                      label: 'Annual Revenue',
+                      data: annual_revenue,
+                      backgroundColor: [
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  }
+                ]
+            },
+            options: custom_options
+        });
+
+        // CHART
+        var ctx = document.getElementById("chart_financial_summary");
+
+        var custom_options = {
+            animation: false,
+            stacked: true,
+            scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: three_years,
+                datasets: [{
+                      label: 'Sales',
+                      data: sales,
+                      backgroundColor: [
+                          '#4E9FD4',
+                          '#4E9FD4',
+                          '#4E9FD4',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  },
+                  {
+                      label: 'Margins',
+                      data: margins,
+                      backgroundColor: [
+                          '#C03441',
+                          '#C03441',
+                          '#C03441',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  },
+                  {
+                      label: 'Profits',
+                      data: profits,
+                      backgroundColor: [
+                          '#8A6E91',
+                          '#8A6E91',
+                          '#8A6E91',
+                      ],
+                      borderColor: [
+                          // 'rgba(255,99,132,1)',
+                      ],
+                      borderWidth: 0
+                  }
+                ]
+            },
+            options: custom_options
+        });
+        
+
       } // end onShow
 
       // Combined Chart

@@ -29,7 +29,7 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
-    chartjst: {
+    chartjs: {
       deps: ['jquery'],
       exports: 'Chartjs'
     },
