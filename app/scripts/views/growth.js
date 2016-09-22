@@ -42,31 +42,31 @@ define(['jquery','underscore','chartjs'],
   var Content = _.template(headline+copy
 
     +category_chart
+    // +parent_dec
     // +dec
-  	// +parent_dec
+    // +parent_nov
     // +nov
-  	// +parent_nov
+    // +parent_oct
     // +oct
-  	// +parent_oct
+    // +parent_sept
     // +sept
-  	// +parent_sept
+    +parent_august
     +august
-  	+parent_august
-    +july
   	+parent_july
-    +june
+    +july
   	+parent_june
-    +may
+    +june
   	+parent_may
-    +april
+    +may
   	+parent_april
-    +march
+    +april
   	+parent_march
-    +feb
+    +march
   	+parent_feb
-    +jan
+    +feb
   	+parent_jan
-
+    +jan
+  
   	);
   return Content;
 });
