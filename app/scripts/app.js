@@ -4,6 +4,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
+  'useful',
   'chartjs',
   'vendor/consoleclass/consoleclass',
   'text!../templates/navigation.html',
@@ -19,10 +20,10 @@ define([
   // 'views/transactions/2016/07',
   // 'views/transactions/2016/08',
   'views/finance_data',
-  'views/faqs',
+  // 'views/faqs',
   // 'text!../templates/growth.html',
 ], 
-function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
+function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
   console.log('doing appjs');
   cc('consoleclass working');
   // var faqs = require('views/faqs');  
@@ -229,8 +230,8 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
               Categories_2016 = Categories_2016.concat(chart_categories);
               chart_totals = _.pluck(Category_Data, 'total');
               var chart_label = month_label+' Spending Category';
-              // DRAW CHART
-              drawMonthChart(chart_categories,chart_totals,chart_label);
+              // SINGLE CATEGORYDRAW CHART
+              drawChart(chart_categories,chart_totals,chart_label,'child','bar');
             }
           } // end for loop for this month categories
 
@@ -319,12 +320,17 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                 // if all subcategory totals added then store the parent category total data into a month array
                 if (j == sorted_month_data_array[i].length-1) {
                   // cc(getMonthLabel(m+1)+' Running TOTAL for : '+sorted_month_data_array[i][j]["parent"]+ ' $' +total.toFixed(2),'highlight');
-                  var this_data = {
-                      parent_category : sorted_month_data_array[i][j]["parent"],
-                      total_spent : total.toFixed(2)
-                  };
-                  parent_month_data = parent_month_data.concat(this_data);
-                  parent_month_data = _.sortBy(parent_month_data,"parent_category");
+
+                  // Dont Include Income categories
+                  if (sorted_month_data_array[i][j]["parent"] != 'zIgnore') {
+                    var this_data = {
+                        parent_category : sorted_month_data_array[i][j]["parent"],
+                        total_spent : total.toFixed(2)
+                    };
+                    parent_month_data = parent_month_data.concat(this_data);
+                    parent_month_data = _.sortBy(parent_month_data,"parent_category");
+                  }// end zIgnore
+                  
                 } 
               } // end [j]
               // Put all Parent categories into an array for the month
@@ -335,19 +341,76 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                     data : parent_month_data
                   };
                 Parent_Yearly_Totals = Parent_Yearly_Totals.concat(this_data);
+                // console.log('Unsorted\n',parent_month_data);
+                // parent_month_data = _.sortBy(parent_month_data,'total_spent');
+                var parent_month_data = _.sortBy(parent_month_data, function(obj){ return parseInt(obj.total_spent, 10) });
+
+                // console.log('SORTED\n',parent_month_data);
+                chart_categories = _.pluck(parent_month_data, 'parent_category');
+                chart_totals = _.pluck(parent_month_data, 'total_spent');
+                var chart_label = getMonthLabel(m+1)+' Parent Category Spending';
+                // DRAW CHART
+                drawChart(chart_categories,chart_totals,chart_label,'parent','bar');
+
                 // if all of the monthly data has been added show the totals
                 if (m == last_month_count-2) {
                   cc('DONE: Transactions Grouped into Parent Categories:','highlight');
                   console.log(Parent_Yearly_Totals);
+
+                  if (urlParams["s"] != null || urlParams["s"] != undefined) {
+                    var search_term = decodeURI(urlParams["s"]);
+                    getSpendingByParentCategory(Parent_Yearly_Totals,search_term);
+                  }
                 }
               }
             } // end [i]
           } // end [m]
         }
 
+        var chart_parent_categories = [];
+        var chart_parent_totals = [];
 
-        function drawMonthChart(chart_categories,chart_totals,chart_label) {
-          var ctx = document.getElementById("chart-"+month_label);
+        function getSpendingByParentCategory(Parent_Yearly_Totals,search_term) {
+          $('.byMonth').hide();
+          $('#byCategory').show();
+          var chart_parent_categories = [];
+          var chart_parent_totals = [];
+          var chart_label = search_term+ ' Spending Trend';
+
+          for (m = 0; m < last_month_count-1; m++) { 
+            var g = searchCategory(search_term,Parent_Yearly_Totals[m]["data"]);
+            chart_parent_categories = chart_parent_categories.concat(getMonthLabel(m+1));
+            chart_parent_totals = chart_parent_totals.concat(g.total_spent);
+            // console.log('Groceries\n',g);
+            if (m == last_month_count-2) {
+              cc('DONE: getSpendingByParentCategory','highlight');
+              console.log('chart_categories\n',chart_parent_categories);
+              console.log('chart_totals\n',chart_parent_totals);
+              drawChart(chart_parent_categories,chart_parent_totals,chart_label,'byCategory','line');
+            }
+          }// end m
+        }
+        function searchCategory(nameKey, myArray){
+            for (var i=0; i < myArray.length; i++) {
+                if (myArray[i].parent_category === nameKey) {
+                    return myArray[i];
+                }
+            }
+        }
+
+        function drawChart(chart_categories,chart_totals,chart_label,chart_type,style) {
+          switch(chart_type){
+            case 'parent' :
+              var ctx = document.getElementById("chart-parent-"+month_label);  
+              break;
+            case 'byCategory' :
+              var ctx = document.getElementById("chart-byCategory");
+              break;
+            default :
+              var ctx = document.getElementById("chart-"+month_label);
+          }
+          
+          // var ctx = document.getElementById("chart-"+month_label);
           var myChart = new Chart(ctx, {
               type: 'bar',
               data: {
@@ -355,137 +418,27 @@ function($, _, Backbone, Marionette,navigation,layout,cta_content,footer_content
                   datasets: [{
                         label: chart_label,
                         data: chart_totals,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(205, 90, 132, 0.2)',
+                            'rgba(14, 12, 215, 0.2)',
+                            'rgba(205, 26, 96, 0.2)',
+                            'rgba(70, 12, 182, 0.2)',
+                            'rgba(103, 108, 155, 0.2)',
+                            'rgba(201, 33, 99, 0.2)',
+                            'rgba(207, 9, 24, 0.2)',
+                            'rgba(211, 12, 94, 0.2)'
+                        ],
                     }
                   ]
               },
               options: custom_chart_options
           });
-        }
-
-
-        function findParentCategory(child_category) {
-          // cc('findParentCategory for ['+child_category+']','run');
-          var parent_category =  null;
-
-
-          if (child_category == 'Coffee Shops' || 
-              child_category == 'Cafe' ) { 
-            parent_category = 'Coffee Shops';
-          }
-
-          if (child_category == 'Groceries' || 
-              child_category == 'Food' ) { 
-            parent_category = 'Groceries';
-          }
-
-          if (child_category == 'Temporary Loan' || 
-              child_category == 'Cash & ATM' ||
-              child_category == 'Income' ||
-              child_category == 'Transfer to PFCU' ||
-              child_category == 'Credit Card Payment' ||
-              child_category == 'Uncategorized' ) { 
-            parent_category = 'zIgnore';
-          }
-
-          if (child_category == 'Travel' || 
-              child_category == 'Rental Car & Taxi' ||
-              child_category == 'Air Travel' ) { 
-            parent_category = 'Travel Related';
-          }
-
-          if (child_category == 'Home Improvement' || 
-              child_category == 'Home Services' ||
-              child_category == 'Home Supplies' ||
-              child_category == 'Furnishings' ) { 
-            parent_category = 'Home Improvement & Supplies';
-          }
-
-          if (child_category == 'Fees & Charges' || 
-              child_category == 'Bank Fee' ||  
-              child_category == 'Finance Charge' ||  
-              child_category == 'ATM Fee' ||  
-              child_category == 'Late Fee' ) { 
-            parent_category = 'Fees & Financial Charges';
-          }
-
-          if (child_category == 'Personal Care' || 
-              child_category == 'Health & Fitness' || 
-              child_category == 'Hair' || 
-              child_category == 'Essential Oils' || 
-              child_category == 'Doctor' || 
-              child_category == 'Sports' || 
-              child_category == 'Spa & Massage' || 
-              child_category == 'Hair and Skin Care' || 
-              child_category == 'Education' || 
-              child_category == 'Gym' || 
-              child_category == 'Shopping' || 
-              child_category == 'Clothing' ) { 
-            parent_category = 'Personal Care & Improvement';
-          }
-
-          if (child_category == 'Toys' || 
-              child_category == 'Baby Supplies' ||  
-              child_category == 'Babysitter & Daycare' ||  
-              child_category == 'Kids Activities' ||  
-              child_category == 'Kids' ) { 
-            parent_category = 'Utilities';
-          }
-
-          if (child_category == 'Business Services' || 
-              child_category == 'Web Services' || 
-              child_category == 'Subcontractors' || 
-              child_category == 'Shipping' || 
-              child_category == 'Equipment' || 
-              child_category == 'Financial Advisor' || 
-              child_category == 'Reimbursements' || 
-              child_category == 'Office Supplies' || 
-              child_category == 'Electronics & Software' ) { 
-            parent_category = 'Business Expenses';
-          }
-          if (child_category == 'Mobile Phone' || 
-              child_category == 'Internet' ||  
-              child_category == 'Utilities' ||  
-              child_category == 'Bills & Utilities' ||  
-              child_category == 'Internet' ||  
-              child_category == 'Home Phone' ) { 
-            parent_category = 'Utilities';
-          }
-          if (child_category == 'Gas & Fuel' || 
-              child_category == 'Highway Tolls' ||  
-              child_category == 'Auto Insurance' ||  
-              child_category == 'Auto & Transport' ||  
-              child_category == 'Parking' ||  
-              child_category == 'Service & Parts' ) { 
-            parent_category = 'Car & Driving';
-          }
-          if (child_category == 'Mortgage & Rent' || 
-              child_category == 'Federal Tax' ||  
-              child_category == 'State Tax' ||  
-              child_category == 'Health Insurance' ||  
-              child_category == 'Check' ) { 
-            parent_category = 'Fixed US Living Expenses';
-          }
-          if (child_category == 'Eating Out' || 
-              child_category == 'Food & Dining' ||  
-              child_category == 'Fast Food' ||  
-              child_category == 'Restaurants' ) { 
-            parent_category = 'Eating Out Expense';
-          }
-          if (child_category == 'Alcohol & Bars' || 
-              child_category == 'Arts' ||  
-              child_category == 'Gift' ||  
-              child_category == 'Shopping' ||  
-              child_category == 'Entertainment' ||  
-              child_category == 'Books' ||  
-              child_category == 'Sporting Goods' ||  
-              child_category == 'Movies & DVDs' ||  
-              child_category == 'Music' ) { 
-              // alert('Found Entertainment')
-              parent_category = 'Entertainment & Arts';
-          }
-            
-          return parent_category;
-
         }
 
 

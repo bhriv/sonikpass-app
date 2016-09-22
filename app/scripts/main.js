@@ -16,6 +16,7 @@ require.config({
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
     'chartjs': 'vendor/chart.js/dist/Chart',
     'cc': 'vendor/consoleclass/consoleclass',
+    'useful': 'vendor/gigroom/useful',
   },
   shim: {
     underscore: {
@@ -36,6 +37,10 @@ require.config({
     consoleclass: {
       deps: ['jquery'],
       exports: 'cc'
+    },
+    useful: {
+      deps: ['jquery'],
+      exports: 'useful'
     }
   },
   hbs: { // optional

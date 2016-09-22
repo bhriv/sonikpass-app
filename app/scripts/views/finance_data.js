@@ -1,5 +1,137 @@
 //Filename: views/finance_data.js
-        
+
+// Entertainment%20%26%20Arts
+// Business%20Expenses
+      
+function findParentCategory(child_category) {
+  // cc('findParentCategory for ['+child_category+']','run');
+  var parent_category =  null;
+
+
+  if (child_category == 'Coffee Shops' || 
+      child_category == 'Cafe' ) { 
+    parent_category = 'Coffee Shops';
+  }
+
+  if (child_category == 'Groceries' || 
+      child_category == 'Food' ) { 
+    parent_category = 'Groceries';
+  }
+
+  if (child_category == 'Temporary Loan' || 
+      child_category == 'Cash & ATM' ||
+      child_category == 'Income' ||
+      child_category == 'Transfer to PFCU' ||
+      child_category == 'Credit Card Payment' ||
+      child_category == 'Uncategorized' ) { 
+    parent_category = 'zIgnore';
+  }
+
+  if (child_category == 'Travel' || 
+      child_category == 'Rental Car & Taxi' ||
+      child_category == 'Air Travel' ) { 
+    parent_category = 'Travel Related';
+  }
+
+  if (child_category == 'Home Improvement' || 
+      child_category == 'Home Services' ||
+      child_category == 'Home Supplies' ||
+      child_category == 'Furnishings' ) { 
+    parent_category = 'Home Improvement & Supplies';
+  }
+
+  if (child_category == 'Fees & Charges' || 
+      child_category == 'Bank Fee' ||  
+      child_category == 'Finance Charge' ||  
+      child_category == 'ATM Fee' ||  
+      child_category == 'Late Fee' ) { 
+    parent_category = 'Fees & Financial Charges';
+  }
+
+  if (child_category == 'Personal Care' || 
+      child_category == 'Health & Fitness' || 
+      child_category == 'Hair' || 
+      child_category == 'Essential Oils' || 
+      child_category == 'Doctor' || 
+      child_category == 'Sports' || 
+      child_category == 'Spa & Massage' || 
+      child_category == 'Hair and Skin Care' || 
+      child_category == 'Education' || 
+      child_category == 'Gym' || 
+      child_category == 'Shopping' || 
+      child_category == 'Clothing' ) { 
+    parent_category = 'Personal Care & Improvement';
+  }
+
+  if (child_category == 'Toys' || 
+      child_category == 'Baby Supplies' ||  
+      child_category == 'Babysitter & Daycare' ||  
+      child_category == 'Kids Activities' ||  
+      child_category == 'Kids' ) { 
+    parent_category = 'Utilities';
+  }
+
+  if (child_category == 'Business Services' || 
+      child_category == 'Web Services' || 
+      child_category == 'Subcontractors' || 
+      child_category == 'Shipping' || 
+      child_category == 'Equipment' || 
+      child_category == 'Refunds' || 
+      child_category == 'Financial Advisor' || 
+      child_category == 'Reimbursements' || 
+      child_category == 'Office Supplies' || 
+      child_category == 'Electronics & Software' ) { 
+    parent_category = 'Business Expenses';
+  }
+  if (child_category == 'Mobile Phone' || 
+      child_category == 'Internet' ||  
+      child_category == 'Utilities' ||  
+      child_category == 'Bills & Utilities' ||  
+      child_category == 'Internet' ||  
+      child_category == 'Home Phone' ) { 
+    parent_category = 'Utilities';
+  }
+  if (child_category == 'Gas & Fuel' || 
+      child_category == 'Highway Tolls' ||  
+      child_category == 'Auto Insurance' ||  
+      child_category == 'Auto & Transport' ||  
+      child_category == 'Parking' ||  
+      child_category == 'Service & Parts' ) { 
+    parent_category = 'Car & Driving';
+  }
+  if (child_category == 'Mortgage & Rent' || 
+      child_category == 'Federal Tax' ||  
+      child_category == 'State Tax' ||  
+      child_category == 'Health Insurance' ||  
+      child_category == 'Check' ) { 
+    parent_category = 'Fixed US Living Expenses';
+  }
+  if (child_category == 'Eating Out' || 
+      child_category == 'Food & Dining' ||  
+      child_category == 'Fast Food' ||  
+      child_category == 'Restaurants' ) { 
+    parent_category = 'Eating Out Expense';
+  }
+  if (child_category == 'Alcohol & Bars' || 
+      child_category == 'Arts' ||  
+      child_category == 'Gift' ||  
+      child_category == 'Shopping' ||  
+      child_category == 'Amusement' ||  
+      child_category == 'Entertainment' ||  
+      child_category == 'Books' ||  
+      child_category == 'Sporting Goods' ||  
+      child_category == 'Movies & DVDs' ||  
+      child_category == 'Music' ) { 
+      // alert('Found Entertainment')
+      parent_category = 'Entertainment & Arts';
+  }
+  if (parent_category == null) {
+    cc('ERROR findParentCategory for ['+child_category+']','error');
+  }
+  return parent_category;
+
+}
+
 var months_all = ["Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec"];
 // cc(months_temp, 'success');
 

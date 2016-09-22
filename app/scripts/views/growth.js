@@ -8,38 +8,66 @@ define(['jquery','underscore','chartjs'],
   var headline = '<h1 class="headline-big">Finance</h1>';
   var copy =      '<p class="copy">finance charts.</p>';
   
-  var jan =     '<canvas id="chart-January" width="400" height="400" style="margin:20px;"></canvas>';
-  var feb =     '<canvas id="chart-February" width="400" height="400" style="margin:20px;"></canvas>';
-  var march =     '<canvas id="chart-March" width="400" height="400" style="margin:20px;"></canvas>';
-  var april =     '<canvas id="chart-April" width="400" height="400" style="margin:20px;"></canvas>';
-  var may =     '<canvas id="chart-May" width="400" height="400" style="margin:20px;"></canvas>';
-  var june =     '<canvas id="chart-June" width="400" height="400" style="margin:20px;"></canvas>';
-  var july =     '<canvas id="chart-July" width="400" height="400" style="margin:20px;"></canvas>';
-  var august =     '<canvas id="chart-August" width="400" height="400" style="margin:20px;"></canvas>';
-  var sept =     '<canvas id="chart-September" width="400" height="400" style="margin:20px;"></canvas>';
-  var oct =     '<canvas id="chart-October" width="400" height="400" style="margin:20px;"></canvas>';
-  var nov =     '<canvas id="chart-November" width="400" height="400" style="margin:20px;"></canvas>';
-  var dec =     '<canvas id="chart-December" width="400" height="400" style="margin:20px;"></canvas>';
+  var jan =     '<canvas class="byMonth" id="chart-January"></canvas>';
+  var feb =     '<canvas class="byMonth" id="chart-February"></canvas>';
+  var march =     '<canvas class="byMonth" id="chart-March"></canvas>';
+  var april =     '<canvas class="byMonth" id="chart-April"></canvas>';
+  var may =     '<canvas class="byMonth" id="chart-May"></canvas>';
+  var june =     '<canvas class="byMonth" id="chart-June"></canvas>';
+  var july =     '<canvas class="byMonth" id="chart-July"></canvas>';
+  var august =     '<canvas class="byMonth" id="chart-August"></canvas>';
+  var sept =     '<canvas class="byMonth" id="chart-September"></canvas>';
+  var oct =     '<canvas class="byMonth" id="chart-October"></canvas>';
+  var nov =     '<canvas class="byMonth" id="chart-November"></canvas>';
+  var dec =     '<canvas class="byMonth" id="chart-December"></canvas>';
+  
+  var parent_jan =     '<canvas class="byMonth" id="chart-parent-January"></canvas>';
+  var parent_feb =     '<canvas class="byMonth" id="chart-parent-February"></canvas>';
+  var parent_march =     '<canvas class="byMonth" id="chart-parent-March"></canvas>';
+  var parent_april =     '<canvas class="byMonth" id="chart-parent-April"></canvas>';
+  var parent_may =     '<canvas class="byMonth" id="chart-parent-May"></canvas>';
+  var parent_june =     '<canvas class="byMonth" id="chart-parent-June"></canvas>';
+  var parent_july =     '<canvas class="byMonth" id="chart-parent-July"></canvas>';
+  var parent_august =     '<canvas class="byMonth" id="chart-parent-August"></canvas>';
+  var parent_sept =     '<canvas class="byMonth" id="chart-parent-September"></canvas>';
+  var parent_oct =     '<canvas class="byMonth" id="chart-parent-October"></canvas>';
+  var parent_nov =     '<canvas class="byMonth" id="chart-parent-November"></canvas>';
+  var parent_dec =     '<canvas class="byMonth" id="chart-parent-December"></canvas>';
+  
+  var category_chart =     '<canvas class="byCategory" id="chart-byCategory"></canvas>';
 
-  var chart =     '<canvas id="growth_chart" width="400" height="400" style="margin:20px;"></canvas>';
-  var chart_financial_summary =     '<canvas id="chart_financial_summary" width="400" height="400" style="margin:20px;"></canvas>';
+  // var chart =     '<canvas class="byMonth" id="growth_chart"></canvas>';
+  // var chart_financial_summary =     '<canvas class="byMonth" id="chart_financial_summary"></canvas>';
   
   var Content = _.template(headline+copy
 
-  	// +dec
-  	// +nov
-  	// +oct
-  	// +sept
-  	+august
-  	+july
-  	+june
-  	+may
-  	+april
-  	+march
-  	+feb
-  	+jan
+    +category_chart
+    // +dec
+  	// +parent_dec
+    // +nov
+  	// +parent_nov
+    // +oct
+  	// +parent_oct
+    // +sept
+  	// +parent_sept
+    +august
+  	+parent_august
+    +july
+  	+parent_july
+    +june
+  	+parent_june
+    +may
+  	+parent_may
+    +april
+  	+parent_april
+    +march
+  	+parent_march
+    +feb
+  	+parent_feb
+    +jan
+  	+parent_jan
 
-  	+chart+chart_financial_summary);
+  	);
   return Content;
 });
 
