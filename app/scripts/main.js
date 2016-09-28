@@ -14,7 +14,9 @@ require.config({
     'hbs': 'vendor/hbs/hbs',
     'text': 'vendor/text/text',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
+    'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',
+    'moment': 'vendor/moment/moment',
     'cc': 'vendor/consoleclass/consoleclass',
     'useful': 'vendor/gigroom/useful',
   },
@@ -30,16 +32,28 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
+    bootstrap: {
+      deps: ['jquery'],
+      exports: 'bootstrap'
+    },
+    datepicker: {
+      deps: ['jquery','bootstrap'],
+      exports: 'datepicker'
+    },
     chartjs: {
       deps: ['jquery'],
       exports: 'Chartjs'
+    },
+    moment: {
+      deps: ['jquery'],
+      exports: 'moment'
     },
     consoleclass: {
       deps: ['jquery'],
       exports: 'cc'
     },
     useful: {
-      deps: ['jquery'],
+      deps: ['jquery','moment'],
       exports: 'useful'
     }
   },

@@ -44,7 +44,37 @@ var urlParams;
     while (match = search.exec(query))
        urlParams[decode(match[1])] = decode(match[2]);
 })();
-console.log('*************** urlParams ************');
-console.log(urlParams);
+console.log('*************** urlParams ************\n',urlParams,'***************');
+// console.log(urlParams);
 
 
+
+/*****************************************************************/
+/****************** Date Functions                ****************/
+/*****************************************************************/
+
+/*****************************************************************/
+// Date Picker Processing Functions 
+/*****************************************************************/
+
+
+function setStartDate(){
+  cc('setStartDate','run');
+  var start_date = $('#start_date').val();
+  alert(start_date);
+  // if (isItemNullorUndefined(start_date,true)) {
+  //   setDateRange();
+  // }
+  localStorage.setItem( 'start_date', start_date );
+  cc('start_date set: '+start_date,'info');
+}
+
+function setEndDate(){
+  cc('setEndDate','run');
+  var end_date = $('#end_date').val();
+  // if (isItemNullorUndefined(end_date,true)) {
+  //   setDateRange();
+  // }
+  localStorage.setItem( 'end_date', end_date );
+  cc('end_date set: '+end_date,'info');
+}

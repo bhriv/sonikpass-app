@@ -8,9 +8,14 @@
 /* ----------------------  
 Import Resets
 ---------------------- */ 
-/* 
-@import "../../assets/vendor/bootstrap/bootstrap.css"; 
-@import "../../assets/vendor/bootstrap/bootstrap-responsive.css";
+ 
+/*Bootstrap includes Normalize reset*/
+
+@import "../scripts/vendor/bootstrap/dist/css/bootstrap.css";
+
+/*Vendors*/
+
+@import "../scripts/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.css";
 
 
 /*Compass*/

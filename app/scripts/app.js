@@ -4,6 +4,9 @@ define([
   'underscore',
   'backbone',
   'marionette',
+  'bootstrap',
+  'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
+  'moment',
   'useful',
   'chartjs',
   'vendor/consoleclass/consoleclass',
@@ -23,7 +26,7 @@ define([
   // 'views/faqs',
   // 'text!../templates/growth.html',
 ], 
-function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
+function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
   console.log('doing appjs');
   cc('consoleclass working');
   // var faqs = require('views/faqs');  
@@ -53,8 +56,8 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
           'team':       'team',
           'growth':     'growth',
           'faqs':       'faqs',
-          '*path':      'team',
-          '':           'team',
+          '*path':      'growth',
+          '':           'growth',
       }
   });
 
@@ -77,7 +80,7 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
           App.mainRegion.show(view);
       },
       index: function() {
-          var view = new App.IndexView();
+          var view = new App.GrowthView();
           App.mainRegion.show(view);
       },
   });
@@ -94,35 +97,6 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
 
 // Route based views
 
-  App.AboutView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: about_content,
-      onBeforeShow: function(){
-        $('body').removeClass();
-        $('body').addClass('view-about');
-        $('#team_list').hide();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('AboutView shown')
-      }
-  });
-
-  App.TeamlistView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: team_list,
-      onBeforeShow: function(){
-        $('body').removeClass();
-        $('body').addClass('view-team');
-        $('#team_list').show();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('Teamlist shown')
-      }
-  });
-
-
   App.GrowthView = Marionette.ItemView.extend({
       tagName: 'div',
       template: growth_content,
@@ -135,15 +109,139 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
       onShow: function(){
         console.log('GrowthView shown');
         var content_div = $('#center_content');
+
+
+
+        // Handle Dates using bootstrap-datepicker and Callbacks
+
+        $('input.datepicker').datepicker({
+            format: "yyyy/mm/dd",
+            maxViewMode: 3,
+            clearBtn: true,
+            calendarWeeks: true,
+            todayHighlight: true
+        });
+
+        var start_date = null;
+        var end_date = null;
+        var filter_date = urlParams["Filter_Date"];
+
+        $('#start_date').datepicker().on('changeDate', function(e) {
+            start_date = moment($(this).val()).format("X");
+            // alert(start_date)
+        });
+        $('#end_date').datepicker().on('changeDate', function(e) {
+            end_date = moment($(this).val()).format("X");
+            // alert(end_date)
+        });
+        $('#update_report').click(function(e) {
+          
+          // given a urlParam of a category, get all entries and log
+          if (filter_parent_category != null || filter_parent_category != undefined) {
+            cc('filter_parent_category by date','run');
+            var d = filterParentData(all_transaction_data,filter_parent_category);
+            console.log('filterParentData by '+filter_parent_category+' data:\n',d);
+            if (filter_date != null || filter_date != undefined) {
+              cc('filter_date','run');
+              var f = filterDataByDate(d,start_date,end_date);
+              console.log('Filtered by Category and Date: \n',f);
+              var spent = _.pluck(f,'Amount');
+              console.log('spent\n',spent);
+              var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
+              console.log('TOTAL SPENT\n',sum)
+            }
+          }
+          if (filter_child_category != null || filter_child_category != undefined) {
+            cc('filter_child_category by date','run');
+            var d = filterChildData(all_transaction_data,filter_child_category);
+            console.log('filterChildData by '+filter_child_category+' data:\n',d);
+            if (filter_date != null || filter_date != undefined) {
+              cc('filter_date','run');
+              var f = filterDataByDate(d,start_date,end_date);
+              console.log('Filtered by Category and Date: \n',f);
+              var spent = _.pluck(f,'Amount');
+              console.log('spent\n',spent);
+              var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
+              console.log('TOTAL SPENT\n',sum)
+            }
+          }
+        }); // end update_report
         
+
+
+        function dateMoment(timestamp){
+          var time_moment = moment.unix(timestamp).format("YYYY/MM/DD hh:mm:ss");
+          return time_moment;
+        }
+
+        function addTimestampToData(data){
+          var data = $.grep(data, function(e){ 
+            return e.Timestamp = moment(e.Date).format("X");
+          });
+          return data;
+        }
+
+        function getDataByCategory(data,search_term){
+          var data = $.grep(data, function(e){ 
+            if (e.Category = search_term) {
+              return e;
+            }            
+          });
+          return data;
+        }
+
+        function filterDataByDate(data,start_date,end_date){
+          cc('filterDateByDate','run');
+          var data = $.grep(data, function(e){ 
+            var t = parseInt(e.Timestamp);
+            var sd = parseInt(start_date);
+            var ed = parseInt(end_date);
+            sd = sd-1; // increment to include = to current this timestamp
+            ed = ed+1; // increment to include = to current this timestamp
+            if (sd < t && t < ed) {
+              return e;
+            }            
+          });
+          return data;
+        }
+
+        function addParentData(data){
+          var data = $.grep(data, function(e){ 
+            return e.Parent_Category = findParentCategory(e.Category);
+          });
+          return data;
+        }
+        
+        function filterParentData(data,search_term){
+          var data = $.grep(data, function(e){ 
+            if (e.Parent_Category == search_term) {
+              return e;
+            } 
+          });
+          return data;
+        } 
+
+        function filterChildData(data,search_term){
+          var data = $.grep(data, function(e){ 
+            if (e.Category == search_term) {
+              return e;
+            } 
+          });
+          return data;
+        } 
+
+
+        // var stored_timestamp = moment('1/29/2016').format("X");
+        // alert('Earlier: '+stored_timestamp);
+
+        // var time_passed = timestamp - stored_timestamp;
+        // var hours_passed = time_passed/60/60;
+        // var months_passed = time_passed/60/60/24/30;
+        // alert('hours_passed '+hours_passed);
+        // alert('months_passed '+months_passed);
+
         // $(content_div).removeClass();
         
-        // Chart Options
-        var custom_chart_options = {
-          animation: false,
-          stacked: true,
-          scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
-        };
 
         // Setup VARIABLES
         var Yearly_Totals = [];
@@ -161,10 +259,32 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
         var Parent_Category_Monthly_Spent = [];
         var Parent_Category_Yearly_Spent = [];
 
-
         var month_label = null;
         var current_month_count = 8;
         var last_month_count = 9;
+
+        var chart_parent_categories = [];
+        var chart_parent_totals = [];
+
+        var filter_parent_category = urlParams["Parent_Category"];
+        var filter_child_category = urlParams["Category"];
+        
+
+        // Prep ALL Data for better filtering
+        addTimestampToData(all_transaction_data);
+        addParentData(all_transaction_data);
+        // all_transaction_data = _.sortBy(all_transaction_data, function(obj){ return parseInt(obj.Amount)});
+        all_transaction_data = _.sortBy(all_transaction_data, function(obj){ return obj.Timestamp});
+        
+        // console.log('SORTED all_transaction_data\n',all_transaction_data);
+
+
+        for (m = 1; m < last_month_count; m++) { 
+          addTimestampToData(data_2016[m]);
+          addParentData(data_2016[m]);
+          data_2016[m] = _.sortBy(data_2016[m], function(obj){ return obj.Timestamp});
+          // console.log(getMonthLabel(m)+' Parent_Category Data\n',data_2016[m]);
+        }
 
 
         for (m = 1; m < last_month_count; m++) { 
@@ -244,7 +364,7 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
             // cc('unique Categories_2016: ','highlight');
             
             // Show list of Categories
-            $('p.copy').append('<ul id="category_list"></ul>')
+            $('#center_content').append('<ul id="category_list"></ul>')
             for (c = 0; c < Categories_2016_size; c++) { 
               $('#category_list').append('<li>'+Categories_2016[c]+'</li>');
             }
@@ -301,6 +421,7 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
         function processParentCategories(obj) {
           cc('processParentCategories','run');
           for (m = 0; m < last_month_count-1; m++) { 
+            
             var total = null;
             // var year_month_data = [];
             var parent_month_data = []
@@ -308,7 +429,6 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
             var sorted_month_data_array = _.toArray(obj[m]);
             // console.log('Month ['+getMonthLabel(m+1)+'] Sorted Parent Data: \n',sorted_month_data_array);
             cc('Total Sorted Parent Categories in '+getMonthLabel(m+1)+' : '+sorted_month_data_array.length);
-
             // For each single category, group under Parent Category and get total spend in this Parent Category
             for (i = 0; i < sorted_month_data_array.length; i++) { 
               total = 0;
@@ -320,7 +440,6 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
                 // if all subcategory totals added then store the parent category total data into a month array
                 if (j == sorted_month_data_array[i].length-1) {
                   // cc(getMonthLabel(m+1)+' Running TOTAL for : '+sorted_month_data_array[i][j]["parent"]+ ' $' +total.toFixed(2),'highlight');
-
                   // Dont Include Income categories
                   if (sorted_month_data_array[i][j]["parent"] != 'zIgnore') {
                     var this_data = {
@@ -330,7 +449,6 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
                     parent_month_data = parent_month_data.concat(this_data);
                     parent_month_data = _.sortBy(parent_month_data,"parent_category");
                   }// end zIgnore
-                  
                 } 
               } // end [j]
               // Put all Parent categories into an array for the month
@@ -344,7 +462,6 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
                 // console.log('Unsorted\n',parent_month_data);
                 // parent_month_data = _.sortBy(parent_month_data,'total_spent');
                 var parent_month_data = _.sortBy(parent_month_data, function(obj){ return parseInt(obj.total_spent, 10) });
-
                 // console.log('SORTED\n',parent_month_data);
                 chart_categories = _.pluck(parent_month_data, 'parent_category');
                 chart_totals = _.pluck(parent_month_data, 'total_spent');
@@ -359,7 +476,18 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
 
                   if (urlParams["s"] != null || urlParams["s"] != undefined) {
                     var search_term = decodeURI(urlParams["s"]);
-                    getSpendingByParentCategory(Parent_Yearly_Totals,search_term);
+                    if (urlParams["m"] != null || urlParams["m"] != undefined) {
+                      var month = getMonthLabel(parseInt(urlParams["m"]));
+                      console.log(data_2016[parseInt(urlParams["m"])])
+                      // var data = _.where(data_2016[parseInt(urlParams["m"])], {Catagory: "Coffee Shops"});
+                      // console.log(data);
+
+                      // var dc = getDataByCategory(data,search_term,month);
+                      // console.log('Found category '+search_term+' in '+month+'\n',dc);
+                    }else{
+                      getSpendingByParentCategory(Parent_Yearly_Totals,search_term);  
+                    }
+                    
                   }
                 }
               }
@@ -367,10 +495,8 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
           } // end [m]
         }
 
-        var chart_parent_categories = [];
-        var chart_parent_totals = [];
-
         function getSpendingByParentCategory(Parent_Yearly_Totals,search_term) {
+          cc('getSpendingByParentCategory','run')
           $('.byMonth').hide();
           $('#byCategory').show();
           var chart_parent_categories = [];
@@ -390,6 +516,7 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
             }
           }// end m
         }
+
         function searchCategory(nameKey, myArray){
             for (var i=0; i < myArray.length; i++) {
                 if (myArray[i].parent_category === nameKey) {
@@ -397,6 +524,13 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
                 }
             }
         }
+
+        // Chart Options
+        var custom_chart_options = {
+          animation: false,
+          stacked: true,
+          scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}
+        };
 
         function drawChart(chart_categories,chart_totals,chart_label,chart_type,style) {
           switch(chart_type){
@@ -439,68 +573,6 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
               },
               options: custom_chart_options
           });
-        }
-
-
-        function containsCategory(Yearly_Totals,size,find_category){
-
-          cc('containsCategory['+find_category+'] total months['+size+']','run');
-
-          for (x = 0; x < size; x++) {
-            var category_count = Yearly_Totals[x]["data"].length;
-            for (y = 0; y < category_count; y++) {
-              var current = Yearly_Totals[x]["data"];
-              cc('Month['+Yearly_Totals[x]["month"]+'] Category['+Yearly_Totals[x]["data"][y]["category"]+'] Total['+Yearly_Totals[x]["data"][y]["total"]+']');
-              if (Yearly_Totals[x]["data"][y]["category"] == find_category) {
-                cc('category MATCHED','success');
-              }
-            }
-          }
-        }
-
-        function groupSubCategories(Category_Data,category_count) {
-          cc('groupSubCategories','run');
-          // console.log(Category_Data);
-          // cc('Category_Data[0]["data"][0]["category"] '+Category_Data[0]["data"][0]["category"],'info')
-          var size = _.size(Category_Data);
-          var loop_end = size;
-          // cc('size'+size,'highlight')
-          // cc('Categories_2016_size: '+Categories_2016_size,'done');
-          
-          var st = 0;
-          var Entertainment_Total = 0;
-          var Eating_Out_Total = 0;
-
-          for (c = 0; c < size; c++) {
-            
-          }
-          cc('post','info')
-          
-        }
-
-        function removeIncomeCategories(data){
-          // Remove Income from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Income'; 
-          });
-          // Remove Transfers from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Transfer to PFCU'; 
-          });
-          // Remove Payments to Credit Accounts from Spending Categories
-          var data = $.grep(data, function(e){ 
-             return e.category != 'Credit Card Payment'; 
-          });
-          return data;
-        }
-
-        function totalSpent(category,period){
-          var category_data = _.where(period, {Category: category});        
-          var category_amounts = _.pluck(category_data,'Amount');
-          var category_sum = _.reduce(category_amounts, function(memo, num){ return memo + num; }, 0); 
-          var category_total_spent = parseFloat(category_sum).toFixed(2);
-          cc('Category Total Spent('+category+'): $'+category_total_spent,'success',true);
-          return category_total_spent;
         }
 
         function getMonthLabel(m) {
@@ -546,13 +618,79 @@ function($, _, Backbone, Marionette,useful,navigation,layout,cta_content,footer_
           }
           return month_label
         }
-      } // end onShow
 
+        function containsCategory(Yearly_Totals,size,find_category){
+          cc('containsCategory['+find_category+'] total months['+size+']','run');
+          for (x = 0; x < size; x++) {
+            var category_count = Yearly_Totals[x]["data"].length;
+            for (y = 0; y < category_count; y++) {
+              var current = Yearly_Totals[x]["data"];
+              cc('Month['+Yearly_Totals[x]["month"]+'] Category['+Yearly_Totals[x]["data"][y]["category"]+'] Total['+Yearly_Totals[x]["data"][y]["total"]+']');
+              if (Yearly_Totals[x]["data"][y]["category"] == find_category) {
+                cc('category MATCHED','success');
+              }
+            }
+          }
+        }
+
+        function removeIncomeCategories(data){
+          // Remove Income from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Income'; 
+          });
+          // Remove Transfers from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Transfer to PFCU'; 
+          });
+          // Remove Payments to Credit Accounts from Spending Categories
+          var data = $.grep(data, function(e){ 
+             return e.category != 'Credit Card Payment'; 
+          });
+          return data;
+        }
+
+        function totalSpent(category,period){
+          var category_data = _.where(period, {Category: category});        
+          var category_amounts = _.pluck(category_data,'Amount');
+          var category_sum = _.reduce(category_amounts, function(memo, num){ return memo + num; }, 0); 
+          var category_total_spent = parseFloat(category_sum).toFixed(2);
+          cc('Category Total Spent('+category+'): $'+category_total_spent,'success',true);
+          return category_total_spent;
+        }
+
+      } // end onShow
       // Combined Chart
-      //Chart Data
-  
-    
+    //Chart Data
   }); // end GrowthView
+
+  
+  App.AboutView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: about_content,
+      onBeforeShow: function(){
+        $('body').removeClass();
+        $('body').addClass('view-about');
+        $('#team_list').hide();
+        $('#faq_list').hide();
+      },
+      onShow: function(){
+        console.log('AboutView shown')
+      }
+  });
+
+  App.TeamlistView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: team_list,
+      onBeforeShow: function(){
+        $('body').removeClass();
+        $('body').addClass('view-team');
+        $('#team_list').show();
+        $('#faq_list').hide();
+      },
+      onShow: function(){
+        console.log('Teamlist shown')
+      }
+  });
 
   App.FaqlistView = Marionette.ItemView.extend({
       tagName: 'div',

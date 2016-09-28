@@ -5,8 +5,8 @@ define(['jquery','underscore','chartjs'],
 // inject into DOM
   // $('#faq_list').append(myFaqsView.el);
 
-  var headline = '<h1 class="headline-big">Finance</h1>';
-  var copy =      '<p class="copy">finance charts.</p>';
+  var headline = '<h1 class="headline-bigXX">Finance Reports</h1>';
+  var copy =      '<p class="copy"></p>';
   
   var jan =     '<canvas class="byMonth" id="chart-January"></canvas>';
   var feb =     '<canvas class="byMonth" id="chart-February"></canvas>';
@@ -34,7 +34,7 @@ define(['jquery','underscore','chartjs'],
   var parent_nov =     '<canvas class="byMonth" id="chart-parent-November"></canvas>';
   var parent_dec =     '<canvas class="byMonth" id="chart-parent-December"></canvas>';
   
-  var category_chart =     '<canvas class="byCategory" id="chart-byCategory"></canvas>';
+  var category_chart =     '<canvas class="byCategory" id="chart-byCategory" style="display:none;"></canvas>';
 
   // var chart =     '<canvas class="byMonth" id="growth_chart"></canvas>';
   // var chart_financial_summary =     '<canvas class="byMonth" id="chart_financial_summary"></canvas>';
