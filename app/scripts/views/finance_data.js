@@ -37,7 +37,7 @@ function findParentCategory(child_category) {
       child_category == 'Home Services' ||
       child_category == 'Home Supplies' ||
       child_category == 'Furnishings' ) { 
-    parent_category = 'Home Improvement & Supplies';
+    parent_category = 'Home';
   }
 
   if (child_category == 'Fees & Charges' || 
@@ -111,7 +111,7 @@ function findParentCategory(child_category) {
     parent_category = 'Taxes';
   }
   if (child_category == 'Health Insurance') { 
-    parent_category = 'Health Insurance';
+    parent_category = 'Insurance';
   }
 
   if (child_category == 'Eating Out' || 

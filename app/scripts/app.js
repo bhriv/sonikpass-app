@@ -114,6 +114,12 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
 
         // Handle Dates using bootstrap-datepicker and Callbacks
 
+        
+
+        var start_date = null;
+        var end_date = null;
+        var filter_date = urlParams["Filter_Date"];
+
         $('input.datepicker').datepicker({
             format: "yyyy/mm/dd",
             maxViewMode: 3,
@@ -121,10 +127,6 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
             calendarWeeks: true,
             todayHighlight: true
         });
-
-        var start_date = null;
-        var end_date = null;
-        var filter_date = urlParams["Filter_Date"];
 
         $('#start_date').datepicker().on('changeDate', function(e) {
             start_date = moment($(this).val()).format("X");
@@ -134,8 +136,8 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
             end_date = moment($(this).val()).format("X");
             // alert(end_date)
         });
+
         $('#update_report').click(function(e) {
-          
           // given a urlParam of a category, get all entries and log
           if (filter_parent_category != null || filter_parent_category != undefined) {
             cc('filter_parent_category by date','run');
@@ -148,7 +150,7 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
               var spent = _.pluck(f,'Amount');
               console.log('spent\n',spent);
               var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
-              console.log('TOTAL SPENT\n',sum)
+              console.log('TOTAL SPENT on '+filter_parent_category+' for this period:\n',sum)
             }
           }
           if (filter_child_category != null || filter_child_category != undefined) {
@@ -162,7 +164,7 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
               var spent = _.pluck(f,'Amount');
               console.log('spent\n',spent);
               var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
-              console.log('TOTAL SPENT\n',sum)
+              console.log('TOTAL SPENT on '+filter_child_category+' in this period:\n',sum)
             }
           }
         }); // end update_report
@@ -207,7 +209,17 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
 
         function addParentData(data){
           var data = $.grep(data, function(e){ 
-            return e.Parent_Category = findParentCategory(e.Category);
+            var pc = findParentCategory(e.Category)
+            return e.Parent_Category = pc;
+            return e.Grouping = pc +' > '+e.Category;
+          });
+          return data;
+        }
+
+        function addGroupingData(data){
+          var data = $.grep(data, function(e){ 
+            var pc = findParentCategory(e.Category)
+            return e.Grouping = pc +' > '+e.Category;
           });
           return data;
         }
@@ -229,6 +241,18 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
           });
           return data;
         } 
+
+        function findAllCategories(data){
+          cc('findAllCategories','run');
+          var data = $.grep(data, function(e){ 
+            var x = [{
+                Category : e.Category,
+                Parent_Category : e.Parent_Category
+              }];
+              return e.x;
+          });
+          return data;
+        }
 
 
         // var stored_timestamp = moment('1/29/2016').format("X");
@@ -266,6 +290,7 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
         var chart_parent_categories = [];
         var chart_parent_totals = [];
 
+        var parents_and_children_categories = [];
         var filter_parent_category = urlParams["Parent_Category"];
         var filter_child_category = urlParams["Category"];
         
@@ -273,10 +298,21 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
         // Prep ALL Data for better filtering
         addTimestampToData(all_transaction_data);
         addParentData(all_transaction_data);
+        addGroupingData(all_transaction_data);
         // all_transaction_data = _.sortBy(all_transaction_data, function(obj){ return parseInt(obj.Amount)});
         all_transaction_data = _.sortBy(all_transaction_data, function(obj){ return obj.Timestamp});
         
-        // console.log('SORTED all_transaction_data\n',all_transaction_data);
+        console.log('SORTED all_transaction_data\n',all_transaction_data);
+        var all_grouping_categories = _.pluck(all_transaction_data,'Grouping');
+        // var all_parent_cats = _.pluck(all_transaction_data,'Parent_Category');
+        // var all_cats = findAllCategories(all_transaction_data);
+        
+        // var all_parent_and_cats = _.zip(all_parent_cats,all_child_cats);
+        // console.log('All P & C Categories\n',all_parent_and_cats);
+        all_grouping_categories = _.uniq(all_grouping_categories);
+        all_grouping_categories = _.sortBy(all_grouping_categories);
+
+        console.log('All P & C Categories\n',all_grouping_categories);
 
 
         for (m = 1; m < last_month_count; m++) { 
@@ -285,7 +321,6 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
           data_2016[m] = _.sortBy(data_2016[m], function(obj){ return obj.Timestamp});
           // console.log(getMonthLabel(m)+' Parent_Category Data\n',data_2016[m]);
         }
-
 
         for (m = 1; m < last_month_count; m++) { 
           // Initialize Arrays 
