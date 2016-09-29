@@ -114,11 +114,14 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
 
         // Handle Dates using bootstrap-datepicker and Callbacks
 
-        
 
         var start_date = null;
         var end_date = null;
         var filter_date = urlParams["Filter_Date"];
+
+        var default_date = moment().year(2016).month(0).date(1).format('YYYY/MM/DD');
+        // var default_date = moment([2016, 0, 01]).format("YYYY/MM/DD");
+        var todays_date = moment().format("YYYY/MM/DD");
 
         $('input.datepicker').datepicker({
             format: "yyyy/mm/dd",
@@ -128,45 +131,60 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
             todayHighlight: true
         });
 
+        $('#start_date').datepicker('setDate', default_date).datepicker('update').val(default_date);
+        $('#end_date').datepicker('setDate', todays_date).datepicker('update').val(todays_date);
+        
+
         $('#start_date').datepicker().on('changeDate', function(e) {
             start_date = moment($(this).val()).format("X");
-            // alert(start_date)
+            updateReport();
         });
         $('#end_date').datepicker().on('changeDate', function(e) {
             end_date = moment($(this).val()).format("X");
-            // alert(end_date)
+            updateReport(); 
         });
 
-        $('#update_report').click(function(e) {
+        function getDateRange(){
+          var sd = $('#start_date').val();
+          var ed = $('#end_date').val();
+          start_date = moment(sd).format("X");
+          end_date = moment(ed).format("X");
+        }
+
+        
+        function updateReport() {
+          // getDateRange();
           // given a urlParam of a category, get all entries and log
           if (filter_parent_category != null || filter_parent_category != undefined) {
-            cc('filter_parent_category by date','run');
+            // cc('filter_parent_category by date','run');
             var d = filterParentData(all_transaction_data,filter_parent_category);
-            console.log('filterParentData by '+filter_parent_category+' data:\n',d);
+            var spent = _.pluck(d,'Amount');
+            var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
             if (filter_date != null || filter_date != undefined) {
-              cc('filter_date','run');
+              // cc('filter_date','run');
               var f = filterDataByDate(d,start_date,end_date);
-              console.log('Filtered by Category and Date: \n',f);
               var spent = _.pluck(f,'Amount');
-              console.log('spent\n',spent);
               var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
-              console.log('TOTAL SPENT on '+filter_parent_category+' for this period:\n',sum)
             }
+            console.log('TOTAL SPENT on '+filter_parent_category+' for this period:\n',sum)
           }
           if (filter_child_category != null || filter_child_category != undefined) {
             cc('filter_child_category by date','run');
             var d = filterChildData(all_transaction_data,filter_child_category);
-            console.log('filterChildData by '+filter_child_category+' data:\n',d);
+            var spent = _.pluck(d,'Amount');
+            var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
             if (filter_date != null || filter_date != undefined) {
               cc('filter_date','run');
               var f = filterDataByDate(d,start_date,end_date);
-              console.log('Filtered by Category and Date: \n',f);
               var spent = _.pluck(f,'Amount');
-              console.log('spent\n',spent);
               var sum = _.reduce(spent, function(memo, num){ return memo + num; }, 0);
-              console.log('TOTAL SPENT on '+filter_child_category+' in this period:\n',sum)
             }
+            console.log('TOTAL SPENT on '+filter_child_category+' in this period:\n',sum)
           }
+        }
+
+        $('#update_report').click(function(e) {
+          updateReport()
         }); // end update_report
         
 
