@@ -329,9 +329,21 @@ function($, _, Backbone, Marionette,bootstrap,datepicker,moment,useful,navigatio
         // console.log('All P & C Categories\n',all_parent_and_cats);
         all_grouping_categories = _.uniq(all_grouping_categories);
         all_grouping_categories = _.sortBy(all_grouping_categories);
-
-        console.log('All P & C Categories\n',all_grouping_categories);
-
+        // console.log('All P & C Categories\n',all_grouping_categories);
+        var category_link_list = '<ul id="category_link_list"></ui>';
+        $('aside').prepend(category_link_list);
+        var list_items = '';
+        for (c = 0; c < all_grouping_categories.length; c++) { 
+          var words = all_grouping_categories[c].split('>');
+          Parent_Category = words[0].substring(0, words[0].length-1);
+          Category = words[1].slice(1);
+          var link1 = '/?Parent_Category='+encodeURIComponent(Parent_Category)+'&Filter_Date=yes';
+          var link2 = '/?Category='+encodeURIComponent(Category.replace(/\s/g, ''))+'&Filter_Date=yes';
+          list_items = '<li><a href="'+link1+'">'+Parent_Category+'</a> > <a href="'+link2+'">'+Category+'</a></li>';
+          $('#category_link_list').append(list_items);
+        }
+        
+        
 
         for (m = 1; m < last_month_count; m++) { 
           addTimestampToData(data_2016[m]);
