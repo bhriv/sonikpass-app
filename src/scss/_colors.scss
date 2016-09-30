@@ -1,0 +1,60 @@
+$primary-red: #ce3745;
+$primary-blue: #4aa3da;
+
+$primary-blue-highlight: #54beff;
+
+$font-light: #FFFFFF;
+$font-mid-grey: #CCCCCC;
+$font-grey: #868686;
+$font-dark: #252525;
+
+$bg-grey: #F2F2F2;
+$border-grey: #D8D8D8;
+$border-grey-highlight: #868686;
+$light-grey: rgba(176,176,176, 0.1);
+$mid-grey: #B0B0B0;
+$dark-grey: #252525;
+
+@mixin linear-gradient-vert($first-color, $second-color){
+
+	background: #ce3745; /* Old browsers */
+	background: -moz-linear-gradient(left,  $first-color 0%, $second-color 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left,  $first-color 0%,$second-color 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right,  $first-color 0%,$second-color 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$first-color, endColorstr=$second-color,GradientType=1 ); /* IE6-9 */
+
+}
+
+@mixin linear-gradient-vert-hover($first-color, $second-color){
+
+	background: #ce3745; /* Old browsers */
+	background: -moz-linear-gradient(left,  $first-color 0%, $second-color 50%, $first-color 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left,  $first-color 0%,$second-color 50%,$first-color 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right,  $first-color 0%,$second-color 50%,$first-color 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$first-color, endColorstr=$second-color,GradientType=1 ); /* IE6-9 */
+
+
+}
+
+
+@mixin linear-gradient-hor($first-color, $second-color){
+
+	background: #ce3745; /* Old browsers */
+	background: -moz-linear-gradient(top,  $first-color 0%, $second-color 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  $first-color 0%,$second-color 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  $first-color 0%,$second-color 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$first-color, endColorstr=$second-color,GradientType=0 ); /* IE6-9 */
+
+}
+
+@mixin sidebar-gradient($border-color, $first-color, $second-color){
+
+	background: $border-color; /* Old browsers */
+	background: -moz-linear-gradient(left, $border-color 0%,$border-color 50%, $first-color 50%, $second-color 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(left, $border-color 0%,$border-color 50%,$first-color 50%,$second-color 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, $border-color 0%,$border-color 50%,$first-color 50%,$second-color 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$first-color, endColorstr=$second-color,GradientType=1 ); /* IE6-9 */
+
+}
+
+

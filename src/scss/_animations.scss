@@ -1,0 +1,35 @@
+// CSS Animations
+
+@keyframes logo-infinite {
+	0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1,1);}
+	50% { transform: translate(-50%, -50%) rotate(10deg) scale(1.4, 1.4);}
+}
+
+@keyframes rotate-infinite {
+	from { transform: rotate(0deg);}
+	to { transform: rotate(360deg);}
+}
+
+@media all and (min-width: $notebook-width) {
+
+	.js-fadeIn {
+		opacity: 0;
+		transform: translate(0, 48px);
+	}
+
+	.js-fadeIn-center {
+		opacity: 0;
+		transform: translate(-50%, -46%);
+	}
+
+	.js-slideIn-left {
+		opacity: 0;
+		transform: translate(-48px, 0);
+	}
+
+	.js-slideIn-right {
+		opacity: 0;
+		transform: translate(48px, 0);
+	}
+
+}
