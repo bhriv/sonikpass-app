@@ -1,6 +1,6 @@
 {
-  "name": "skeleton",
-  "version": "0.0.1",
+  "name": "sonikpass-app",
+  "version": "1.0.1",
   "author": "",
   "license": "ISC",
   "description": "Basic Backbone.Marionette App for exploring features",
