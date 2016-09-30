@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "author": "",
   "license": "ISC",
-  "description": "Basic Backbone.Marionette App for exploring features",
+  "description": "Frontend for Sonikpass.com launch version",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
