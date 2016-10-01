@@ -9,9 +9,10 @@ $border_color: #D8D8D8;
 $transition_time: 0.75s;
 
 html{
-  background-color: $white; 
+  background-color: red; 
   background: url('../assets/background.png') no-repeat center center fixed;
   background-size: cover
+
 }
 body{
   background-color: transparent;

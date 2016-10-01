@@ -1,13 +1,13 @@
 @import 'reset';
-@import 'mediaqueries';
-@import 'colors';
-@import 'typography';
-@import 'layout';
-@import 'sections';
-@import 'modules';
-@import 'elements';
-@import 'illustrations';
-@import 'animations';
+/*Custom*/
+
+@import 'modules/all';
+
+
+@import 'pages/illustrations';
+@import 'partials/sections';
+
+
 
 @font-face {
 	font-family: 'Maison Neue';
@@ -268,10 +268,6 @@ a {
 
 }
 
-
-@import 'ben';
-
-
 @media all and (max-width: $tablet-width) and (orientation: landscape){
 	.background-title-container {
 		display: none;
@@ -321,5 +317,11 @@ a {
 	}
 
 }
+
+/*@import "hotfixes";
+@import 'ben';*/
+
+/*Print only*/
+@import "print";
 
 
