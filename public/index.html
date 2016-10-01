@@ -1,348 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Sonikpass - Everything Secure. Everything Passwordless.</title>
+<html>
+  <head>
+    <title>Sonikpass App</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="A simple app for Sonikpass ">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="scripts/vendor/bootstrap/dist/css/bootstrap.css">
+    
+    <!-- import sonikpass.com as style base - merge with SASS later on -->
+    <link rel="stylesheet" media="screen" href="css/sonikpass.css" type="text/css" />
+    <!-- main app specific styles -->
+    <link rel="stylesheet" media="screen" href="css/screen.css" type="text/css" />
+    <style type="text/css">
+      #chart_financial_summary{
+        max-height: 700px !important;
+      }
+    </style>
+  </head>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <body>
+    <div class="row">
+      <nav id="header-region"></nav>  
+    </div>
+    
+    <!-- <div id="sidebar-region"></div> -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2" id="center_content"> 
+          <div id="main-region">
+            <!-- content via js   -->
+            <div id="top"></div>
+            <div id="team_list"></div>
+            <div id="faq_list"></div>
+          </div>
+          <div id="cta-region"></div>
+        </div><!-- end col-8 -->
+      </div>
+    </div>
+    
 
-	<meta property="og:title" content="Sonikpass: The Future Of Identity Managament">
-	<meta property="og:site_name" content="site">
-	<meta property="og:url" content="http://www.sonikpass.com/">
-	<meta property="og:description" content="We set out to create an identity management solution that was built for the future and had the most elegant user experience. We came up with something that can be deployed at the most critical government, commercial, and non-profit institutions in the world to solve identity problems we could not even imagine.">
-	<meta property="og:image" content="http://www.sonikpass.com/html/assets/thumb.jpg" />
-	<meta property="og:type" content="website">
-	<meta name="twitter:card" content="summary">
-	<meta name="twitter:site" content="@sonikpass">
-	<meta name="twitter:title" content="Sonikpass: The Future Of Identity Managament">
-	<meta name="twitter:description" content="We set out to create an identity management solution that was built for the future and had the most elegant user experience.">
-	<meta name="twitter:image:src" content="http://www.sonikpass.com/assets/thumb.jpg">
-	<meta name="robots" content="index, follow">
-	<meta name="description" content="We set out to create an identity management solution that was built for the future and had the most elegant user experience." />
-	<link rel="canonical" href="http://www.sonikpass.com/" />
-    <link rel="apple-touch-icon" sizes="57x57" href="http://www.sonikpass.com/assets/icons/apple-touch-icon-57x57-precomposed.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-60x60-precomposed.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-72x72-precomposed.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-76x76-precomposed.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-114x114-precomposed.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-120x120-precomposed.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-144x144-precomposed.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-152x152-precomposed.png">
-    <link rel="icon" type="image/png" href="http://www.sonikpass.com/html/assets/icons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="http://www.sonikpass.com/html/assets/icons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="http://www.sonikpass.com/html/assets/icons/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="http://www.sonikpass.com/html/manifest.json">
-    <meta name="msapplication-TileColor" content="#ce3745">
-    <meta name="msapplication-TileImage" content="http://www.sonikpass.com/html/assets/icons/mstile-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-    <link rel="shortcut icon" href="http://www.sonikpass.com/html/assets/icons/favicon.ico">
+    <script type="text/template" id="team-template">
+      <ul id="team-<%= id %>">
+        <li><img src="<%= image_url %>" alt="<%= name %>"></li>
+        <li><h3><%= name %></h3></li>  
+        <li><p class="copy"><%= about %></p></li>  
+      </ul>    
+    </script>
 
-	<link rel="stylesheet" href="css/style.min.css">
+    <script type="text/template" id="accordion-template">
+      <div>
+        <a class="trigger" data-toggle="collapse" data-target="#answer-<%= id %>">
+          <span class="circle-num-label"><span><%= id %></span></span>
+          <span class="question"><%= question %></span>
+        </a>
+        <div id="answer-<%= id %>" class="collapse answer"><%= answer%></div>
+      </div>
+    </script>
 
-</head>
-<body class="is-loading">
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-45851993-2', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-<div class="global-container">
-	
-	<a href="#intro" class="logo">
-		<div class="logo-icon"></div>
-		<div class="logo-type"></div>
-	</a> <!-- end logo -->
-
-	<div class="hamburger-menu">
-		<div class="hamburger"></div>
-	</div> <!-- end hamburger-menu -->
-
-	<!-- <div class="request"><a href="mailto:sales@sonikpass.com?subject=Get%20Started with Sonikpass">Get Started</a></div> -->
-
-	<ul class="sidebar">
-		<li><a href="#intro" class="sidebar-item"><span class="sidebar-line"></span></a></li>
-		<li><a href="#problem" class="sidebar-item"><span class="sidebar-line"></span></a></li>
-		<li><a href="#solution" class="sidebar-item"><span class="sidebar-line"></span></a></li>
-		<li><a href="#usecases" class="sidebar-item"><span class="sidebar-line"></span></a></li>
-		<li><a href="#partner" class="sidebar-item"><span class="sidebar-line"></span></a></li>
-	</ul>
-
-	<div class="meter">0.00001dB</div>
-	<div class="copyright js-fadeIn">— © Copyright <span class="date"></span> by Sonikpass. All rights reserved. <a href="privacypolicy.html" target="_blank">| Privacy Policy </a><a href="https://www.twitter.com/sonikpass">| <img style="margin-bottom:-3px" src="http://kattwilliams.com/_v2_102315/wp-content/uploads/2015/10/Twitter_logo_grey.png" alt="Twitter" width="16" height="13"></a></div>
-
-	<div class="content-container">
-		<div id="intro">
-			<div class="inner-container">
-				<div class="intro-message">
-					<div class="col-8 col-center">
-						<h1 class="headline-big center js-fadeIn">Secure Your World<br>Without Passwords</h1>
-					</div>
-					<div class="col-4 col-center">
-						<!-- <div class="type-divider js-fadeIn"></div> -->
-						<p class="copy center js-fadeIn">Login with sound, not passwords.<br>
-						</p>
-						<p>
-							<form>
-								<input type="email" name="myEmailField" placeholder="Enter Your Business Email...">
-								<a class="btn-prim js-fadeIn "><span class="btn-text">TRY LOGGING IN WITH SOUND</span></a>
-							</form>
-						</p>
-					</div>
-				</div>
-			</div>
-			<canvas id="canvas" class="logo-illustration"></canvas>
-		</div> <!-- end intro -->
-		<div id="problem">
-			<div class="inner-container">
-				<div class="problem-message">
-					<div class="col-10">
-						<div class="section-num dark">
-						<span class="section-num-label">002</span>
-						<svg viewBox="0 0 50 50">
-							<defs>
-							<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-								<stop offset="0%"   stop-color="#ce3745"/>
-								<stop offset="100%" stop-color="#4aa3da"/>
-							</linearGradient>
-							</defs>
-						  
-							<circle class='circle' cx='25' cy='25' r='24' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='200'></circle>
-						</svg>
-						</div>
-						<h2 class="headline dark js-fadeIn">Sonikpass delivers the highest level of security using true multifactor authentication, without using passwords.</h2>
-						<div class="col-3">
-							<p class="copy js-fadeIn">So we built Sonikpass, a product that protects you and your organization’s most valuable work. It secures multiple levels of access across devices and domains, and we made it incredibly easy to deploy and use.</p>
-							<a class="btn-prim js-fadeIn" href="mailto:sales@sonikpass.com?subject=Get%20Started with Sonikpass"><span class="btn-text">Get Started</span></a>
-						</div>
-					</div>
-				</div>
-			</div> <!-- end inner-container -->
-		</div>
-		<div id="solution">
-			<div class="inner-container">
-				<div class="col-10">
-					<div class="section-num">
-						<span class="section-num-label">003</span>
-						<svg viewBox="0 0 50 50">
-							<defs>
-							<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-								<stop offset="0%"   stop-color="#ce3745"/>
-								<stop offset="100%" stop-color="#4aa3da"/>
-							</linearGradient>
-							</defs>
-						  
-							<circle class='circle' cx='25' cy='25' r='24' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='200'></circle>
-						</svg>
-					</div>
-					<h2 class="headline js-fadeIn">Everything secure. <br> Everything passwordless.</h2>
-					<p class="col-3 copy js-fadeIn">We are creating an ecosystem where your employees do not have to rely on passwords to safeguard critical data and where your IT department can focus on driving your organization forward.</p>
-				</div>
-			</div>
-
-			<div id="solution-illustration">
-
-				<ul class="waves">
-					<li class="wave"></li>
-					<li class="wave"></li>
-					<li class="wave"></li>
-					<li class="wave"></li>
-					<li class="wave"></li>
-				</ul> <!-- end of waves -->
-				
-				<div class="s_laptop">
-					<div class="s_laptop-screen">
-						<div class="circle-container">
-							<svg viewBox="0 0 96 96">
-								<defs>
-								<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-									<stop offset="0%"   stop-color="#ce3745"/>
-									<stop offset="100%" stop-color="#4aa3da"/>
-								</linearGradient>
-								</defs>
-							  
-								<circle class='circle-big' cx='48' cy='48' r='47' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='302' stroke-dashoffset="302"></circle>
-							</svg>
-							<div class="icon icon-lock"></div>
-							<div class="icon icon-unlocked"></div>
-						</div>
-					</div>
-				</div>
-				<div class="s_phone">
-					<div class="s_phone-screen">
-						<div class="circle-container">
-							<svg viewBox="0 0 96 96">
-								<defs>
-								<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-									<stop offset="0%"   stop-color="#ce3745"/>
-									<stop offset="100%" stop-color="#4aa3da"/>
-								</linearGradient>
-								</defs>
-							  
-								<circle class='circle' cx='48' cy='48' r='47' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='0'></circle>
-							</svg>
-							<!-- <div class="square-container"></div> -->
-							<div class="icon icon-sonikpass"></div>
-						</div>
-					</div>
-				</div>
-				<div class="s_watch">
-					<div class="s_watch-screen">
-						<div class="circle-container">
-							<svg viewBox="0 0 96 96">
-								<defs>
-								<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-									<stop offset="0%"   stop-color="#ce3745"/>
-									<stop offset="100%" stop-color="#4aa3da"/>
-								</linearGradient>
-								</defs>
-							  
-								<circle class='circle' cx='48' cy='48' r='47' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='400'></circle>
-							</svg>
-							<!-- <div class="square-container"></div> -->
-							<div class="icon icon-sonikpass"></div>
-						</div>
-					</div>
-				</div>
-				<ul class="s_server">
-					<li class="s_server-light"></li>
-				</ul>
-
-
-
-			</div> <!-- end solution illustration -->
-
-				<div class="inner-container">
-
-					<div class="solution-breakdown">
-						<div class="col-3">
-							<div class="fact js-fadeIn">
-								<div class="fact-icon icon-wave"></div>
-								<h3 class="subheadline">Proximity</h3>
-								<p class="copy">It enforces physical proximity, through the use of audio signatures that inherently requires you to be close to the access point.</p>
-							</div>
-						</div>
-
-						<div class="col-3">
-							<div class="fact js-fadeIn">
-								<div class="fact-icon icon-time"></div>
-								<h3 class="subheadline">Time Sensitive</h3>
-								<p class="copy">Authentication data can only be used once and for a specific and limited amount of time.</p>
-							</div>
-						</div>
-
-						<div class="col-3">
-							<div class="fact js-fadeIn">
-								<div class="fact-icon icon-check"></div>
-								<h3 class="subheadline">Enterprise Ready</h3>
-								<p class="copy">Built so that it can be integrated with most existing IT infrastructure.</p>
-							</div>
-						</div>
-					</div>
-
-			</div><!-- end inner-container -->
-		</div> <!-- end solution -->
-
-		<div id="usecases">
-			<div class="inner-container">
-				<div class="col-3 col-left">
-					<div class="section-num">
-						<span class="section-num-label">004</span>
-						<svg viewBox="0 0 50 50">
-							<defs>
-							<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-								<stop offset="0%"   stop-color="#ce3745"/>
-								<stop offset="100%" stop-color="#4aa3da"/>
-							</linearGradient>
-							</defs>
-						  
-							<circle class='circle' cx='25' cy='25' r='24' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='200'></circle>
-						</svg>
-					</div>	
-					<h1 class="headline js-fadeIn">One Solution, Global Protection</h2>
-					<p class="copy col-8 js-fadeIn">These are some of the places it can be used right away</p>
-					<ul class="case-illustration-container js-fadeIn-center"></ul> <!-- end case-ullstrations -->
-					<ul class="case-nav js-fadeIn">
-						<li class="case-nav-item case-nav-left"></li>
-						<li class="case-nav-item case-nav-right" ></li>
-					</ul>
-					<ul class="case-tabs js-fadeIn"></ul>
-				</div>
-				<div class="col-2 col-right js-fadeIn">
-					<p class="copy case-copy stripe"></p>
-				</div>
-			</div> <!-- end inner-container -->
-		</div> <!-- end usecases -->
-
-		<div id="partner">
-			<div class="inner-container">
-				<div class="col-6 col-center col-right">
-					<div class="mail-illustration js-fadeIn"></div>
-				</div>
-				<div class="col-4 col-center ">
-					<div class="section-num">
-						<span class="section-num-label">005</span>
-						<svg viewBox="0 0 50 50">
-							<defs>
-							<linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-								<stop offset="0%"   stop-color="#ce3745"/>
-								<stop offset="100%" stop-color="#4aa3da"/>
-							</linearGradient>
-							</defs>
-						  
-							<circle class='circle' cx='25' cy='25' r='24' fill='transparent' stroke='url(#linear)' stroke-width='1' stroke-dasharray='200'></circle>
-						</svg>
-					</div>
-					<h1 class="headline js-fadeIn">Get Sonikpass</h1>
-					<p class="copy js-fadeIn">Secure your enterprise with one solution that works everywhere and  easily integrates with your existing infrastructure</p>
-					<a href="mailto:sales@sonikpass.com?subject=Get%20Started with Sonikpass" class="btn-prim js-fadeIn "><span class="btn-text">Get Started</span></a>
-					<a href="faq.html" target="_blank" class="btn-prim outline js-fadeIn">Learn More</a>
-				</div>
-			</div>
-		</div> <!-- end partner -->
-
-		<div class="footer"></div> <!-- end footer -->
-
-	</div> <!-- end content-container -->
-
-	<div class="background-title-container" onselectstart="return false">
-		<div class="upper-container">
-			<div class="upper-type"></div>
-		</div>
-		<div class="lower-container">
-			<div class="lower-type"></div>
-		</div>
-	</div>
-
-	<div class="divider"></div>
-	<div class="global-background"></div>
-	<div class="menu-container">
-		<ul class="menu center">
-			<li class="menu-item"><a href="#intro">Home</a></li>
-			<li class="menu-item"><a href="faq.html" target="_blank">Frequently Asked Questions</li>
-			<li class="menu-item"><a href="mailto:info@example.com?subject=Partership%20Opportunities">Partner With Us</a></li>
-			<li class="menu-item copy col-5"  style="color:white; font-size: 100%; margin-top:-20px">At Sonikpass, we strongly believe that the next generation of technology must have security built from the very start. We’d love to hear from you if you are interested in partnering with us.</li>
-			<li class="menu-item menu-line"></li>
-			<li class="menu-item">
-				<ul class="menu-ctas">
-					<li class="menu-cta"><a href="mailto:hello@sonikpass.com?subject=Hello">Contact Us</a></li>
-					<li class="menu-cta"><a href="https://www.twitter.com/sonikpass">Twitter</a></li>
-					<!--<li class="menu-cta"><a href="mailto:supporto@sonikpass.com?subject=Hello">Support</a></li>-->
-				</ul>
-			</li>
-		</ul>
-		<div class="address js-fadeIn">Sonikpass - Los Angeles • San Francisco • (650) 567-6645, <a href="mailto:hello@sonikpass.com?subject=Hello">hello@sonikpass.com</a></div>
-	</div>
-
-</div> <!-- end global-container -->
-
-<script src="js/vendor/bundle.js"></script>
-<script src="js/main.min.js"></script>
-
-</body>
+    <div id="footer-region" class="copyright">
+      <p>— &copy; <span class="date">2016</span> by Sonikpass. All rights reserved. <a href="https://sonikpass.com/privacypolicy.html" target="_blank">| Privacy Policy</a> <a href="https://www.twitter.com/sonikpass">| <img alt="Twitter" height="13" src="assets/Twitter_logo_grey.png" style="margin-bottom:-3px" width="16"></a></p>  
+    </div>
+    <script data-main="scripts/main.js" src="scripts/vendor/requirejs/require.js"></script>
+  </body>
 </html>

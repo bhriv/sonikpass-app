@@ -4,8 +4,8 @@ module.exports = function(grunt) {
   // requirejs compile options
   var compileOptions = {
 
-      mainConfigFile: 'app/scripts/main.js',
-      baseUrl: 'app/scripts',
+      mainConfigFile: 'src/scripts/main.js',
+      baseUrl: 'src/scripts',
       include: ['main'],
       out: 'dist/main.min.js',
       removeCombined: false,
@@ -23,12 +23,12 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     // Add global variables for asset locations
     dirs: {            
-        sass_folder: 'app/sass',
-        css_folder: 'app/css',
-        js_folder: './app/scripts',
-        images_folder: './app/images',
+        sass_folder: 'src/sass',
+        css_folder: 'src/css',
+        js_folder: './src/scripts',
+        images_folder: './src/images',
         // files for deploying
-        production_build_folder: './app/production_build'
+        production_build_folder: './src/production_build'
         // Usage Example: 
             // dest: '<%= dirs.sass_folder %>/assets/sass' 
     },
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
             },
             files: {
               //compiling base.less into styles.css
-              "./app/styles/styles.css":"./app/styles/base.less"
+              "./src/styles/styles.css":"./src/styles/base.less"
             }
         },
         production: {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
           },
           files: {
             //compiling base.less into main.min.css
-            "./dist/main.min.css": "./app/styles/base.less"
+            "./dist/main.min.css": "./src/styles/base.less"
           }
         }
     },
@@ -114,7 +114,7 @@ module.exports = function(grunt) {
         },
         less: {
             // Watch all .less files from the styles directory)
-            files: ['app/styles/*.less'],
+            files: ['src/styles/*.less'],
             tasks: ['less'],
             // Reloads the browser
             options: {
@@ -123,7 +123,7 @@ module.exports = function(grunt) {
         },
         requirejs: {
             // Watch only main.js so that we do not constantly recompile the .js files
-            files: [ 'app/scripts/main.js' ],
+            files: [ 'src/scripts/main.js' ],
             tasks: [ 'requirejs' ],
             // Reloads the browser
             options: {
