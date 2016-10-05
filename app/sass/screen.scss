@@ -8,9 +8,14 @@
 /* ----------------------  
 Import Resets
 ---------------------- */ 
-/* 
-@import "../../assets/vendor/bootstrap/bootstrap.css"; 
-@import "../../assets/vendor/bootstrap/bootstrap-responsive.css";
+ 
+/*Bootstrap includes Normalize reset*/
+
+@import "../scripts/vendor/bootstrap/dist/css/bootstrap.css";
+
+/*Vendors*/
+
+@import "../scripts/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.css";
 
 
 /*Compass*/
@@ -24,12 +29,9 @@ Import Resets
 /*@import url(https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900);*/
 
 /*Custom*/
-/*@import "mixins";
+@import "mixins";
 @import "layout";
-@import "hotfixes";*/
+@import "hotfixes";
 
 /*Print only*/
-/*@import "print";*/
-
- /*USE NEW SCSS BASE FILE*/
-@import "style";
+@import "print";

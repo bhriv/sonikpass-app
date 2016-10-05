@@ -4,10 +4,10 @@ module.exports = function(grunt) {
   // requirejs compile options
   var compileOptions = {
 
-      mainConfigFile: 'src/scripts/main.js',
-      baseUrl: 'src/scripts',
+      mainConfigFile: 'public/scripts/main.js',
+      baseUrl: 'public/scripts',
       include: ['main'],
-      out: 'dist/main.min.js',
+      out: 'public/scripts/main.min.js',
       removeCombined: false,
       findNestedDependencies: true,
 
@@ -23,12 +23,12 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     // Add global variables for asset locations
     dirs: {            
-        sass_folder: 'src/sass',
-        css_folder: 'src/css',
-        js_folder: './src/scripts',
-        images_folder: './src/images',
+        sass_folder: 'src/scss',
+        css_folder: 'public/css',
+        js_folder: './public/scripts',
+        images_folder: './public/images',
         // files for deploying
-        production_build_folder: './src/production_build'
+        production_build_folder: './public/production_build'
         // Usage Example: 
             // dest: '<%= dirs.sass_folder %>/assets/sass' 
     },
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
             },
             files: {
               //compiling base.less into styles.css
-              "./src/styles/styles.css":"./src/styles/base.less"
+              "./public/styles/styles.css":"./public/styles/base.less"
             }
         },
         production: {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
           },
           files: {
             //compiling base.less into main.min.css
-            "./dist/main.min.css": "./src/styles/base.less"
+            "./dist/main.min.css": "./public/styles/base.less"
           }
         }
     },
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                 require: 'susy'
             },
             files: {
-                '<%= dirs.css_folder %>/screen.css': '<%= dirs.sass_folder %>/screen.scss'
+                '<%= dirs.css_folder %>/screen.min.css': '<%= dirs.sass_folder %>/screen.scss'
                 // 'css/build/mixins.css': 'styles/mixins.sass'
             }
         } 
@@ -114,7 +114,7 @@ module.exports = function(grunt) {
         },
         less: {
             // Watch all .less files from the styles directory)
-            files: ['src/styles/*.less'],
+            files: ['public/styles/*.less'],
             tasks: ['less'],
             // Reloads the browser
             options: {
@@ -123,7 +123,7 @@ module.exports = function(grunt) {
         },
         requirejs: {
             // Watch only main.js so that we do not constantly recompile the .js files
-            files: [ 'src/scripts/main.js' ],
+            files: [ 'public/scripts/main.js' ],
             tasks: [ 'requirejs' ],
             // Reloads the browser
             options: {

@@ -14,7 +14,12 @@ require.config({
     'hbs': 'vendor/hbs/hbs',
     'text': 'vendor/text/text',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
+    'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',
+    'moment': 'vendor/moment/moment',
+    'consoleclass': 'vendor/consoleclass/consoleclass',
+    'useful': 'useful',
+    'urlParams': 'urlParams',
   },
   shim: {
     underscore: {
@@ -28,10 +33,38 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
-    chartjst: {
-      deps: ['jquery'],
-      exports: 'Chartjs'
-    }
+    // bootstrap: {
+    //   deps: ['jquery'],
+    //   exports: 'bootstrap'
+    // },
+    // datepicker: {
+    //   deps: ['jquery','bootstrap'],
+    //   exports: 'datepicker'
+    // },
+    // chartjs: {
+    //   deps: ['jquery'],
+    //   exports: 'Chartjs'
+    // },
+    // moment: {
+    //   deps: ['jquery'],
+    //   exports: 'moment'
+    // },
+    // consoleclass: {
+    //   deps: ['jquery'],
+    //   exports: 'consoleclass'
+    // },
+    // useful: {
+    //   deps: ['jquery','moment'],
+    //   exports: 'useful'
+    // },
+    // urlParams: {
+    //   // deps: ['jquery','moment'],
+    //   exports: 'urlParams'
+    // },
+    ui: {
+      deps: ['bootstrap','datepicker','moment','chartjs','consoleclass','useful','urlParams'],
+      exports: 'ui'
+    },
   },
   hbs: { // optional
       helpers: true,            // default: true
