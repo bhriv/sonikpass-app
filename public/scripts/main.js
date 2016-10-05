@@ -33,38 +33,38 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
-    // bootstrap: {
-    //   deps: ['jquery'],
-    //   exports: 'bootstrap'
-    // },
-    // datepicker: {
-    //   deps: ['jquery','bootstrap'],
-    //   exports: 'datepicker'
-    // },
-    // chartjs: {
-    //   deps: ['jquery'],
-    //   exports: 'Chartjs'
-    // },
-    // moment: {
-    //   deps: ['jquery'],
-    //   exports: 'moment'
-    // },
-    // consoleclass: {
-    //   deps: ['jquery'],
-    //   exports: 'consoleclass'
-    // },
-    // useful: {
-    //   deps: ['jquery','moment'],
-    //   exports: 'useful'
-    // },
-    // urlParams: {
-    //   // deps: ['jquery','moment'],
-    //   exports: 'urlParams'
-    // },
-    ui: {
-      deps: ['bootstrap','datepicker','moment','chartjs','consoleclass','useful','urlParams'],
-      exports: 'ui'
+    bootstrap: {
+      deps: ['jquery'],
+      exports: 'bootstrap'
     },
+    datepicker: {
+      deps: ['jquery','bootstrap'],
+      exports: 'datepicker'
+    },
+    chartjs: {
+      deps: ['jquery'],
+      exports: 'Chartjs'
+    },
+    moment: {
+      deps: ['jquery'],
+      exports: 'moment'
+    },
+    consoleclass: {
+      deps: ['jquery'],
+      exports: 'consoleclass'
+    },
+    useful: {
+      deps: ['jquery','moment'],
+      exports: 'useful'
+    },
+    urlParams: {
+      // deps: ['jquery','moment'],
+      exports: 'urlParams'
+    },
+    // ui: {
+    //   deps: ['bootstrap','datepicker','moment','chartjs','consoleclass','useful','urlParams'],
+    //   exports: 'ui'
+    // },
   },
   hbs: { // optional
       helpers: true,            // default: true

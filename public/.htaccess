@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile /www/htdocs/w007e74a/sonikpass/.htpasswd
-Require valid-user

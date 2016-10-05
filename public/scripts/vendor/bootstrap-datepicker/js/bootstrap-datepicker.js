@@ -19,7 +19,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================= */
-console.log('bootstrap-datepicker loaded');
+
 (function(factory){
     if (typeof define === "function" && define.amd) {
         define(["jquery"], factory);

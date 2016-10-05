@@ -5,13 +5,13 @@ define([
   // 'backbone',
   'marionette',
   // 'ui',
-  // 'vendor/consoleclass/consoleclass',
-  // 'bootstrap',
-  // 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
-  // 'moment',
-  // 'useful',
-  // 'urlParams',
-  // 'chartjs',
+  'consoleclass',
+  'bootstrap',
+  'datepicker',
+  'moment',
+  'useful',
+  'urlParams',
+  'chartjs',
   'text!../templates/navigation.html',
   'text!../templates/layout.html',
   'text!../templates/cta.html',
@@ -28,7 +28,7 @@ define([
   // 'views/faqs',
   // 'text!../templates/growth.html',
 ], 
-function(Marionette,ui,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
+function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,chartjs,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
   console.log('doing appjs');
   cc('consoleclass working');
   // var faqs = require('views/faqs');  
