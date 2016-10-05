@@ -28,12 +28,12 @@ define([
   // 'views/faqs',
   // 'text!../templates/growth.html',
 ], 
-function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,chartjs,navigation,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
+function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,chartjs,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
   console.log('doing appjs');
   cc('consoleclass working','success');
   // var faqs = require('views/faqs');  
 
-  var navigation = require('text!../templates/navigation.html'); 
+  // var navigation = require('text!../templates/navigation.html'); 
   var layout = require('text!../templates/layout.html');  
   var cta_content = require('text!../templates/cta.html');  
   var footer_content = require('text!../templates/footer.html'); 
@@ -801,7 +801,7 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
 
   App.HeaderView = Marionette.LayoutView.extend({
       tagName: 'ul',
-      template: navigation
+      template: require('text!../templates/navigation.html')
   });
 
   App.CtaView = Marionette.LayoutView.extend({

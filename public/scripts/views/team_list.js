@@ -1,13 +1,12 @@
 //Filename: views/header.js
 define([
-  'jquery',
-  'underscore',
-  'backbone',
+  // 'jquery',
+  // 'underscore',
+  // 'backbone',
   'marionette',
-  'bootstrap',
   // 'text!../../templates/team.html',
 ], 
-function($, _, Backbone, Marionette,Bootstrap,team_content){
+function(Marionette){
   console.log('views/team_list loaded');
 
   // var team_content = require('text!../../templates/team.html'); 
