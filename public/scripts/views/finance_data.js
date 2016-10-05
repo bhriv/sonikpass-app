@@ -30561,4 +30561,4 @@ var all_transaction_data = [
 ];
 
 // console.log('all_transaction_data\n',all_transaction_data)
-cc('views/finance_data loaded');
+console.log('views/finance_data loaded');
