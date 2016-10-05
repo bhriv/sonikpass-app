@@ -1,0 +1,21 @@
+[
+	{
+		"title" : "Online access",
+		"class": "internet",
+		"copy" : "No more remembering usernames and passwords for email access. No more identity theft",
+		"image" : "../assets/internet.png"
+	},
+	{
+		"title": "Financial Institutions",
+		"class": "bank",
+		"copy" : "No need for an ATM card, and no need to enter a pin at the ATM. Customers and employees will be free from breaches stemming from phishing.",
+		"image" : "../assets/pad.png"
+	},
+	{
+		"title" : "Piracy",
+		"class": "mask",
+		"copy" : "Protect your digital content. Ensure only licensed software is used everywhere.",
+		"image" : "../assets/mask.png"
+	}
+
+]

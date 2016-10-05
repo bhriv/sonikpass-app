@@ -1,0 +1,33 @@
+[
+	{
+		"name" : "Carey D’Souza" ,
+		"title": "CEO, co-founder",
+		"bio" : "Carey drives the company’s vision, strategy, growth and product as it delivers a unique way to secure identity and data. Under Carey’s leadership, Sonikpass is leading the way in innovating the cybersecurity space. Carey has 20+ experience in the Technology and Design space and has held leadership positions at Electronic Arts and Nexon.",
+		"image": ""
+	},
+	{
+		"name" : "Jeshua Nanthakumar" ,
+		"title": "Design, co-founder",
+		"bio" : "Jesh’s deep understanding of design and interfaces has defined the core User experience of Sonikpass. Jesh brings over - years of design experience and is dedicated to creating the best user experience possible for Sonikpass customers. Jesh has been a key member of the design groups at Electronic Arts, Zynga and Mercedes Benz Research.",
+		"image": ""
+	},
+	{
+		"name" : "Jason Mullings" ,
+		"title": "Engineer, co-founder",
+		"bio" : "Jason’s experience in scientific computing and video game development over the last 20 years have given him the uncanny ability venture into the unknown and solve the most complex problems in a simple and elegant manner. Jason has a PhD in Physics from Heriot-Watts University, UK.",
+		"image": "../assets/team/jason_mullings_cropped.jpg"
+	},
+	{
+		"name" : "John Carter" ,
+		"title": "Scientist",
+		"bio" : "John possesses a unique and diverse array of skills, knowledge and experience as a Data Scientist, Mechanical Engineer, Kinesiologist and Software Engineer. Having earned advanced degrees in Mechanical Engineering and Kinesiology, his expertise focuses on fluid mechanics, data analysis, and algorithm and model development. At Sonikpass, he is responsible for system architectural design, security and machine learning.",
+		"image": ""
+	},
+		{
+		"name" : "John Peach" ,
+		"title": "Engineer",
+		"bio" : "John Carter leads R&D and scientific computing efforts at Sonikpass. Our cutting edge technologies first take shape in John’s labs, where he take them from an idea to a prototype.Besides being a part of the core team at Sonikpass, John is a Chair Biomaterials, Director Instrumentation Program and holds various academic positions at  at SUNY - Downstate, Brooklyn, NY.",
+		"image": "../assets/team/john_peach_cropped.jpg"
+	}
+
+]

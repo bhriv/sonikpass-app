@@ -1,0 +1,35 @@
+
+/*------------------------------------*\
+-------- Components
+\*------------------------------------*/
+/* line 1, ../scss/3-components/global/_site-header.scss */
+.site-header-wrap {
+  margin-bottom: 60px;
+  padding: 45px 0px 40px;
+  position: relative;
+  border-bottom: 1px solid #000;
+  background: #1b1b1b url("../img/dark-bg.png");
+}
+
+/* line 19, ../scss/3-components/global/_site-header.scss */
+.site-header {
+  width: 1000px;
+  margin: 0px auto;
+  text-align: center;
+}
+
+
+/*------------------------------------*\
+-------- General Styles
+\*------------------------------------*/
+/* line 36, ../scss/main.scss */
+html, body {
+  height: 100%;
+  background: #fff;
+}
+
+/* line 41, ../scss/main.scss */
+.main {
+  width: 1000px;
+  margin: 0px auto;
+}

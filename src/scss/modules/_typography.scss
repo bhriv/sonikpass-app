@@ -1,0 +1,90 @@
+// #### Typography ####
+
+$mono: 'PT Mono', Times, serif;
+
+a {
+	text-decoration: none;
+}
+
+.center {
+	text-align: center;
+}
+
+.dark {
+	color: $font-light;
+}
+
+.mid {
+	color: $font-mid-grey;
+}
+
+.headline-big {
+	font-size: 6.286em;
+	font-weight: 500;
+	line-height: 1.091em;
+	margin: 0 0 24px 0;
+	letter-spacing: -0.02em;
+	color: red;
+}
+
+.headline {
+	font-size: 3.429em;
+	font-weight: 500;
+	line-height: 1.333em;
+	margin: 0 0 32px 0;
+}
+
+.subheadline {
+	font-size: 1.714em;
+	margin-bottom: 24px;
+}
+
+.copy {
+	line-height: 2em;
+	color: $font-grey;
+	margin: 0 0 40px 0;
+}
+
+.copy-big {
+	font-size: 3em;
+	font-weight: 300;
+	line-height: 1.4em;
+	margin-bottom: 24px;
+}
+
+.caption {
+	font-size: 0.786em;
+	font-weight: 300;
+	text-transform: uppercase;
+	letter-spacing: 0.24em;
+	margin: 0 0 12px 0;
+	//color: $border-grey;
+}
+
+
+@media all and (min-width: $mobile-width) and (max-width: $notebook-width) {
+	.headline-big {
+		font-size: 4em;
+	}
+}
+
+
+@media all and (max-width: $mobile-width) {
+
+	.headline-big {
+		font-size: 2em;
+		line-height: 1.2em;
+	}
+
+	.headline {
+		font-size: 1.5em;
+		line-height: 1.5em;
+		margin-bottom: 24px;
+	}
+
+	.subheadline {
+		font-size: 1.429em;
+		margin-bottom: 24px;
+	}
+
+}

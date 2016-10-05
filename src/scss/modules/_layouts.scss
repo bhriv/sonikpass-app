@@ -1,0 +1,226 @@
+$measure: 30px;
+$red: #ce3745;
+$blue: #4aa3da;
+$black: #252525;
+$white: #FFFFFF;
+$smoke: #f7f7f7;
+$border_color: #D8D8D8;
+
+$transition_time: 0.75s;
+
+html{
+  background-color: red; 
+  background: url('../assets/background.png') no-repeat center center fixed;
+  background-size: cover
+
+}
+body{
+  background-color: transparent;
+}
+#main-region{
+  margin-bottom: $measure;
+  text-align: center;
+}
+#cta-region{
+  @extend #main-region;
+  margin-top: $measure;
+}
+
+.js-fadeIn,
+.section-num-label{
+  opacity: 1;
+}
+
+#intro{
+  text-align: center;
+}
+#top{
+  margin-bottom: $measure*2;
+}
+
+.inner-container {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  background-size: cover;
+  overflow: inherit;
+}
+.intro-message{
+  padding-top: $measure;
+}
+button{
+  color: $black;
+  border: 1px solid $border_color;
+  cursor: pointer;
+  border-radius: $measure;
+  padding: $measure/2.1 $measure;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  background-color: transparent;
+  font-size: 0.83em;
+  &:hover{
+    border-color: $black;
+    transition : border $transition_time ease-out;
+  }
+}
+
+.button-gradient {
+  border-radius: $measure;
+  background-size: 100%;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  @include background-image-gradient(right, $red, $blue, $red);
+  &:before {
+    border-radius: inherit;
+    content: '';    
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0; 
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -1;
+    transition: opacity $transition_time;
+    @include background-image-gradient(right, $blue, $red, $blue);
+  }
+  &:hover {
+    &:before {
+      opacity: 1;
+    }
+  }
+  button{
+    border: none;   
+    color: $white;
+  }
+}
+
+.circle-num-label{
+  border-radius: 50%;
+  margin-right: $measure/2;
+  border: 0.005em solid transparent;
+  display: inline-flex;
+  @include background-image-gradient(right, $red, $blue, $red);
+  &:hover{
+    cursor: pointer;
+    @include background-image-gradient(right, $blue, $red, $blue);
+  }
+  .viewed{
+    @include background-image-gradient(right, $blue, $red, $blue); 
+  }
+  a{
+    text-decoration: none;
+    &:hover{
+      text-decoration: none;
+    }
+  }
+  span{
+    color: $black;
+    border-radius: 50%;
+    background-color: $white;
+    min-width: $measure*1.1;
+    min-height: $measure*1.1;
+    line-height: $measure*1.1;
+    text-align: center;
+  }
+}
+
+nav{
+  ul{
+    li{
+      list-style: none;
+      display: inline;
+      float: right;
+      margin: $measure;
+      &:first-child{
+        float: left;
+        width: inherit;
+        margin: 11px $measure/2;
+        @media (max-width: 600px){
+          max-width: 100%;  
+          float: none;
+        }
+      }
+    }
+  }
+}
+
+#main_logo{
+  display: block;
+  width: 171px;
+  height: 42px;
+  text-indent: -99999px;
+  @include background-image-retina(logo, png, 171px, 42px);
+}
+.accordion{
+  div{
+    margin: $measure 0;
+  }
+}
+a[aria-expanded="true"]{
+  /*font-weight: 600;*/
+  .circle-num-label span{
+    background-color: transparent;
+    color: $white;
+  }
+}
+a.trigger{
+  &:hover{
+    cursor: pointer;
+    text-decoration: none;
+  }
+}
+
+#faq_list{
+  p{
+    margin: $measure 0;
+  }
+  .answer{
+    padding: $measure/2 0;
+    margin: 0 auto;
+    @media (max-width: 1448px) and (min-width: 780px){
+      max-width: 50%;  
+    }
+    
+  }
+}
+
+#team_list{
+  text-align: center;
+  img{
+    max-width: 140px;
+    border-radius: 50%;
+    margin-bottom: $measure;
+  }
+}
+
+h3{
+  margin-bottom: 1em;
+}
+.headline-big{
+  line-height: initial;
+  margin: 0;
+}
+
+/*Page Specific Styles*/
+body.view-team{
+  nav ul li:nth-child(4){
+    text-decoration: underline;
+  }
+}
+
+body.view-faq{
+  nav ul li:nth-child(3){
+    text-decoration: underline;
+  }
+}
+
+body.view-about{
+  nav ul li:nth-child(2){
+    text-decoration: underline;
+  }
+}

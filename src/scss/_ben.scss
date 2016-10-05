@@ -1,0 +1,180 @@
+// Ben
+
+/* #snippets */
+
+$measure: 30px;
+$red: #ce3745;
+$blue: #4aa3da;
+$black: #252525;
+$white: #FFFFFF;
+$smoke: #f7f7f7;
+$border_color: #D8D8D8;
+
+$transition_time: 0.75s;
+
+
+@mixin background-image-retina($file, $type, $width, $height) {
+  background-image: url('../assets/' + $file + '.' + $type);
+  background-repeat: no-repeat;
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (-moz-min-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-device-pixel-ratio: 2),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx){
+    & {
+      background-image: url('../assets/' + $file + '@2x.' + $type);
+      -webkit-background-size: $width $height;
+      -moz-background-size: $width $height;
+      -o-background-size: $width $height;
+      background-size: $width $height;
+    }
+  }
+}
+ 
+@mixin background-image-gradient($direction, $start_color, $middle_color, $stop_color){
+  background-image: linear-gradient(to $direction, $start_color 0%, $middle_color 100%, $stop_color 0%);
+}
+
+
+// LAYOUT
+
+section{
+  height: 600px; /* Or whatever */
+ /* We first create a flex layout context */
+  display: flex;
+
+  /* Then we define the flow direction and if we allow the items to wrap 
+   * Remember this is the same as:
+   * flex-direction: row;
+   * flex-wrap: wrap;
+   */
+  flex-flow: row wrap;
+  
+  /* Then we define how is distributed the remaining space */
+  justify-content: space-around;
+
+  div{
+    width: 500px;  /* Or whatever */
+    height: 500px; /* Or whatever */
+    margin: auto;  /* Magic! */
+    border: 1px solid red;
+  }
+}
+
+@mixin transparent-btn{
+  color: $black;
+  border: 1px solid $border_color;
+  cursor: pointer;
+  border-radius: $measure;
+  padding: $measure/2.1 $measure;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  background-color: transparent;
+  font-size: 0.83em;
+  &:hover{
+    border-color: $black;
+    transition : border $transition_time ease-out;
+  }
+}
+
+@mixin gradient-btn {
+  @include transparent-btn
+  color: white;
+  background-size: 100%;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  @include background-image-gradient(right, $red, $blue, $red);
+  &:before {
+    @include gradient-btn-fade
+  }
+  &:hover {
+    border-color: inherit;
+    &:before {
+      opacity: 1;
+    }
+  }
+}
+
+@mixin gradient-btn-fade{
+  border-radius: inherit;
+  content: '';    
+  display: block;
+  height: 100%;
+  position: absolute;
+  top: 0; 
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  z-index: -1;
+  transition: opacity $transition_time;
+  @include background-image-gradient(right, $blue, $red, $blue);
+} 
+
+
+// INPUT STYLES
+
+@mixin placeholder{
+  \::-webkit-input-placeholder{
+    @content
+  }
+  \:-moz-placeholder{
+    @content
+  }
+  \::-moz-placeholder{
+    @content
+  }
+  \:-ms-input-placeholder{
+    @content
+  }
+}
+
+@mixin clear-input-background{
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  -moz-box-shadow: 0 0 0px 1000px white inset;
+  box-shadow: 0 0 0px 1000px white inset;
+}
+  
+
+
+input[type="submit"],
+button{
+  @include transparent-btn
+}
+
+.gradient-btn{
+  @include gradient-btn
+}
+
+
+.circle-num-label{
+  border-radius: 50%;
+  margin-right: $measure/2;
+  border: 0.005em solid transparent;
+  display: inline-flex;
+  @include background-image-gradient(right, $red, $blue, $red);
+  &:hover{
+    cursor: pointer;
+    @include background-image-gradient(right, $blue, $red, $blue);
+  }
+  .viewed{
+    @include background-image-gradient(right, $blue, $red, $blue); 
+  }
+  a{
+    text-decoration: none;
+    &:hover{
+      text-decoration: none;
+    }
+  }
+  span{
+    color: $black;
+    border-radius: 50%;
+    background-color: $white;
+    min-width: $measure*1.1;
+    min-height: $measure*1.1;
+    line-height: $measure*1.1;
+    text-align: center;
+  }
+}

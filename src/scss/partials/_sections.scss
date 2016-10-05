@@ -1,0 +1,98 @@
+// Sections
+
+// Intro Section
+#intro {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: relative;
+	background-size: cover;
+	overflow: hidden;
+}
+
+
+.intro-message {
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: flex;
+	flex-flow: column;
+	transform: translate(-50%, -50%);
+	padding-top: 48px;
+}
+
+#solution, #usecases, #about, #partner, #problem {
+	width: 100%;
+	display: block;
+	// padding: 5% 0;
+}
+
+#partner {
+	height: 100%;
+}
+
+#footer {
+	width: 100%;
+	height: 80px;
+	display: none;
+}
+
+@media all and (min-width: $desktop-width) {
+	#usecases, #problem {
+		height: 100%;
+	}
+
+	#problem {
+		.col-10 {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			transform: translate(0, -50%);
+		}
+	}
+}
+
+@media all and (max-width: $tablet-width) and (orientation: landscape){
+	#intro {
+		min-height: 100%;
+		height: auto;
+		overflow: visible;
+	}
+
+	.intro-message{
+		position: initial;
+		transform: none;
+	}
+
+	#problem {
+		background: $dark-grey;
+	}
+
+	#usecases {
+		background: $bg-grey;
+	}
+}
+
+@media all and (max-width: $mobile-width) {
+
+	#intro {
+		.js-fadeIn {
+			opacity: 0;
+			transform: translate(0, 48px);
+		}
+	}
+
+	#problem, #solution, #usecases, #about, #partner {
+		height: auto;
+	}
+
+	#problem {
+		background: $dark-grey;
+	}
+
+	#usecases {
+		background: $bg-grey;
+	}
+
+}
