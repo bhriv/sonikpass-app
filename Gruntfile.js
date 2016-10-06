@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       mainConfigFile: 'public/scripts/main.js',
       baseUrl: 'public/scripts',
       include: ['main'],
-      out: 'public/scripts/main.min.js',
+      out: 'public/scripts/build/dist/main.min.js',
       removeCombined: false,
       findNestedDependencies: true,
 
@@ -62,27 +62,27 @@ module.exports = function(grunt) {
             dest: '<%= dirs.production_build_folder %>/ui.js'
         }
     },
-    less: {
-        development: {
-            options: {
-              compress: false,  // no minification in dev
-            },
-            files: {
-              //compiling base.less into styles.css
-              "./public/styles/styles.css":"./public/styles/base.less"
-            }
-        },
-        production: {
-          options: {
-            cleancss: true, // minify css
-            // compress: true, // minify css
-          },
-          files: {
-            //compiling base.less into main.min.css
-            "./dist/main.min.css": "./public/styles/base.less"
-          }
-        }
-    },
+    // less: {
+    //     development: {
+    //         options: {
+    //           compress: false,  // no minification in dev
+    //         },
+    //         files: {
+    //           //compiling base.less into styles.css
+    //           "./public/styles/styles.css":"./public/styles/base.less"
+    //         }
+    //     },
+    //     production: {
+    //       options: {
+    //         cleancss: true, // minify css
+    //         // compress: true, // minify css
+    //       },
+    //       files: {
+    //         //compiling base.less into main.min.css
+    //         "./dist/main.min.css": "./public/styles/base.less"
+    //       }
+    //     }
+    // },
     requirejs: {
         compile: {
             options : compileOptions
@@ -93,10 +93,10 @@ module.exports = function(grunt) {
         dist: {
             options: {
                 style: 'compressed',
-                require: 'susy'
+                // require: 'susy'
             },
             files: {
-                '<%= dirs.css_folder %>/screen.min.css': '<%= dirs.sass_folder %>/screen.scss'
+                '<%= dirs.css_folder %>/sonikpass.min.css': '<%= dirs.sass_folder %>/style.scss'
                 // 'css/build/mixins.css': 'styles/mixins.sass'
             }
         } 
@@ -121,7 +121,6 @@ module.exports = function(grunt) {
                cssDir: ['<%= dirs.css_folder %>'],
                require: 'susy',
                environment: 'production'
-
           }
         }
     },
@@ -140,15 +139,15 @@ module.exports = function(grunt) {
             livereload: true  
           }
         },
-        less: {
-            // Watch all .less files from the styles directory)
-            files: ['public/styles/*.less'],
-            tasks: ['less'],
-            // Reloads the browser
-            options: {
-              livereload: true  
-            }
-        },
+        // less: {
+        //     // Watch all .less files from the styles directory)
+        //     files: ['public/styles/*.less'],
+        //     tasks: ['less'],
+        //     // Reloads the browser
+        //     options: {
+        //       livereload: true  
+        //     }
+        // },
         requirejs: {
             // Watch only main.js so that we do not constantly recompile the .js files
             files: [ 'public/scripts/main.js' ],

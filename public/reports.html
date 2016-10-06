@@ -8,55 +8,25 @@
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="scripts/vendor/bootstrap/dist/css/bootstrap.min.css">
-    
-    <!-- main app specific styles -->
-    <!-- <link rel="stylesheet" media="screen" href="css/style.min.css" type="text/css" /> -->
     <link rel="stylesheet" media="screen" href="css/screen.min.css" type="text/css" />
     <style type="text/css">
-      canvas{
-        max-height: 800px !important;
-      }
-      html{
-        background-image: none;
-      }
-      #category_list{
-        width: 100%;
-      }
-      #category_list li{
-        display: inline-block;
-        margin-right: 0.5em; 
-        padding: 0.5em;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
       header{
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 1em;
-        margin-bottom: 2em;
+        padding: 1em;
       }
-      header ul{
+      #header-region nav ul:first-child{
         float: right;
       }
-      header ul li{
-        display: inline-block;
-        margin: 11px 15px
-      }
-      #category_link_list{
-        display: block;
-      }
-      #category_link_list li{
-        display: block;
-        margin: 0;
-        padding: 0;
-        font-size: 12px;
+      #header-region ul li{
+        max-width: 120px;
+        display: inline-flex;
       }
     </style>
   </head>
 
   <body>
     <div class="container-fluid">
+      <header class="row" id="header-region"></header>
       <div class="row">
-        <header class="row" id="header-region"></header>
         <aside class="col-md-2"> </aside>
         <div class="col-md-9 col-md-offset-X" id="center_content"> 
           <div id="main-region">
@@ -64,9 +34,9 @@
             <div id="team_list"></div>
             <div id="faq_list"></div>
           </div>
-          <footer id="footer-region"></footer>
         </div><!-- end col-10 -->
       </div>
+      <footer id="footer-region"></footer>
     </div>
     
 
@@ -113,7 +83,7 @@
     </script>
 
 
-    <script data-main="scripts/main.js" src="scripts/vendor/requirejs/require.js"></script>
+    <script data-main="scripts/build/dist/main.min.js" src="scripts/vendor/requirejs/require.js"></script>
 
   </body>
 </html>

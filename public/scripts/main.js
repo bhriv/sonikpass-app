@@ -14,13 +14,13 @@ require.config({
     'hbs': 'vendor/hbs/hbs',
     'text': 'vendor/text/text',
     // 'ui': 'build/dist/ui',
+    'useful': 'useful',
+    'consoleclass': 'vendor/consoleclass/consoleclass',
+    'urlParams': 'urlParams',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
     'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',
     'moment': 'vendor/moment/moment',
-    'consoleclass': 'vendor/consoleclass/consoleclass',
-    'useful': 'useful',
-    'urlParams': 'urlParams',
   },
   shim: {
     underscore: {
@@ -34,7 +34,7 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
-    // bs: {
+    // ui: {
     //   deps: ['jquery'],
     //   exports: 'bs'
     // },
