@@ -1,59 +1,49 @@
 // Filename: app.js
 define([
-  // 'jquery',
-  // 'underscore',
-  // 'backbone',
+
   'marionette',
-  // 'ui',
+  // Use Gulp to move all common UI dependencies into a single file that can be called.
   'consoleclass',
-  'bootstrap',
+  // 'bootstrap',
   'datepicker',
   'moment',
   'useful',
   'urlParams',
   'chartjs',
+  // static
   'text!../templates/navigation.html',
   'text!../templates/layout.html',
   'text!../templates/cta.html',
   'text!../templates/footer.html',
   'text!../templates/about.html',
-  'text!../templates/team.html',
   'views/team_list',
   'views/faq_list',
-  'views/growth',
-  // 'views/growth_data',
-  // 'views/transactions/2016/07',
-  // 'views/transactions/2016/08',
+  'views/charts',
   'views/finance_data',
-  // 'views/faqs',
-  // 'text!../templates/growth.html',
 ], 
-function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,chartjs,layout,cta_content,footer_content,about_content,team_content,team_list,faq_list,growth_content,finance_data){
+function(
+    Marionette,
+    consoleclass,
+    // bootstrap,
+    datepicker, // bootstrap loaded as dependency
+    moment,
+    useful,
+    urlParams,
+    chartjs,
+    team_list,
+    faq_list,
+    growth_content,
+    finance_data
+  ){
   console.log('doing appjs');
   cc('consoleclass working','success');
-  // var faqs = require('views/faqs');  
-
-  // var navigation = require('text!../templates/navigation.html'); 
-  var layout = require('text!../templates/layout.html');  
-  var cta_content = require('text!../templates/cta.html');  
-  var footer_content = require('text!../templates/footer.html'); 
   
-  var about_content = require('text!../templates/about.html'); 
-  var team_content = require('text!../templates/team.html'); 
-  // var growth_content = require('text!../templates/growth.html'); 
-  
-  var team_list = require('views/team_list'); 
-  var faq_list = require('views/faq_list'); 
-  var growth_content = require('views/growth'); 
-  // var growth_data = require('views/growth_data'); 
-   
   // Define a new app
   window.App = new Marionette.Application();
 
   // Define routes
   App.Router = Marionette.AppRouter.extend({
       appRoutes: {
-          
           'about':      'about',
           'team':       'team',
           'growth':     'growth',
@@ -101,10 +91,11 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
 
   App.GrowthView = Marionette.ItemView.extend({
       tagName: 'div',
-      template: growth_content,
+      template: require('views/charts'),
       onBeforeShow: function(){
 
 
+        $('#category_list').show();
         $('body').removeClass();
         $('body').addClass('view-growth');
         $('#team_list').hide();
@@ -741,8 +732,9 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
   
   App.AboutView = Marionette.ItemView.extend({
       tagName: 'div',
-      template: about_content,
+      template: require('text!../templates/about.html'),
       onBeforeShow: function(){
+        $('#category_list').hide();
         $('body').removeClass();
         $('body').addClass('view-about');
         $('#team_list').hide();
@@ -757,6 +749,7 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
       tagName: 'div',
       template: team_list,
       onBeforeShow: function(){
+        $('#category_list').hide();
         $('body').removeClass();
         $('body').addClass('view-team');
         $('#team_list').show();
@@ -769,8 +762,9 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
 
   App.FaqlistView = Marionette.ItemView.extend({
       tagName: 'div',
-      template: faq_list,
+      template: require('views/faq_list'),
       onBeforeShow: function(){
+        $('#category_list').hide();
         $('body').removeClass();
         $('body').addClass('view-faq');
         $('#team_list').hide();
@@ -806,17 +800,17 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
 
   App.CtaView = Marionette.LayoutView.extend({
       tagName: 'div',
-      template: cta_content
+      template: require('text!../templates/cta.html')
   });
 
   App.FooterView = Marionette.LayoutView.extend({
       tagName: 'div',
-      template: footer_content
+      template: require('text!../templates/footer.html')
   });
 
   App.MainView = Marionette.LayoutView.extend({
       tagName: 'div',
-      template: layout,
+      template: require('text!../templates/layout.html'),
       onShow: function(){
         console.log('MainView content shown')
       }
@@ -843,7 +837,6 @@ function(Marionette,consoleclass,bootstrap,datepicker,moment,useful,urlParams,ch
 
       Backbone.history.start();
       console.log( 'app.js says: Backbone history has started!' );
-
     }
   });
 

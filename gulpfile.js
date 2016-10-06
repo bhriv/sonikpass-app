@@ -21,8 +21,18 @@ var jsFiles = [
 	'src/js/vendor/TimelineMax.min.js',
 	'src/js/vendor/ScrollMagic.js',
 	'src/js/vendor/animation.gsap.js',
-	'src/js/vendor/jquery.waypoints.min.js'
-]
+	'src/js/vendor/jquery.waypoints.min.js',
+];
+
+// var uiFiles = [
+// 	'public/scripts/vendor/bootstrap/dist/js/bootstrap',
+//     'public/scripts/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
+//     'public/scripts/vendor/chart.js/dist/Chart',
+//     'public/scripts/vendor/moment/moment',
+//     'public/scripts/vendor/consoleclass/consoleclass',
+//     'public/scripts/useful',
+//     'public/scripts/urlParams'
+// ];
 
 
 gulp.task('browserSync', function(){
@@ -68,6 +78,16 @@ gulp.task('vendors', function(){
 
 });
 
+gulp.task('ui', function(){
+
+	gulp.src(uiFiles)
+		.pipe(concat('ui.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('public/vendor'))
+		.pipe(browserSync.reload({stream:true}));
+
+});
+
 gulp.task('images', function(){
 
 	gulp.src('src/assets/**/*.{jpg,jpeg,png,gif,svg}')
@@ -101,3 +121,4 @@ gulp.task('watch', function(){
 });
 
 gulp.task('default', ['html', 'scripts', 'vendors', 'images', 'styles', 'browserSync', 'watch']);
+gulp.task('frontend', ['ui','browserSync']);

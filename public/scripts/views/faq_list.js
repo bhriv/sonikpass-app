@@ -1,15 +1,15 @@
 //Filename: views/header.js
 define([
-  'jquery',
-  'underscore',
-  'backbone',
   'marionette',
   'bootstrap'
 ], 
-function($, _, Backbone, Marionette,Bootstrap){
+function(
+  Marionette,
+  Bootstrap
+  ){
   console.log('views/faq_list loaded');
 
-// Collection
+  // Collection
   // data
   var faqs = [
     {

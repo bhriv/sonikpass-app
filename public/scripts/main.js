@@ -38,7 +38,7 @@ require.config({
       exports: 'bootstrap'
     },
     datepicker: {
-      deps: ['jquery','bootstrap'],
+      deps: ['bootstrap'],
       exports: 'datepicker'
     },
     chartjs: {
@@ -60,11 +60,7 @@ require.config({
     urlParams: {
       // deps: ['jquery','moment'],
       exports: 'urlParams'
-    },
-    // ui: {
-    //   deps: ['bootstrap','datepicker','moment','chartjs','consoleclass','useful','urlParams'],
-    //   exports: 'ui'
-    // },
+    }
   },
   hbs: { // optional
       helpers: true,            // default: true
@@ -82,7 +78,15 @@ require.config({
 });
 
 
-require(['app'], function(AppView){
+require([
+  // load dependencies
+  'app'
+], 
+function(
+  // pass to function
+  AppView
+  ){
+  // do stuff
   new AppView;
 });
 

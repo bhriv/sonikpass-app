@@ -1,5 +1,5 @@
 // Reset Page Scroll
-window.onunload = function(){ window.scrollTo(0,0); }
+window.onunload = function(){ window.scrollTo(0,0); } 
 
 window.mobilecheck = function(){
 
