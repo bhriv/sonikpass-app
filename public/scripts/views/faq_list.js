@@ -1,7 +1,7 @@
 //Filename: views/header.js
 define([
   'marionette',
-  // 'bootstrap'
+  'bootstrap'
 ], 
 function(
   Marionette,

@@ -1,22 +1,18 @@
 // Filename: app.js
 define([
-
+  // Core needs
   'marionette',
   // Use Gulp to move all common UI dependencies into a single file that can be called.
+  // UI needs
   'consoleclass',
-  // 'bootstrap',
   'datepicker',
   'moment',
   'useful',
   'urlParams',
   'chartjs',
-  // static
-  // 'text!../templates/layout.html',
-  // 'text!../templates/navigation.html',
-  'text!../templates/cta.html',
-  // 'text!../templates/footer.html',
+  // Static Content Pages
   'text!../templates/about.html',
-  // 'views/static',
+  // Dynamic Content Pages
   'views/team_list',
   'views/faq_list',
   'views/charts',
@@ -25,16 +21,15 @@ define([
 function(
     Marionette,
     consoleclass,
-    // bootstrap,
     datepicker, // bootstrap loaded as dependency
     moment,
     useful,
     urlParams,
-    chartjs,
-    team_list,
-    faq_list,
-    growth_content,
-    finance_data
+    chartjs
+    // team_list,
+    // faq_list,
+    // growth_content,
+    // finance_data
   ){
   console.log('doing appjs');
   cc('consoleclass working','success');
@@ -57,31 +52,28 @@ function(
   // Handle routes
   App.Controller = Marionette.Controller.extend({
       about: function() {
-          var view = new App.AboutView();
-          App.mainRegion.show(view);
+        var view = new App.AboutView();
+        App.mainRegion.show(view);
       },
       team: function() {
-          var view = new App.TeamlistView();
-          App.mainRegion.show(view);
+        var view = new App.TeamlistView();
+        App.mainRegion.show(view);
       },
       faqs: function() {
-          var view = new App.FaqlistView();
-          App.mainRegion.show(view);
+        var view = new App.FaqlistView();
+        App.mainRegion.show(view);
       },
       index: function() {
-          var view = new App.GrowthView();
-          App.mainRegion.show(view);
+        var view = new App.GrowthView();
+        App.mainRegion.show(view);
       },
   });
 
   // Add targeted regions
   App.addRegions({
-      ctaRegion:            "#cta-region",
       headerRegion:         "#header-region",
       footerRegion:         "#footer-region",
       mainRegion:           "#main-region #top",
-      ctaRegion:            "#cta-region",
-      faqsRegion:           "#faqs-region"
   });
 
 // Route based views
@@ -744,7 +736,7 @@ function(
 
   App.TeamlistView = Marionette.ItemView.extend({
       tagName: 'div',
-      template: team_list,
+      template: require('views/team_list'),
       onBeforeShow: function(){
         $('#category_list').hide();
         $('body').removeClass();
@@ -772,13 +764,6 @@ function(
       }
   });
 
-  App.FaqsView = Marionette.ItemView.extend({
-      tagName: 'h1',
-      template: _.template('<span class="headline-big">FAQ View</span>'),
-      onShow: function(){
-        console.log('FaqsView content shown')
-      }
-  });
 
   App.IndexView = Marionette.ItemView.extend({
     tagName: 'h1',
@@ -791,7 +776,7 @@ function(
 // PAGE LAYOUTS
 
   App.HeaderView = Marionette.LayoutView.extend({
-      tagName: 'ul',
+      tagName: 'nav',
       template: '#header-template'
   });
 

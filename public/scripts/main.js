@@ -13,6 +13,7 @@ require.config({
     'viewManager': 'vendor/backbone-viewmanager/src/backbone-viewmanager',
     'hbs': 'vendor/hbs/hbs',
     'text': 'vendor/text/text',
+    // 'ui': 'build/dist/ui',
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
     'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',

@@ -13,13 +13,15 @@
     "url": "https://github.com/bhriv/sonikpass-app"
   },
   "devDependencies": {
+    "browser-sync": "^2.11.1",
     "grunt": "~0.4.5",
     "grunt-contrib-compass": "^1.1.1",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-less": "latest",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-sass": "^0.8.1",
+    "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^0.6.1",
-    "browser-sync": "^2.11.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-concat": "^2.6.0",

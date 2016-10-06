@@ -26,14 +26,42 @@ module.exports = function(grunt) {
         sass_folder: 'src/scss',
         css_folder: 'public/css',
         js_folder: './public/scripts',
+        vendor_folder: './public/scripts/vendor',
+        node_modules_folder: './node_modules',
         images_folder: './public/images',
         // files for deploying
-        production_build_folder: './public/production_build'
+        production_build_folder: './public/scripts/build/dist'
         // Usage Example: 
             // dest: '<%= dirs.sass_folder %>/assets/sass' 
     },
     // Task configuration
-    
+    concat: {
+        ui_custom: {
+            src: [
+                '<%= dirs.vendor_folder %>/consoleclass/consoleclass.js',
+                '<%= dirs.js_folder %>/useful.js',
+                '<%= dirs.js_folder %>/urlParams.js',
+            ],
+            dest: '<%= dirs.js_folder %>/build/concat-ui_custom.js',
+        },
+        ui_vendor: {
+            src: [
+                '<%= dirs.node_modules_folder %>/bootstrap/dist/js/bootstrap.js',
+                '<%= dirs.node_modules_folder %>/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+                '<%= dirs.node_modules_folder %>/chart.js/dist/Chart.js',
+                '<%= dirs.node_modules_folder %>/moment/moment.js',
+            ],
+            dest: '<%= dirs.js_folder %>/build/concat-ui_vendor.js',
+        },
+    },
+    // Uglify JS
+    uglify: {
+        build: {
+            src: '<%= dirs.js_folder %>/build/concat-ui_vendor.js',
+            src: '<%= dirs.js_folder %>/build/concat-ui_custom.js',
+            dest: '<%= dirs.production_build_folder %>/ui.js'
+        }
+    },
     less: {
         development: {
             options: {
@@ -141,10 +169,14 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-contrib-compass');
   
 
+ // JS
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   // Task definition
   // grunt.registerTask('default', ['requirejs' ]);
   grunt.registerTask('default', ['requirejs','watch' ]);
   grunt.registerTask('js', ['requirejs' ]);
   grunt.registerTask('dev', ['sass' ]);
+  grunt.registerTask('ui', ['concat','uglify' ]);
 
 };
