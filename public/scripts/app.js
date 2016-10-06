@@ -12,6 +12,7 @@ define([
   'chartjs',
   // Static Content Pages
   'text!../templates/about.html',
+  'text!../templates/privacy.html',
   // Dynamic Content Pages
   'views/team_list',
   'views/faq_list',
@@ -43,6 +44,7 @@ function(
           'about':      'about',
           'team':       'team',
           'faqs':       'faqs',
+          'privacy':    'privacy',
           'growth':     'index',          
           '*path':      'index',
           '':           'index',
@@ -61,6 +63,10 @@ function(
       },
       faqs: function() {
         var view = new App.FaqlistView();
+        App.mainRegion.show(view);
+      },
+      privacy: function() {
+        var view = new App.PrivacyView();
         App.mainRegion.show(view);
       },
       index: function() {
@@ -764,6 +770,20 @@ function(
       }
   });
 
+  App.PrivacyView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: require('text!../templates/privacy.html'),
+      onBeforeShow: function(){
+        $('#category_list').hide();
+        $('body').removeClass();
+        $('body').addClass('view-privacy');
+        $('#team_list').hide();
+        $('#faq_list').hide();
+      },
+      onShow: function(){
+        console.log('AboutView shown')
+      }
+  });
 
   App.IndexView = Marionette.ItemView.extend({
     tagName: 'h1',
