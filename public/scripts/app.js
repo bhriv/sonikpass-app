@@ -11,11 +11,12 @@ define([
   'urlParams',
   'chartjs',
   // static
-  'text!../templates/navigation.html',
-  'text!../templates/layout.html',
+  // 'text!../templates/layout.html',
+  // 'text!../templates/navigation.html',
   'text!../templates/cta.html',
-  'text!../templates/footer.html',
+  // 'text!../templates/footer.html',
   'text!../templates/about.html',
+  // 'views/static',
   'views/team_list',
   'views/faq_list',
   'views/charts',
@@ -46,10 +47,10 @@ function(
       appRoutes: {
           'about':      'about',
           'team':       'team',
-          'growth':     'growth',
           'faqs':       'faqs',
-          '*path':      'growth',
-          '':           'growth',
+          'growth':     'index',          
+          '*path':      'index',
+          '':           'index',
       }
   });
 
@@ -61,10 +62,6 @@ function(
       },
       team: function() {
           var view = new App.TeamlistView();
-          App.mainRegion.show(view);
-      },
-      growth: function() {
-          var view = new App.GrowthView();
           App.mainRegion.show(view);
       },
       faqs: function() {
@@ -795,50 +792,34 @@ function(
 
   App.HeaderView = Marionette.LayoutView.extend({
       tagName: 'ul',
-      template: require('text!../templates/navigation.html')
-  });
-
-  App.CtaView = Marionette.LayoutView.extend({
-      tagName: 'div',
-      template: require('text!../templates/cta.html')
+      template: '#header-template'
   });
 
   App.FooterView = Marionette.LayoutView.extend({
       tagName: 'div',
-      template: require('text!../templates/footer.html')
-  });
-
-  App.MainView = Marionette.LayoutView.extend({
-      tagName: 'div',
-      template: require('text!../templates/layout.html'),
-      onShow: function(){
-        console.log('MainView content shown')
-      }
+      template: '#footer-template'
   });
 
 
-// RUN APP
-
+  // RUN APP
   var AppView = Backbone.View.extend({
     initialize: function() {
-      // Start the router and handle views
+      // Start the router to handle views
       App.router = new App.Router({
         controller: new App.Controller()
       });
 
       // Add base layout elements upon initialize
       var header = new App.HeaderView();
-      var cta = new App.CtaView();
-      // var footer = new App.FooterView();
-      
       App.headerRegion.show(header);
-      App.ctaRegion.show(cta);
-      // App.footerRegion.show(footer);
+
+      var footer = new App.FooterView();
+      App.footerRegion.show(footer);
 
       Backbone.history.start();
       console.log( 'app.js says: Backbone history has started!' );
     }
   });
-
+  // return for RequireJS processing
   return AppView;
 });

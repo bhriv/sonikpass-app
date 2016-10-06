@@ -33,6 +33,10 @@ require.config({
       deps: ['backbone'],
       exports: 'Marionette'
     },
+    // bs: {
+    //   deps: ['jquery'],
+    //   exports: 'bs'
+    // },
     bootstrap: {
       deps: ['jquery'],
       exports: 'bootstrap'

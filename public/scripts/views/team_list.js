@@ -1,8 +1,5 @@
 //Filename: views/header.js
 define([
-  // 'jquery',
-  // 'underscore',
-  // 'backbone',
   'marionette',
   // 'text!../../templates/team.html',
 ], 
@@ -22,7 +19,7 @@ function(Marionette){
     { 
       id: 2,
       name: "Jeshua Nanthakumar", 
-      about: " UX/UI @Fantasy, @Mark One, @Mercedes-Benz Research & Development", 
+      about: " UX/UI/Design @Fantasy, @Mark One, @Mercedes-Benz Research & Development", 
       image_url: 'assets/jesh.jpg'
     }, 
   ];
