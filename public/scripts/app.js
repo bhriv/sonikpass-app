@@ -12,8 +12,10 @@ define([
   'chartjs',
   // Static Content Pages
   'text!../templates/about.html',
+  'text!../templates/api.html',
   'text!../templates/privacy.html',
   // Dynamic Content Pages
+  'views/user_list',
   'views/team_list',
   'views/faq_list',
   'views/charts',
@@ -41,6 +43,8 @@ function(
   // Define routes
   App.Router = Marionette.AppRouter.extend({
       appRoutes: {
+          'users':      'users',
+          'api':        'api',
           'about':      'about',
           'team':       'team',
           'faqs':       'faqs',
@@ -53,6 +57,14 @@ function(
 
   // Handle routes
   App.Controller = Marionette.Controller.extend({
+      users: function() {
+        var view = new App.UserlistView();
+        App.mainRegion.show(view);
+      },
+      api: function() {
+        var view = new App.ApiView();
+        App.mainRegion.show(view);
+      },
       about: function() {
         var view = new App.AboutView();
         App.mainRegion.show(view);
@@ -725,6 +737,27 @@ function(
   }); // end GrowthView
 
   
+  App.ApiView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: require('text!../templates/api.html'),
+      onBeforeShow: function(){
+        $('#category_list').hide();
+        $('body').removeClass();
+        $('body').addClass('view-api');
+        $('#team_list').hide();
+        $('#faq_list').hide();
+      },
+      onShow: function(){
+        console.log('APIView shown');
+
+        $("#api").click(function() {
+          cc('#api clicked','info')
+          getImages();
+        });
+
+      } // end onShow
+  });
+
   App.AboutView = Marionette.ItemView.extend({
       tagName: 'div',
       template: require('text!../templates/about.html'),
@@ -752,6 +785,22 @@ function(
       },
       onShow: function(){
         console.log('Teamlist shown')
+      }
+  });
+
+  App.UserlistView = Marionette.ItemView.extend({
+      tagName: 'div',
+      template: require('views/user_list'),
+      onBeforeShow: function(){
+        $('#category_list').hide();
+        $('body').removeClass();
+        $('body').addClass('view-user');
+        $('#team_list').hide();
+        $('#user_list').show();
+        $('#faq_list').hide();
+      },
+      onShow: function(){
+        console.log('Userlist shown')
       }
   });
 

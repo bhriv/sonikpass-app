@@ -173,8 +173,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   // Task definition
   // grunt.registerTask('default', ['requirejs' ]);
-  grunt.registerTask('default', ['requirejs','watch' ]);
-  grunt.registerTask('js', ['requirejs' ]);
+  grunt.registerTask('default', ['requirejs']);
+  grunt.registerTask('start', ['sass','requirejs','watch']);
   grunt.registerTask('dev', ['sass' ]);
   grunt.registerTask('ui', ['concat','uglify' ]);
 

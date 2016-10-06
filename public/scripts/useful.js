@@ -246,5 +246,6 @@ define(['jquery','underscore','moment'],
         window.open(href, window_name, 'width=800,height=800,toolbar=no, scrollbars=yes');
         return false;
     }
+
 });
 

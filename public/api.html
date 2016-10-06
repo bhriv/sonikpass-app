@@ -20,21 +20,6 @@
         max-width: 120px;
         display: inline-flex;
       }
-      table{
-        border: 1px solid #ddd;
-      }
-      table tr{
-        border: 1px solid #ddd;
-      }
-      table td{
-        padding: 10px;
-        border: 1px solid #ddd;
-      }
-      table img{
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-      }
     </style>
   </head>
 
@@ -47,18 +32,7 @@
           <div id="main-region">
             <div id="top"></div>
             <div id="team_list"></div>
-            <div id="user_list">
-              <table>
-                <thead>
-                  <tr>
-                    <td>ID</td>
-                    <td>Image</td>
-                    <td>Name</td>
-                    <td>Date</td>
-                  </tr>
-                </thead>
-              </table>
-            </div>
+            <div id="user_list"></div>
             <div id="faq_list"></div>
           </div>
         </div>
@@ -83,7 +57,6 @@
         <li><a href="#users">Users</a></li>
         <li><a href="#growth">Growth</a></li>
       </ul>
-      <button id="api">FETCH API</button>
     </script>
 
     <script type="text/template" id="content-template">
@@ -99,11 +72,12 @@
       </ul>    
     </script>    
 
-    <script type="text/template" id="users-template">
-        <td><%= id %></td>
-        <td><img src="<%= image_url %>" alt="<%= image_url %>"></td>
-        <td><%= name %></td>  
-        <td><%= date %></td>  
+    <script type="text/template" id="user-template">
+      <ul id="user-<%= id %>">
+        <li><img src="<%= image_url %>" alt="<%= name %>"></li>
+        <li><h3><%= name %></h3></li>  
+        <li><p class="copy"><%= date %></p></li>  
+      </ul>    
     </script>
 
     <script type="text/template" id="accordion-template">
