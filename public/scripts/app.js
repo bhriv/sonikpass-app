@@ -743,6 +743,32 @@ function(
     onShow: function(){
       console.log('AboutView shown');
     },
+
+    events: {
+      "click .signup": "signupClicked",
+      "click .next": "nextClicked",
+      "click .previous": "previousClicked"
+    },
+
+    signupClicked: function(e){
+      // e.preventDefault();
+      cc('signup clicked');
+      var username = $('input#username').val();
+      var new_user = {
+        account : {
+          user : {
+            username : username,
+            email : {
+              address : username,
+              label : 'primary'
+            }
+          }
+        }
+      };
+      console.log('new_user:\n',new_user);
+      // POST to API
+    },
+    
   });
 
   App.TeamlistView = Marionette.ItemView.extend({
