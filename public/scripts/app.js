@@ -1,7 +1,7 @@
 // Filename: app.js
 define([
   // Core needs
-  'marionette',
+  'marionette', 
   // Use Gulp to move all common UI dependencies into a single file that can be called.
   // UI needs
   'consoleclass',
@@ -12,7 +12,6 @@ define([
   'chartjs',
   // Static Content Pages
   'text!../templates/about.html',
-  'text!../templates/api.html',
   'text!../templates/privacy.html',
   // Dynamic Content Pages
   'views/user_list',
@@ -29,84 +28,80 @@ function(
     useful,
     urlParams,
     chartjs
-    // team_list,
-    // faq_list,
-    // growth_content,
-    // finance_data
   ){
   console.log('doing appjs');
   cc('consoleclass working','success');
   
-  // Define a new app
+  // Define Globals
+  var api_urls = {
+    flickr: 'http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?',
+    instagram: 'https://api.instagram.com/v1/media/popular?access_token=' 
+  };
+
+  var user_list_done = false;
+
+  // Define a new App
   window.App = new Marionette.Application();
 
-  // Define routes
+  // Define Routes
   App.Router = Marionette.AppRouter.extend({
-      appRoutes: {
-          'users':      'users',
-          'api':        'api',
-          'about':      'about',
-          'team':       'team',
-          'faqs':       'faqs',
-          'privacy':    'privacy',
-          'growth':     'index',          
-          '*path':      'index',
-          '':           'index',
-      }
+    appRoutes: {
+        'users':      'users',
+        'about':      'about',
+        'team':       'team',
+        'faqs':       'faqs',
+        'privacy':    'privacy',
+        'growth':     'index',          
+        '*path':      'index',
+        '':           'index',
+    }
   });
 
-  // Handle routes
+  // Define Controllers to Load Views based on Routes
   App.Controller = Marionette.Controller.extend({
-      users: function() {
-        var view = new App.UserlistView();
-        App.mainRegion.show(view);
-      },
-      api: function() {
-        var view = new App.ApiView();
-        App.mainRegion.show(view);
-      },
-      about: function() {
-        var view = new App.AboutView();
-        App.mainRegion.show(view);
-      },
-      team: function() {
-        var view = new App.TeamlistView();
-        App.mainRegion.show(view);
-      },
-      faqs: function() {
-        var view = new App.FaqlistView();
-        App.mainRegion.show(view);
-      },
-      privacy: function() {
-        var view = new App.PrivacyView();
-        App.mainRegion.show(view);
-      },
-      index: function() {
-        var view = new App.GrowthView();
-        App.mainRegion.show(view);
-      },
+    users: function() {
+      var view = new App.UserlistView();
+      App.mainRegion.show(view);
+    },
+    about: function() {
+      var view = new App.AboutView();
+      App.mainRegion.show(view);
+    },
+    team: function() {
+      var view = new App.TeamlistView();
+      App.mainRegion.show(view);
+    },
+    faqs: function() {
+      var view = new App.FaqlistView();
+      App.mainRegion.show(view);
+    },
+    privacy: function() {
+      var view = new App.PrivacyView();
+      App.mainRegion.show(view);
+    },
+    index: function() {
+      var view = new App.GrowthView();
+      App.mainRegion.show(view);
+    },
   });
 
-  // Add targeted regions
+  // Add target Regions for populating DOM with Views
   App.addRegions({
-      headerRegion:         "#header-region",
-      footerRegion:         "#footer-region",
-      mainRegion:           "#main-region #top",
+    headerRegion:         "#header-region",
+    footerRegion:         "#footer-region",
+    mainRegion:           "#main-region #top",
   });
 
-// Route based views
+// Define Views
 
   App.GrowthView = Marionette.ItemView.extend({
       tagName: 'div',
       template: require('views/charts'),
       onBeforeShow: function(){
-
-
         $('#category_list').show();
         $('body').removeClass();
         $('body').addClass('view-growth');
-        $('#team_list').hide();
-        $('#faq_list').hide();
+        $('section').hide();
       },
       onShow: function(){
 
@@ -437,10 +432,10 @@ function(
             // cc('unique Categories_2016: ','highlight');
             
             // Show list of Categories
-            $('#center_content').append('<ul id="category_list"></ul>')
-            for (c = 0; c < Categories_2016_size; c++) { 
-              $('#category_list').append('<li>'+Categories_2016[c]+'</li>');
-            }
+            // $('#center_content').append('<ul id="category_list"></ul>')
+            // for (c = 0; c < Categories_2016_size; c++) { 
+            //   $('#category_list').append('<li>'+Categories_2016[c]+'</li>');
+            // }
 
             for (m = 0; m < current_month_count; m++) { 
               var getData = Data_By_Month_2016[m]["data"];
@@ -736,102 +731,132 @@ function(
     //Chart Data
   }); // end GrowthView
 
-  
-  App.ApiView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: require('text!../templates/api.html'),
-      onBeforeShow: function(){
-        $('#category_list').hide();
-        $('body').removeClass();
-        $('body').addClass('view-api');
-        $('#team_list').hide();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('APIView shown');
-
-        $("#api").click(function() {
-          cc('#api clicked','info')
-          getImages();
-        });
-
-      } // end onShow
-  });
-
   App.AboutView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: require('text!../templates/about.html'),
-      onBeforeShow: function(){
-        $('#category_list').hide();
-        $('body').removeClass();
-        $('body').addClass('view-about');
-        $('#team_list').hide();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('AboutView shown')
-      }
+    tagName: 'div',
+    template: require('text!../templates/about.html'),
+    onBeforeShow: function(){
+      $('#category_list').hide();
+      $('body').removeClass();
+      $('body').addClass('view-about');
+      $('section').hide();
+    },
+    onShow: function(){
+      console.log('AboutView shown');
+    },
   });
 
   App.TeamlistView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: require('views/team_list'),
-      onBeforeShow: function(){
-        $('#category_list').hide();
-        $('body').removeClass();
-        $('body').addClass('view-team');
-        $('#team_list').show();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('Teamlist shown')
-      }
+    tagName: 'div',
+    template: require('views/team_list'),
+    onBeforeShow: function(){
+      $('#category_list').hide();
+      $('body').removeClass();
+      $('body').addClass('view-team');
+      $('section').hide();
+    },
+    onShow: function(){
+      $('#team_list').show();
+      console.log('Teamlist shown')
+    }
   });
 
   App.UserlistView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: require('views/user_list'),
-      onBeforeShow: function(){
-        $('#category_list').hide();
-        $('body').removeClass();
-        $('body').addClass('view-user');
-        $('#team_list').hide();
-        $('#user_list').show();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('Userlist shown')
+    tagName: 'div',
+    template: require('views/user_list'),
+    onBeforeShow: function(){
+      $('#category_list').hide();
+      $('body').removeClass();
+      $('body').addClass('view-user');
+      $('section').hide();
+
+      if (!user_list_done) {
+        $('#user_list').append('<table><thead><tr><td>ID</td><td>Image</td><td>Name</td><td>Date</td></tr></thead><tbody></tbody></table>');
+        var users = [];
+        var all_users = []; 
+        console.log('api_urls: \n',api_urls);
+        
+        // Pull Data from API 
+        var usersRetrieved = $.getJSON( api_urls.flickr, {
+          tags: "bailey canyon",
+          tagmode: "any",
+          format: "json"
+        }) // handle API responses
+        .done(function(data) {
+          cc('Success: API Data retrieved','success');
+          console.log('data fetched:\n',data);
+        })
+        .fail(function() { 
+          cc('Fail: API Data retrieved','error');
+        })
+        .always(function() { 
+          cc('Always: API Data call complete','info');
+        });
+
+        // Use jQuery Promise to handle async data fetch
+        $.when(usersRetrieved).then(function(data){
+          cc('Jquery Deferred when/then has fired','success');
+          cc('API data passed into when/then','highlight');
+          // Process Data
+          var all_users = data.items;
+          console.log('Total users '+all_users.length);
+          // Pass each Data item to the View
+          for (i = 0; i < all_users.length; i++) { 
+            var userdata = {
+              id: all_users[i].author_id,
+              name: all_users[i].author, 
+              date: all_users[i].date_taken, 
+              image_url: all_users[i].media.m
+            }
+            // push each single user to object for Collection view rendering 
+            // @FIXME - use Collection view rather than jQuery rendering
+            users = users.concat(userdata);
+
+            var profile = '<tr><td><img src="'+userdata.image_url+'"></td><td>'+userdata.id+'</td><td>'+userdata.name+'<td>'+userdata.date+'</td></tr>'
+            $(profile).appendTo('#user_list tbody');
+            
+            if (i == all_users.length - 1) {
+              cc('Users loop done','done');
+              console.log(users);
+              // only fetch the data once per session
+              user_list_done = true;
+            }
+          }
+        });
       }
+    },
+    onShow: function(){
+      $('#user_list').show();
+      console.log('Userlist shown');
+    }
   });
 
   App.FaqlistView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: require('views/faq_list'),
-      onBeforeShow: function(){
-        $('#category_list').hide();
-        $('body').removeClass();
-        $('body').addClass('view-faq');
-        $('#team_list').hide();
-        $('#faq_list').show();
-      },
-      onShow: function(){
-        console.log('FaqlistView shown')
-      }
+    tagName: 'div',
+    template: require('views/faq_list'),
+    onBeforeShow: function(){
+      $('#category_list').hide();
+      $('body').removeClass();
+      $('body').addClass('view-faq');
+      $('section').hide();
+    },
+    onShow: function(){
+      $('#faq_list').show();
+      console.log('FaqlistView shown')
+    }
   });
 
   App.PrivacyView = Marionette.ItemView.extend({
-      tagName: 'div',
-      template: require('text!../templates/privacy.html'),
-      onBeforeShow: function(){
-        $('#category_list').hide();
-        $('body').removeClass();
-        $('body').addClass('view-privacy');
-        $('#team_list').hide();
-        $('#faq_list').hide();
-      },
-      onShow: function(){
-        console.log('AboutView shown')
-      }
+    tagName: 'div',
+    template: require('text!../templates/privacy.html'),
+    onBeforeShow: function(){
+      $('#category_list').hide();
+      $('body').removeClass();
+      $('body').addClass('view-privacy');
+      $('section').hide();
+    },
+    onShow: function(){
+      console.log('AboutView shown')
+    }
   });
 
   App.IndexView = Marionette.ItemView.extend({
@@ -845,13 +870,13 @@ function(
 // PAGE LAYOUTS
 
   App.HeaderView = Marionette.LayoutView.extend({
-      tagName: 'nav',
-      template: '#header-template'
+    tagName: 'nav',
+    template: '#header-template'
   });
 
   App.FooterView = Marionette.LayoutView.extend({
-      tagName: 'div',
-      template: '#footer-template'
+    tagName: 'div',
+    template: '#footer-template'
   });
 
 

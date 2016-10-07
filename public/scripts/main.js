@@ -63,9 +63,8 @@ require.config({
       exports: 'useful'
     },
     urlParams: {
-      // deps: ['jquery','moment'],
       exports: 'urlParams'
-    }
+    },
   },
   hbs: { // optional
       helpers: true,            // default: true
