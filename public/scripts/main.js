@@ -21,6 +21,7 @@ require.config({
     'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',
     'moment': 'vendor/moment/moment',
+    'marionette_forms': 'vendor/marionette-forms/dist/marionette-forms',
   },
   shim: {
     underscore: {
@@ -64,6 +65,10 @@ require.config({
     },
     urlParams: {
       exports: 'urlParams'
+    },
+    marionette_forms: {
+      deps: ['jquery','underscore','backbone','marionette'],
+      exports: 'marionette_forms'
     },
   },
   hbs: { // optional
