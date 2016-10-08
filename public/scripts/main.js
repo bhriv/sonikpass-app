@@ -9,6 +9,7 @@ require.config({
     'backbone': 'vendor/backbone/backbone',
     'backbone.babysitter': 'vendor/backbone.babysitter/lib/backbone.babysitter',
     'backbone.wreqr': 'vendor/backbone.wreqr/lib/backbone.wreqr',
+    'backboneforms': 'vendor/backbone-forms/distribution/backbone-forms',
     'marionette': 'vendor/marionette/lib/core/backbone.marionette',
     'viewManager': 'vendor/backbone-viewmanager/src/backbone-viewmanager',
     'hbs': 'vendor/hbs/hbs',
@@ -17,10 +18,13 @@ require.config({
     'useful': 'useful',
     'consoleclass': 'vendor/consoleclass/consoleclass',
     'urlParams': 'urlParams',
+
     'bootstrap': 'vendor/bootstrap/dist/js/bootstrap',
     'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',
     'moment': 'vendor/moment/moment',
+    // 'backform': 'vendor/backform/src/backform'
+    
     // 'backbone_validation': 'vendor/backbone-validation/dist/backbone-validation',
     // 'backbone_syphon': 'vendor/backbone.syphon/lib/backbone.syphon',
     // 'formwrapper': 'vendor/marionette-form-wrapper/js/src/FormWrapper',
@@ -67,6 +71,14 @@ require.config({
     },
     urlParams: {
       exports: 'urlParams'
+    },
+    backform: {
+      deps: ['backbone','bootstrap'],
+      exports: 'backform'
+    },
+    backboneforms: {
+      deps: ['backbone','bootstrap'],
+      exports: 'backboneforms'
     },
     // backbone_validation: {
     //   deps: ['jquery','backbone'],

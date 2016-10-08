@@ -1,17 +1,19 @@
 //Filename: views/forms.js
 define([
   'marionette',
+  'backboneforms',
   'bootstrap',
-  'backbone_validation',
-  'backbone_syphon',
-  'formwrapper',
+  // 'backbone_validation',
+  // 'backbone_syphon',
+  // 'formwrapper',
 ], 
 function(
   Marionette,
+  Backboneforms,
   Bootstrap,
-  backbone_validation,
-  backbone_syphon,
-  formwrapper
+  // backbone_validation,
+  // backbone_syphon,
+  // formwrapper
   ){
   console.log('views/forms loaded');
 
@@ -380,7 +382,23 @@ function(
 
   // // render the view
   // FormView.render();
-  // console.log('FormView should have rendered.')
+  var UserForm = Backbone.Form.extend({
+      template: _.template($('#formTemplate').html()),
+
+      schema: {
+          title:      { type: 'Select', options: ['Mr', 'Mrs', 'Ms'] },
+          name:       'Text',
+          email:      { validators: ['required', 'email'] },
+          password:   'Password'
+      }
+  });
+
+  var form = new UserForm({
+      model: new User()
+  }).render();
+
+  $('body').append(form.el);
+  console.log('FormView should have rendered.')
 
 });
 

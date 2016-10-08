@@ -1,0 +1,51 @@
+{
+  "name": "backform",
+  "description": "Backform takes a Backbone model and transforms it into an HTML form. Any changes to the form are relfected back to the model and vice versa.",
+  "author": {
+    "name": "Martin Drapeau and contributors",
+    "email": "martindrapeau@gmail.com"
+  },
+  "homepage": "http://amiliaapp.github.io/backform/",
+  "bugs": {
+    "url": "https://github.com/AmiliaApp/backform/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AmiliaApp/backform"
+  },
+  "version": "0.2.0",
+  "keywords": [
+    "backbone",
+    "bootstrap",
+    "form",
+    "html",
+    "javascript"
+  ],
+  "files": [
+    "src/backform.js"
+  ],
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/AmiliaApp/backform/blob/gh-pages/LICENSE"
+  },
+  "_id": "backform@0.2.0",
+  "dist": {
+    "shasum": "b14cb8deb08c863fc595a2bc505066e32a2ad4ce",
+    "tarball": "https://registry.npmjs.org/backform/-/backform-0.2.0.tgz"
+  },
+  "_from": "backform@latest",
+  "_npmVersion": "1.4.3",
+  "_npmUser": {
+    "name": "martindrapeau",
+    "email": "martindrapeau@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "martindrapeau",
+      "email": "martindrapeau@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_shasum": "b14cb8deb08c863fc595a2bc505066e32a2ad4ce",
+  "_resolved": "https://registry.npmjs.org/backform/-/backform-0.2.0.tgz"
+}
