@@ -1,6 +1,7 @@
 // Filename: app.js
 define([
   // Core needs
+  // 'backbone', 
   'marionette', 
   // Use Gulp to move all common UI dependencies into a single file that can be called.
   // UI needs
@@ -19,8 +20,10 @@ define([
   'views/faq_list',
   'views/charts',
   'views/finance_data',
+  // 'views/forms',
 ], 
 function(
+    // Backbone,
     Marionette,
     consoleclass,
     datepicker, // bootstrap loaded as dependency
@@ -46,6 +49,7 @@ function(
   // Define Routes
   App.Router = Marionette.AppRouter.extend({
     appRoutes: {
+        // 'forms':      'forms',
         'users':      'users',
         'about':      'about',
         'team':       'team',
@@ -59,6 +63,10 @@ function(
 
   // Define Controllers to Load Views based on Routes
   App.Controller = Marionette.Controller.extend({
+    // forms: function() {
+    //   var view = new App.FormView();
+    //   App.mainRegion.show(view);
+    // },
     users: function() {
       var view = new App.UserlistView();
       App.mainRegion.show(view);
@@ -869,7 +877,22 @@ function(
       $('#faq_list').show();
       console.log('FaqlistView shown')
     }
-  });
+  });  
+
+  // App.FormView = Marionette.ItemView.extend({
+  //   tagName: 'div',
+  //   template: require('views/forms'),
+  //   onBeforeShow: function(){
+  //     $('#category_list').hide();
+  //     $('body').removeClass();
+  //     $('body').addClass('view-form');
+  //     $('section').hide();
+  //   },
+  //   onShow: function(){
+  //     $('#forms').show();
+  //     console.log('FormView shown')
+  //   }
+  // });
 
   App.PrivacyView = Marionette.ItemView.extend({
     tagName: 'div',

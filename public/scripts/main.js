@@ -21,7 +21,9 @@ require.config({
     'datepicker': 'vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
     'chartjs': 'vendor/chart.js/dist/Chart',
     'moment': 'vendor/moment/moment',
-    'marionette_forms': 'vendor/marionette-forms/dist/marionette-forms',
+    // 'backbone_validation': 'vendor/backbone-validation/dist/backbone-validation',
+    // 'backbone_syphon': 'vendor/backbone.syphon/lib/backbone.syphon',
+    // 'formwrapper': 'vendor/marionette-form-wrapper/js/src/FormWrapper',
   },
   shim: {
     underscore: {
@@ -66,10 +68,18 @@ require.config({
     urlParams: {
       exports: 'urlParams'
     },
-    marionette_forms: {
-      deps: ['jquery','underscore','backbone','marionette'],
-      exports: 'marionette_forms'
-    },
+    // backbone_validation: {
+    //   deps: ['jquery','backbone'],
+    //   exports: 'backbone_validation'
+    // },
+    // backbone_syphon: {
+    //   deps: ['jquery','backbone'],
+    //   exports: 'backbone_syphon'
+    // },
+    // formwrapper: {
+    //   deps: ['backbone_validation','backbone_syphon'],
+    //   exports: 'formwrapper'
+    // },
   },
   hbs: { // optional
       helpers: true,            // default: true

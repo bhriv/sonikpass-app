@@ -1,0 +1,64 @@
+{
+  "name": "marionette-form-wrapper",
+  "version": "0.2.0",
+  "description": "Marionette Form Wrapper",
+  "main": "js/src/FormWrapper",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricca509/marionette-form-wrapper.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Riccardo Coppola",
+    "email": "ricca509@gmail.com"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "grunt": "^0.4.5",
+    "grunt-bowercopy": "^1.1.0",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-handlebars": "^0.9.2",
+    "grunt-contrib-jasmine": "^0.8.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-shell": "^1.1.1",
+    "grunt-template-jasmine-requirejs": "^0.2.0",
+    "load-grunt-tasks": "^3.0.0",
+    "requirejs": "^2.1.15"
+  },
+  "dependencies": {
+    "backbone-validation": "^0.11.5",
+    "backbone.syphon": "^0.6.2"
+  },
+  "gitHead": "cf5ee9c17ed2556f56f7e3623b643ecda0e05c20",
+  "bugs": {
+    "url": "https://github.com/ricca509/marionette-form-wrapper/issues"
+  },
+  "homepage": "https://github.com/ricca509/marionette-form-wrapper#readme",
+  "_id": "marionette-form-wrapper@0.2.0",
+  "_shasum": "e7211a950b72f663ac47e700bc84594cb1189a2f",
+  "_from": "marionette-form-wrapper@latest",
+  "_npmVersion": "2.14.2",
+  "_nodeVersion": "4.0.0",
+  "_npmUser": {
+    "name": "ricca509",
+    "email": "ricca509@gmail.com"
+  },
+  "dist": {
+    "shasum": "e7211a950b72f663ac47e700bc84594cb1189a2f",
+    "tarball": "https://registry.npmjs.org/marionette-form-wrapper/-/marionette-form-wrapper-0.2.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "ricca509",
+      "email": "ricca509@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/marionette-form-wrapper/-/marionette-form-wrapper-0.2.0.tgz"
+}
