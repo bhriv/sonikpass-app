@@ -16,6 +16,7 @@ var gulp = require('gulp'),
 // Set order for JS files
 var jsFiles = [
 	'src/js/vendor/jquery-2.2.0.js',
+	'src/js/vendor/Underscore.js',
 	'src/js/vendor/modernizer.js',
 	'src/js/vendor/TweenMax.js',
 	'src/js/vendor/TimelineMax.min.js',

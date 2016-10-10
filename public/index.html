@@ -36,9 +36,20 @@
         border-radius: 50%;
       }
     </style>
+    <script type="text/javascript">
+      
+    </script>
   </head>
 
   <body>
+    <div style="background: red;padding: 1em;">
+      <p><strong>Testing Area</strong></p>
+      <p>
+        <button class="trigger">Trigger</button>
+        <div class="result"></div>
+        <div class="log"></div>
+      </p>
+    </div>
     <div class="container-fluid">
       <header class="row" id="header-region"></header>
       <div class="row">
@@ -79,7 +90,22 @@
       <footer id="footer-region"></footer>
     </div>
     
+    <script id="formTemplate" type="text/html">
+      <form>
+          <h1>New User</h1>
 
+          <h2>Main Info</h2>
+          <div data-fields="title,name,birthday"></div>
+
+          <h2>Account Info</h2>
+          <h3>Email</h3>
+          <div data-fields="email"></div>
+
+          <h3>Password</h3>
+          <p>Must be at least 8 characters long</p>
+          <div data-editors="password"></div>
+      </form>
+  </script>
     <script type="text/template" id="header-template">
       <ul>
         <li><input type="text" id="start_date" name="start_date" class="datepicker form-control" placeholder="Start Date"></li>

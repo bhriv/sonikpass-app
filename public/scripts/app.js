@@ -38,7 +38,7 @@ function(
   ){
   console.log('doing appjs');
   cc('consoleclass working','success');
-  
+
   // Define Globals
   var api_urls = {
     flickr: 'http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?',
