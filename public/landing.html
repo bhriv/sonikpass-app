@@ -38,19 +38,54 @@
     <!-- <link rel="shortcut icon" href="http://www.sonikpass.com/assets/icons/favicon.ico"> -->
 
 	<link rel="stylesheet" href="css/style.min.css">
+	<style type="text/css">
+		#testing-only{
+			z-index: 99999;
+			background: #ddd;
+		}
+		#testing-only h1,
+		#testing-only h2{
+			font-weight: 700;
+			margin: 2em 0;
+		}
+		/*Error Classes*/
+		div.error{
+			background: red;
+		}
+		div.fatal{
+			background: red;
+			font-weight: bold;
+			border: 4px solid orange;
+		}
 
+	</style>
 </head>
 <body class="is-loading">
 
-	<div style="border: 2px solid red;padding: 1em; width: 400px; float: none;margin: 0 auto;">
+	<div id="testing-only" style="border: 2px solid red;padding: 1em; width: 400px; float: none;margin: 0 auto;">
+
       <p><strong>Testing Area</strong></p>
+      <h2>Test Response Handling</h2>
       <p>
-        <button class="trigger">Test Responses</button>
+        <button class="trigger">Test Trigger</button>
         <div class="result" style="display:none">
         	<header></header>
         	<p></p>
         </div>
+        <!-- the result of the search will be rendered inside this div -->
+		<div id="result"></div>
       </p>
+
+      <h2>Test New Account</h2>
+       	<form id="newAccount">
+		  <input type="email" name="u" placeholder="username (email)">
+		  <input type="submit" value="Check if username exists">
+		</form>
+
+		<form id="getUserById">
+		  <input type="text" name="u" placeholder="">
+		  <input type="submit" value="Get User By ID (valid test values: 15000035,66173435,15037230)">
+		</form>
     </div>
 
 <script>

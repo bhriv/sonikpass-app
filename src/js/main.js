@@ -3,6 +3,134 @@ console.log('Sonikpass v1.1');
 
 // @author: BHRIV
 
+
+/********** FRONTEND API ENDPOINT NOTES *************/
+/* 
+
+	Use the ajax request type specifies the action (GET, POST, DELETE)
+
+	All API endpoints will all be listed at api.sonikpass.com.
+	The first call should be to api.sonikpass.com to get all API endpoint URI's.
+
+	The 'base_url' is likely to be api.sonikpass.com/v1/ but this is not set in stone. Each session should request the name
+
+
+	GET:
+	Get version: 		base_url/version
+	Get users list	 /account/{accountid}/users
+ 
+	POST:
+ 	Create account	base_url/account
+ 	Create user		base_url/account/{accountid}/user
+ 
+	DELETE:
+ 	Delete user	  base_url/account/{accountid}/user/{user_id}
+
+ 	* Note - Sonikpass currently does not have any DELETE actions. Rather, the 'lifespan.is_enabled' is updated to = false
+ 	
+ 	Process:
+
+	define vars
+ 	
+ 	getEndpoint()
+
+ 	UI Action Functions
+ 	 - getAllEndpointsURIs
+ 	 - getEndpoint
+ 	 - getCurrentAccountID
+ 	 - getCurrentUserID
+ 	 - prepareDataToPost
+ 	 - postData
+ 	 - getData
+ 	 - handleResponse
+ 	 - updateUI
+
+*/
+
+// Define Static endpoints
+
+var api = {
+	accounts : 	'accounts.js',
+	users : 	'users.js'
+};
+
+$( "button.trigger" ).click(function( event ) {
+	event.preventDefault();
+	// cc(api.accounts);
+	// cc(api.users);
+});
+
+
+$( "#newAccount" ).submit(function( event ) {
+	// Stop form from submitting normally
+  event.preventDefault();
+
+  var data_source = api.accounts;
+  // To test a FAIL, set the following: 
+  var data_source = 'failtest.js';
+
+  // Get some values from elements on the page:
+  var $form = $(this);
+  var userEmail = $form.find( "input[name='u']" ).val();
+
+  // Add data to expected format
+ 	var formData = {
+	  account_id: '',
+	  users: [
+	    {
+	      username: userEmail,
+	      email: [
+	        {
+	          label: 'primary',
+	          address: userEmail,
+	          confirmed: false
+	        }
+	      ],
+	    }
+	  ]  
+	};
+
+	localStorage.setItem('newAccount',JSON.stringify(formData));
+	// Send data to Add User endpoint
+	// $.ajax({
+	//     url: api_url,
+	//     type: "POST",
+	//     data: formData,
+	//     processData: false,
+	//     contentType: 'application/json'
+	// });
+	
+	$.getJSON(data_source, function( json ){
+		console.log('Requested data from URL: '+data_source);
+	})
+  .success(function( json ) {
+  	cc( "DONE: JSON Data Returned: \n" + json,'info' );
+  	var all_accounts = _.flatten(json);
+  	console.log(all_accounts);
+  	// var found_user = _.findWhere(json, {newsroom: "The New York Times"});
+    var first_account = json[0];
+    var first_user = first_account.users[0];
+    console.log(first_account.users);
+    cc( "Finding match for username:"+userEmail,'info' );
+    if (first_user.username == userEmail) {
+    	cc('SUCCESS: '+first_user.contact[0].given_name +' '+first_user.contact[0].surname+ ', with email: '+first_user.email[0].address+ ' is in the User.js file list of users','success');
+    }else{
+    	cc('FAIL: username not found','error');
+    }
+  })
+  .fail(function( jqxhr, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    cc( "Request Failed: " + err,'error' );
+    cc('Response: \n',jqxhr,'error');
+    handleAjaxError(jqxhr);
+	});
+
+});
+
+
+
+
+
 /********** ERROR HANDLING *************/
 /* Gracefully deal with request errors 
 	 Provide meaningful, friendly feedback to the user
@@ -30,6 +158,7 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 			error_code: '0',
 			label: 'Fatal Error',
 			ui_title : 'Fatal Error',
+			ui_class : 'fatal',
 			error_status :  [
 				{
 					status: 'error',
@@ -42,10 +171,11 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 			error_code: '400',
 			label: 'Bad Request',
 			ui_title : 'Value Invalid',
+			ui_class : 'error',
 			error_status : [
 				{
 					status: 'value_invalid',
-					ui_title: 'Account Disabled',
+					ui_title: 'Value Invalid',
 					ui_instruction : 'Usually this is a server issue. Try refreshing your browser and resubmitting.'
 				}
 			]
@@ -54,6 +184,7 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 			error_code: '403',
 			label: 'Forbidden',
 			ui_title : 'Forbidden',
+			ui_class : 'error',
 			error_status :  [
 				{
 					status: 'account_disabled',
@@ -74,6 +205,11 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 					status: 'user_disabled',
 					ui_title: 'User Disabled',
 					ui_instruction : 'This user has been disabled.'
+				},
+				{ 
+					status: 'username_exists',
+					ui_title: 'Address Not Available',
+					ui_instruction : 'The submitted email address already exists. Please submit a new email address or if you have previously signed up to Sonikpass using this email address please login. '
 				}
 			]
 		},
@@ -81,6 +217,7 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 			error_code: '404',
 			label: 'Not Found',
 			ui_title : 'Not Found',
+			ui_class : 'error',
 			error_status :  [
 				{
 					status: 'Not Found',
@@ -93,6 +230,7 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 			error_code: '503',
 			label: 'Service Unavailable',
 			ui_title : 'Service Unavailable',
+			ui_class : 'fatal',
 			error_status : [
 				{
 					status: null,
@@ -129,7 +267,7 @@ function handleAjaxError(jqxhr) {
 	$.when(processErrors).then(function(data){
 	  // After the error has been processed, display User friendly feedback with instructions. 
 	  var ui_data = data[0];
-	  $('.result').html('<strong>'+ui_data.error_code+' Error: '+ui_data.ui_title+'</strong><br>');
+	  $('.result').addClass(ui_data.ui_class).html('<strong>'+ui_data.error_code+' Error: '+ui_data.ui_title+'</strong><br>');
 
 	  var s = data[0].error_status;
 	  var info = getErrorInstructions(s,jqxhr.statusText);
@@ -141,34 +279,8 @@ function handleAjaxError(jqxhr) {
 	 	$('.result').show();
 	});
 }
-
-
-$( "button.trigger" ).on( "click", function() {
-	var data_api = 'users.js';
-	$.getJSON(data_api, function( json ){
-			console.log('Requested data from URL: '+data_api);
-			
-		})
-	  .success(function( json ) {
-	  	console.log( "DONE: JSON Data Returned: \n" + json );
-	    var user = json[0];
-	    console.log( "Finding match for username = brichards@sonikpass.com" );
-	    if (user.username == 'wbrichards@sonikpass.com') {
-	    	console.log(user);
-	    	console.log('SUCCESS: '+user.contact[0].given_name +' '+user.contact[0].surname+ ' is in the User.js file list of users');
-	    }else{
-	    	console.log('FAIL: user not found');
-	    }
-
-	  })
-	  .fail(function( jqxhr, textStatus, error ) {
-	    var err = textStatus + ", " + error;
-	    console.log( "Request Failed: " + err );
-	    console.log('Response: \n',jqxhr);
-	    handleAjaxError(jqxhr);
-		})
-});
-
+console.log('error-handling loaded');
+//////// END Error Handling
 // end @author: BHRIV
 
 window.onunload = function(){ window.scrollTo(0,0); } 

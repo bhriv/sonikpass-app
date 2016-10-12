@@ -13,29 +13,6 @@ var gulp = require('gulp'),
 	browserSync = require('browser-sync');
 
 
-// Set order for JS files
-var jsFiles = [
-	'src/js/vendor/jquery-2.2.0.js',
-	'src/js/vendor/Underscore.js',
-	'src/js/vendor/modernizer.js',
-	'src/js/vendor/TweenMax.js',
-	'src/js/vendor/TimelineMax.min.js',
-	'src/js/vendor/ScrollMagic.js',
-	'src/js/vendor/animation.gsap.js',
-	'src/js/vendor/jquery.waypoints.min.js',
-];
-
-// var uiFiles = [
-// 	'public/scripts/vendor/bootstrap/dist/js/bootstrap',
-//     'public/scripts/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
-//     'public/scripts/vendor/chart.js/dist/Chart',
-//     'public/scripts/vendor/moment/moment',
-//     'public/scripts/vendor/consoleclass/consoleclass',
-//     'public/scripts/useful',
-//     'public/scripts/urlParams'
-// ];
-
-
 gulp.task('browserSync', function(){
 	browserSync({
 		server: {
@@ -59,9 +36,22 @@ gulp.task('styles', function(){
 
 });
 
+// Set order for JS files
+var jsFiles = [
+	'src/js/vendor/jquery-2.2.0.js',
+	'src/js/vendor/Underscore.js',
+	'src/js/vendor/consoleclass.js',
+	'src/js/vendor/modernizer.js',
+	'src/js/vendor/TweenMax.js',
+	'src/js/vendor/TimelineMax.min.js',
+	'src/js/vendor/ScrollMagic.js',
+	'src/js/vendor/animation.gsap.js',
+	'src/js/vendor/jquery.waypoints.min.js',
+];
+
 gulp.task('scripts', function(){
 
-	gulp.src('src/js/main.js')
+	gulp.src(uiFiles) 
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('public/js'))
@@ -78,6 +68,19 @@ gulp.task('vendors', function(){
 		.pipe(browserSync.reload({stream:true}));
 
 });
+
+var uiFiles = [
+	// 'public/scripts/vendor/bootstrap/dist/js/bootstrap',
+    // 'public/scripts/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
+    // 'public/scripts/vendor/chart.js/dist/Chart',
+    // 'public/scripts/vendor/moment/moment',
+    // 'public/scripts/vendor/consoleclass/consoleclass',
+    'src/js/useful',
+    // 'src/js/error-handling',
+    'src/js/main',
+    // 'public/scripts/urlParams'
+]; 
+
 
 gulp.task('ui', function(){
 
