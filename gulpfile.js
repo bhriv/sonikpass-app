@@ -12,14 +12,68 @@ var gulp = require('gulp'),
 	mainBowerFiles = require('main-bower-files'),
 	browserSync = require('browser-sync');
 
+/*********************************************/
+/* Script Tasks */
+/*********************************************/
 
-gulp.task('browserSync', function(){
-	browserSync({
-		server: {
-			baseDir: './public'
-		}
-	})
+// Set order for JS files
+var vendorFiles = [
+	'src/js/vendor/jquery-2.2.0.js',
+	'src/js/vendor/Underscore.js',
+	'src/js/vendor/consoleclass.js',
+	'src/js/vendor/modernizer.js',
+	'src/js/vendor/TweenMax.js',
+	'src/js/vendor/TimelineMax.min.js',
+	'src/js/vendor/ScrollMagic.js',
+	'src/js/vendor/animation.gsap.js',
+	'src/js/vendor/jquery.waypoints.min.js',
+	'src/js/useful',
+];
+
+// var customFiles = [
+//     'src/js/main',
+// ];
+
+gulp.task('vendors', function(){
+	gulp.src(vendorFiles)
+		.pipe(concat('bundle.js'))
+		// .pipe(uglify())
+		// .pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest('public/js/vendor'))
+		.pipe(browserSync.reload({stream:true}));
 });
+
+gulp.task('vendors_production', function(){
+	gulp.src(vendorFiles)
+		.pipe(concat('bundle.js'))
+		.pipe(uglify())
+		.pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest('public/js/dist'))
+		.pipe(browserSync.reload({stream:true}));
+});
+
+
+/* Version 1.0 task for main.js */
+gulp.task('scripts', function(){
+	gulp.src('src/js/main.js')
+		// .pipe(uglify())
+		// .pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest('public/js'))
+		.pipe(browserSync.reload({stream:true}));
+});
+
+gulp.task('scripts_production', function(){
+	gulp.src('src/js/main.js')
+		.pipe(uglify())
+		.pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest('public/js/dist'))
+		.pipe(browserSync.reload({stream:true}));
+});
+
+
+/*********************************************/
+/* Styles Tasks */
+/*********************************************/
 
 gulp.task('styles', function(){
 
@@ -36,61 +90,18 @@ gulp.task('styles', function(){
 
 });
 
-// Set order for JS files
-var jsFiles = [
-	'src/js/vendor/jquery-2.2.0.js',
-	'src/js/vendor/Underscore.js',
-	'src/js/vendor/consoleclass.js',
-	'src/js/vendor/modernizer.js',
-	'src/js/vendor/TweenMax.js',
-	'src/js/vendor/TimelineMax.min.js',
-	'src/js/vendor/ScrollMagic.js',
-	'src/js/vendor/animation.gsap.js',
-	'src/js/vendor/jquery.waypoints.min.js',
-];
+/*********************************************/
+/* Misc Tasks */
+/*********************************************/
 
-gulp.task('scripts', function(){
-
-	gulp.src(uiFiles) 
-		.pipe(uglify())
-		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest('public/js'))
-		.pipe(browserSync.reload({stream:true}));
-
+gulp.task('browserSync', function(){
+	browserSync({
+		server: {
+			baseDir: './public'
+		}
+	})
 });
 
-gulp.task('vendors', function(){
-
-	gulp.src(jsFiles)
-		.pipe(concat('bundle.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest('public/js/vendor'))
-		.pipe(browserSync.reload({stream:true}));
-
-});
-
-var uiFiles = [
-	// 'public/scripts/vendor/bootstrap/dist/js/bootstrap',
-    // 'public/scripts/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker',
-    // 'public/scripts/vendor/chart.js/dist/Chart',
-    // 'public/scripts/vendor/moment/moment',
-    // 'public/scripts/vendor/consoleclass/consoleclass',
-    'src/js/useful',
-    // 'src/js/error-handling',
-    'src/js/main',
-    // 'public/scripts/urlParams'
-]; 
-
-
-gulp.task('ui', function(){
-
-	gulp.src(uiFiles)
-		.pipe(concat('ui.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest('public/vendor'))
-		.pipe(browserSync.reload({stream:true}));
-
-});
 
 gulp.task('images', function(){
 
@@ -113,6 +124,9 @@ gulp.task('html', function(){
 
 });
 
+/*********************************************/
+/* Watch For Changes */
+/*********************************************/
 
 gulp.task('watch', function(){
 
@@ -124,5 +138,9 @@ gulp.task('watch', function(){
 
 });
 
-gulp.task('default', ['html', 'scripts', 'vendors', 'images', 'styles', 'browserSync', 'watch']);
-gulp.task('frontend', ['ui','browserSync']);
+/*********************************************/
+/* Gulp Commands */
+/*********************************************/
+// gulp.task('default', ['html', 'scripts', 'vendors', 'images', 'styles', 'browserSync', 'watch']);
+gulp.task('default', ['html', 'scripts','scripts_production', 'vendors','vendors_production', 'images', 'styles', 'browserSync', 'watch']);
+// gulp.task('frontend', ['vendors','ui','browserSync']);

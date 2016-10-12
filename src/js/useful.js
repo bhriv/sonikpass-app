@@ -7,9 +7,8 @@
 // Usage: If a Students ID (value) is found within a Course (arr), return the Student data so the Student ID and name can be displayed
 
 function findItemByID(data,item_ID,item_TYPE,disable_console_log){
-  cc('findItemByID(data,'+item_ID+','+item_TYPE+') disable_console_log('+disable_console_log+')','run',disable_console_log);
-  console.log('findItemByID - below is the value of the incoming data:');
-  console.log(data);
+  cc('findItemByID(data,'+item_ID+','+item_TYPE+')','run',disable_console_log);
+  console.log('findItemByID - below is the value of the incoming data:\n',data);
   cc('is data NULL?','info');
   isItemNullorUndefined(data,true);
   cc('is item NULL?','info');
@@ -48,97 +47,6 @@ function findItemByID(data,item_ID,item_TYPE,disable_console_log){
           }
           else{
             cc('ID not matched in data['+i+'], moving on to the next node', 'warning');
-          }
-      }else{
-          cc('data['+i+'] is NULL or undefined', 'error');
-      }
-    } // end for // iterate through dataay
-  } // end check for course or courses
-  else if (item_TYPE == 'quizattempt' || item_TYPE == 'quizattempts') {
-    console.log('checking quizattempts...');
-    for(var i = 0; i < data.length; i++) {
-      cc('iterating through data COUNT = '+i, 'info');
-      cc('data.length = '+data.length, 'info');
-      cc('node = data['+i+']:','info' );
-      console.log(data[i]);
-
-      if (data[i] != null && data[i] != undefined) {
-          if (data[i].id == item_ID) {
-              found = true;
-              cc('ID MATCHED!!!: '+found, 'success');
-              cc('Attempt Details: Quiz('+data[i].quiz+') User('+data[i].userid+')', 'success');
-              return { // return dataay of data including labels for access
-                  id: data[i].id,
-                  quiz: data[i].quiz,
-                  userid: data[i].userid,
-                  attempt: data[i].attempt,
-                  uniqueid: data[i].uniqueid,
-                  timestart: data[i].timestart,
-                  timefinish: data[i].timefinish,
-                  timemodified: data[i].timemodified,
-                  timecheckstate: data[i].timecheckstate,
-                  sumgrades: data[i].sumgrades
-              };
-              break;
-          }
-          else{
-            cc('ID not matched in data['+i+'], moving on to the next node', 'warning');
-          }
-      }else{
-          cc('data['+i+'] is NULL or undefined', 'error');
-      }
-    } // end for // iterate through dataay
-  } // end check for course or courses
-  else if (item_TYPE == 'quiz' || item_TYPE == 'quizzes') {
-    console.log('checking quiz...');
-    for(var i = 0; i < data.length; i++) {
-      cc('iterating through data COUNT = '+i, 'info');
-      cc('data.length = '+data.length, 'info');
-      cc('node = data['+i+']:','info' );
-      console.log(data[i]);
-
-      if (data[i] != null && data[i] != undefined) {
-          if (data[i].id == item_ID) {
-              found = true;
-              cc('ID MATCHED!!!: '+found, 'success');
-              cc('Quiz Details: Name('+data[i].name+') Course ID('+data[i].course+') SUMGRADES('+data[i].sumgrades+')', 'success');
-              return { // return dataay of data including labels for access
-                  id: data[i].id,
-                  name: data[i].name,
-                  sumgrades: data[i].sumgrades,
-                  course: data[i].grade
-              };
-              break;
-          }
-          else{
-            cc('ID not matched in data['+i+'], moving on to the next node', 'warning');
-          }
-      }else{
-          cc('data['+i+'] is NULL or undefined', 'error');
-      }
-    } // end for // iterate through dataay
-  } // end check for course or courses
-  else if (item_TYPE == 'parent_ID' ) {
-    console.log('checking parent_ID...');
-    for(var i = 0; i < data.length; i++) {
-      cc('iterating through data COUNT = '+i, 'info',disable_console_log);
-      cc('data.length = '+data.length, 'info',disable_console_log);
-      cc('node = data['+i+']:','info',disable_console_log );
-      console.log(data[i]);
-
-      if (data[i] != null && data[i] != undefined) {
-          if (data[i].id == item_ID) {
-              found = true;
-              cc('ID MATCHED!!!: '+found, 'success');
-              cc('Parent Details: Name('+data[i].name+') ID('+data[i].id+')', 'success');
-              return { // return dataay of data including labels for access
-                  id: data[i].id,
-                  name: data[i].name
-              };
-              break;
-          }
-          else{
-            cc('ID not matched in data['+i+'], moving on to the next node', 'warning',disable_console_log);
           }
       }else{
           cc('data['+i+'] is NULL or undefined', 'error');
