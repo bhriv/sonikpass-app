@@ -60,6 +60,95 @@ $( "button.trigger" ).click(function( event ) {
 	// cc(api.users);
 });
 
+function getAllAccounts(chained_action) {
+	cc('getAllAccounts','run');
+	// event.preventDefault();
+	var request_done = $.getJSON(api.accounts, function( json ){
+		cc('Requesting data from endpoint: '+api.accounts);
+	})
+	.always(function( json ) {
+  	// var data = _.flatten(json);
+  	cc( "Data Returned: \n",'info' );
+  	console.log(json);
+  })
+  .success(function( json ) {
+  	var data = _.flatten(json);
+  	cc( "Request Success: \n",'success' );
+  })
+  .fail(function( jqxhr, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    cc( "Request Failed: " + err,'error' );
+    cc('Response: \n',jqxhr,'error');
+    handleAjaxError(jqxhr);
+	});
+
+	$.when(request_done).then(function(data){
+	  // After the error has been processed, display User friendly feedback with instructions. 
+	  cc('getAllAccounts request_done. chained_action = '+chained_action);
+	  switch(chained_action){
+	  	case 'listAllAccounts':
+	  				listAllAccounts(data);		
+	  				break
+	  	case 'listFirstAccount':
+	  				listFirstAccount(data);		
+	  				break
+	  	default :
+	  				cc('No chained_action set for getAllAccounts','warning');
+	  				console.log(data);
+	  }
+	});
+}
+
+function listFirstAccount(data) {
+	cc('listFirstAccount','run');
+	for (i = 0; i < 1; i++) { 
+		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+  }
+}
+function listAllAccounts(data) {
+	cc('listAllAccounts','run');
+	for (i = 0; i < data.length; i++) { 
+		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+  }
+}
+
+
+$( "body.dashboard button" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	event.preventDefault();
+	getAllAccounts(id);
+});
+
+// $( "#listAllAccounts" ).click(function( event ) {
+// 	var id = $(this).attr("id");
+// 	cc(id,'run');
+// 	event.preventDefault();
+// 	getAllAccounts(id);
+// });
+
+// $( "#listFirstAccount" ).click(function( event ) {
+// 	var id = $(this).attr("id");
+// 	cc(id,'run');
+// 	event.preventDefault();
+// 	getAllAccounts(id);
+// });
+
+// $( "#listAllUsers" ).click(function( event ) {
+// 	cc('listAllUsers','run');
+// 	event.preventDefault();
+// 	// cc(api.accounts);
+// 	// cc(api.users);
+// });
+
+$( "#getUserByID" ).click(function( event ) {
+	cc('getUserByID','run');
+	event.preventDefault();
+	var id = $( "input[name='getUserByID']" ).val();
+	cc('submitted ID: '+id);
+	// cc(api.users);
+});
+
 
 $( "#newAccount" ).submit(function( event ) {
 	// Stop form from submitting normally
