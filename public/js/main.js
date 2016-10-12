@@ -92,6 +92,9 @@ function getAllAccounts(chained_action) {
 	  	case 'listFirstAccount':
 	  				listFirstAccount(data);		
 	  				break
+	  	case 'listAllUsers':
+	  				listAllUsers(data);		
+	  				break
 	  	default :
 	  				cc('No chained_action set for getAllAccounts','warning');
 	  				console.log(data);
@@ -109,6 +112,17 @@ function listAllAccounts(data) {
 	cc('listAllAccounts','run');
 	for (i = 0; i < data.length; i++) { 
 		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+  }
+}
+
+function listAllUsers(data) {
+	cc('listAllAccounts','run');
+	for (i = 0; i < data.length; i++) { 
+		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+		var users = data[i].users;
+		for (u = 0; u < users.length; u++) { 
+			cc(' - Username: '+users[u].username+' ID:'+users[u].id,'done')
+	  }
   }
 }
 
