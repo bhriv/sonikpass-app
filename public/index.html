@@ -2,42 +2,11 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Sonikpass - Everything Secure. Everything Passwordless.</title>
+	<title>Sonikpass REST Testing.</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<meta property="og:title" content="Sonikpass: The Future Of Identity Managament">
-	<meta property="og:site_name" content="site">
-	<meta property="og:url" content="http://www.sonikpass.com/">
-	<meta property="og:description" content="We set out to create an identity management solution that was built for the future and had the most elegant user experience. We came up with something that can be deployed at the most critical government, commercial, and non-profit institutions in the world to solve identity problems we could not even imagine.">
-	<meta property="og:image" content="http://www.sonikpass.com/html/assets/thumb.jpg" />
-	<meta property="og:type" content="website">
-	<meta name="twitter:card" content="summary">
-	<meta name="twitter:site" content="@sonikpass">
-	<meta name="twitter:title" content="Sonikpass: The Future Of Identity Managament">
-	<meta name="twitter:description" content="We set out to create an identity management solution that was built for the future and had the most elegant user experience.">
-	<meta name="twitter:image:src" content="http://www.sonikpass.com/assets/thumb.jpg">
-	<meta name="robots" content="index, follow">
-	<meta name="description" content="We set out to create an identity management solution that was built for the future and had the most elegant user experience." />
-	<link rel="canonical" href="http://www.sonikpass.com/" />
-    <!-- <link rel="apple-touch-icon" sizes="57x57" href="http://www.sonikpass.com/assets/icons/apple-touch-icon-57x57-precomposed.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-60x60-precomposed.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-72x72-precomposed.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-76x76-precomposed.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-114x114-precomposed.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-120x120-precomposed.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-144x144-precomposed.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="http://www.sonikpass.com/html/assets/icons/apple-touch-icon-152x152-precomposed.png">
-    <link rel="icon" type="image/png" href="http://www.sonikpass.com/html/assets/icons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="http://www.sonikpass.com/html/assets/icons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="http://www.sonikpass.com/html/assets/icons/favicon-16x16.png" sizes="16x16"> -->
-    <link rel="manifest" href="http://www.sonikpass.com/html/manifest.json">
-    <meta name="msapplication-TileColor" content="#ce3745">
-    <meta name="msapplication-TileImage" content="http://www.sonikpass.com/html/assets/icons/mstile-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-    <!-- <link rel="shortcut icon" href="http://www.sonikpass.com/assets/icons/favicon.ico"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/style.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.min.css">
 	
 	<style type="text/css">
 		#testing-only{
@@ -70,46 +39,75 @@
 		a:hover{
 			cursor: pointer;
 		}
+		body{
+			min-height: 1200px;
+			overflow-y: auto;
+		}
+		html {
+	    overflow: -moz-scrollbars-vertical; 
+	    overflow-y: scroll;
+	}
 	</style>
 </head>
 <body class="is-loading testing dashboard">
 
-	<div id="testing-only" style="border: 2px solid red;padding: 1em; width: 400px; float: none;margin: 0 auto;">
+	<div id="current-user" style="border: 2px solid blue;padding: 1em; width: 400px; float: none;margin: 0 auto;">
+		Current User
+		<span class="user-status"></span>
 
-      <p><strong>Testing Area</strong></p>
-      <hr>
-      <div id="listData">	
-				<button id="listAllAccounts">listAllAccounts</button>
-				<button id="listAllUsers">listAllUsers</button>
-				<button id="listFirstAccount">listFirstAccount</button>
-			</div>
+		<form id="tempLogin">
+		  Username: <input type="email" name="userEmail" placeholder="brichards@sonikpass.com"><br>
+		  Account ID: <input type="text"  name="accountID" placeholder="123456" value="123456">
+		  <input type="submit" value="Temp Login">
+		</form>
+
+		<span class="user-actions" style="display: none;">
 			<hr>
-			<input type="text" name="checkForAccountID" placeholder="123456" value="">
-		  <button id="checkForAccountID">checkForAccountID</button><br>(Valid Tests: 123456,69328857,71896572)
-		  <hr>
-		  <input type="text" name="checkForUsername" placeholder="123456" value="">
-		  <button id="checkForUsername">checkForUsername</button><br>(Valid Tests: brichards@sonikpass.com,ipsum.veniam,culpa.aliqua)
-		  <hr>
-		  <input type="text" name="getUserByID" placeholder="15000035,66173435,15037230">
-		  <button id="getUserByID">getUserByID</button><br>(Valid Tests: 15000035,66173435,15037230,16495943)
-		  <hr>
-		  <input type="text" name="getAccountByID" placeholder="123456,66173435,15037230">
-		  <button id="getAccountByID">getAccountByID</button><br>(Valid Tests: 123456,69328857,71896572)
-		  <hr>
-	  	<form id="newAccount">
-			  <input type="email" name="u" placeholder="username (email)">
-			  <input type="submit" value="Check if username exists">
-			</form>
-		  <hr>
-		  <p><strong>Results</strong></p>
-		  <div class="result" style="display:none">
-      	<header></header>
-      	<p></p>
-      </div>
-		  <ul id="response_details"></ul>
+			<p><strong>Actions</strong></p>
+			<button class="deactivate_user">Deactivate User</button>
+			<button href="#" id="logout">Logout</button>
+		</span>
+
+	</div>
+	<div id="testing-only" style="border: 2px solid red;padding: 1em; width: 400px; float: none;margin: 0 auto;">
+    <p><strong>Testing Area</strong></p>
+    <hr>
+    <div id="listData">	
+			<button id="listAllAccounts">listAllAccounts</button>
+			<button id="listAllUsers">listAllUsers</button>
+			<!-- <button id="listFirstAccount">listFirstAccount</button> -->
+		</div>
+		<hr>
+		<input type="text" name="checkForAccountID" placeholder="123456" value="">
+	  <button id="checkForAccountID">checkForAccountID</button><br>(Valid Tests: 123456,69328857,71896572)
+	  <hr>
+	  <input type="text" name="checkForUsername" placeholder="123456" value="">
+	  <button id="checkForUsername">checkForUsername</button><br>(Valid Tests: brichards@sonikpass.com,ipsum.veniam,culpa.aliqua)
+	  <hr>
+	  <input type="text" name="getUserByID" placeholder="15000035,66173435,15037230">
+	  <button id="getUserByID">getUserByID</button><br>(Valid Tests: 15000035,66173435,15037230,16495943)
+	  <hr>
+	  <input type="text" name="getAccountByID" placeholder="123456,66173435,15037230">
+	  <button id="getAccountByID">getAccountByID</button><br>(Valid Tests: 123456,69328857,71896572)
+	  <hr>
+	  <small>Enter a valid getUserByID and the matching getAccountByID values above</small>
+	  <button id="getUserByAccountIDandUserID">getUserByAccountIDandUserID</button><br>(Valid Tests: 123456,69328857,71896572)
+	  <hr>
+	  <p>#setupNewAccount requires the /account/ endpoint to be working</p>
+  	<form id="setupNewAccount">
+		  <input type="email" name="newAccount" placeholder="username (email)">
+		  <input type="submit" value="Setup New Account">
+		</form>
+	  <hr>
+	  <hr>
+	  <hr>
+	  <p><strong>Results</strong></p>
+	  <div class="result" style="display:none">
+    	<header></header>
+    	<p></p>
     </div>
-
-
+	  <ul id="response_details"></ul>
+  </div>
 	<script src="js/vendor/bundle.js"></script>
 	<script src="js/main.js"></script>
 

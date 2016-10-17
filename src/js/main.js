@@ -50,8 +50,8 @@ console.log('Sonikpass v1.1');
 // Define Static endpoints
 
 var api = {
-	account : 	'/api/v1/accounts/',
-	accounts : 	'/api/v1/accounts/all.js',
+	account : 	'/api/v1/account/',
+	accounts : 	'/api/v1/account/all.js',
 	// users : 	'users.js'
 };
 
@@ -68,14 +68,24 @@ $( "body.testing button" ).click(function( event ) {
 	$('div.result').html('');
 });
 
-function processRequestedAction(chained_action,search_id,item_type) {
+currentUserStatus();
+
+function processRequestedAction(chained_action,search_id,item_type,user_id) {
 	cc('processRequestedAction','run');
 	// event.preventDefault();
-	var data_source = api.accounts;
-	if (chained_action == 'getAccountByID' || chained_action == 'listAllAccounts' || search_id == 'all') {
-		// @FIXME - testing only
-		data_source = api.account+search_id+'.js';
-	}
+	var data_source = api.account;
+	// @FIXME - testing only
+	// Use hard coded routes to data files to test routing to full endpoints
+	// When the server endpoints are configured comment out the TEST ENDPOINT lines below.
+	// START TEST ENDPOINTS
+		var data_source = api.accounts;
+		if (chained_action == 'getAccountByID' || chained_action == 'listAllAccounts' || search_id == 'all') {
+			data_source = api.account+search_id+'.js';
+		}
+		if (chained_action == 'getUserByAccountIDandUserID') {
+			data_source = api.account+search_id+'/user/'+user_id+'.js';
+		}
+	// END TEST ENDPOINTS
 
 	var request_done = $.getJSON(data_source, function( json ){
 		cc('Requesting data from endpoint: '+data_source);
@@ -137,6 +147,10 @@ function processRequestedAction(chained_action,search_id,item_type) {
 	  					cc('user was NOT found','info');
 	  				}
 	  				break
+	  	case 'getUserByAccountIDandUserID':
+	  				cc('getUserByAccountIDandUserID','highlight');
+	  				listFullUserDetails(data);
+	  				break
 	  	case 'getAccountByID':
 	  				var found = findItemByID(data,search_id,item_type,false);		
 	  				cc('found_account data:','done');
@@ -152,6 +166,7 @@ function processRequestedAction(chained_action,search_id,item_type) {
 	  }
 	});
 }
+
 
 function listFirstAccount(data) {
 	cc('listFirstAccount','run');
@@ -184,9 +199,18 @@ function listFoundAccountDetails(data) {
 function listFoundUserDetails(data) {
 	cc('listFoundUserDetails','run');
 	console.log(data);
-	data = JSON.parse(data);
+	data = JSON.parse(data);	
 	$('#response_details').html('');
 	var content = '<li>FOUND USER with ID:'+data.id+'<br>'+data.username+' Contact: '+data.contact[0].given_name+' '+data.contact[0].surname+' ('+data.email[0].address+')<br> Telephone'+data.telephone[0].number+'</li>'
+	$('#response_details').append(content)
+}
+
+function listFullUserDetails(data) {
+	cc('listFullUserDetails','run');
+	console.log(data);
+	data = data[0];
+	$('#response_details').html('');
+	var content = '<li>USER ID:'+data.id+'<br>'+data.username+' is_enabled: '+data.lifespan.is_enabled+' Contact: '+data.contact[0].given_name+' '+data.contact[0].surname+' ('+data.email[0].address+')<br> Telephone'+data.telephone[0].number+'</li>'
 	$('#response_details').append(content)
 }
 
@@ -293,13 +317,129 @@ $( "#getAccountByID" ).click(function( event ) {
 	}
 });
 
-$( "#newAccount" ).submit(function( event ) {
+$( "#getUserByAccountIDandUserID" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	event.preventDefault();
+	var a_id = $( "input[name='getAccountByID']" ).val();
+	var user_id = $( "input[name='getUserByID']" ).val();
+	cc('submitted ID: '+a_id);
+	if (a_id == '' || user_id == '') {
+		alert('Please enter an ID in both getAccountByID and getUserByID')
+	}else{
+		processRequestedAction(id,a_id,'account',user_id);	
+	}
+});
+
+
+$( "#logout" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc('logout','highlight')
+	cc(id,'run');
+	event.preventDefault();
+	logoutAction();
+});
+
+function logoutAction() {
+	localStorage.removeItem('logged_in_user');
+	$('.user-actions').hide();
+	currentUserStatus();
+}
+
+$( ".deactivate_user" ).click(function( event ) {
+	var id = $(this).attr("class");
+	cc(id,'run');
+	event.preventDefault();
+	var data = localStorage.getItem('logged_in_user');
+	data = JSON.parse(data);
+	console.log(data);
+	// Add data to expected format
+	var accountID = data.account_id;
+	var userEmail = data.users[0].email[0].address;
+ 	var new_data = {
+	  account_id: accountID,
+	  users: [
+	    {
+	      username: userEmail,
+	      email: [
+	        {
+	          label: 'primary',
+	          address: userEmail
+	        }
+	      ],
+	      lifespan: {
+	      	is_enabled : false
+	      }
+	    }
+	  ]  
+	};
+	// set local user
+	localStorage.removeItem('logged_in_user');
+	localStorage.setItem('logged_in_user',JSON.stringify(new_data));
+	currentUserStatus();
+});
+
+
+$( "#tempLogin" ).submit(function( event ) {
+	var id = $(this).attr("class");
+	cc(id,'run');
+	// Stop form from submitting normally
+  event.preventDefault();
+  // Get some values from elements on the page:
+  var $form = $(this);
+  var userEmail = $form.find( "input[name='userEmail']" ).val();
+  var accountID = $form.find( "input[name='accountID']" ).val();
+  if (userEmail == '') {
+  	alert('Please enter a valid test email as the username');
+  	logoutAction();
+  }
+  // Add data to expected format
+ 	var formData = {
+	  account_id: accountID,
+	  users: [
+	    {
+	      username: userEmail,
+	      email: [
+	        {
+	          label: 'primary',
+	          address: userEmail,
+	          confirmed: false
+	        }
+	      ],
+	      lifespan: {
+	      	is_enabled : true
+	      }
+	    }
+	  ]  
+	};
+	// set local user
+	localStorage.setItem('logged_in_user',JSON.stringify(formData));
+	currentUserStatus();
+});
+
+function currentUserStatus(){
+	cc('currentUserStatus','run');
+	var data = localStorage.getItem('logged_in_user');
+	data = JSON.parse(data);
+	console.log(data);
+	if (data != null && data != undefined) {
+		$('body span.user-status').html('Logged In As: '+data.users[0].username+'<br>User Account Enabled:'+data.users[0].lifespan.is_enabled);
+		$('body .user-actions').show();
+		$('#tempLogin').hide();
+	}else{
+		$('body span.user-status').html('Not Logged In');
+		$('#tempLogin').show();
+	}
+}
+
+
+$( "#setupNewAccount" ).submit(function( event ) {
 	// Stop form from submitting normally
   event.preventDefault();
 
   // Get some values from elements on the page:
   var $form = $(this);
-  var userEmail = $form.find( "input[name='u']" ).val();
+  var userEmail = $form.find( "input[name='newAccount']" ).val();
 
   // Add data to expected format
  	var formData = {
@@ -320,35 +460,21 @@ $( "#newAccount" ).submit(function( event ) {
 
 	localStorage.setItem('newAccount',JSON.stringify(formData));
 	// Send data to Add User endpoint
-	// $.ajax({
-	//     url: api_url,
-	//     type: "POST",
-	//     data: formData,
-	//     processData: false,
-	//     contentType: 'application/json'
-	// });
-	
-	var data_source = api.accounts;
-  // To test a FAIL, set the following: 
+	var data_source = api.account;
+	// To test a FAIL, set the following: 
   // var data_source = 'failtest.js';
-	$.getJSON(data_source, function( json ){
-		console.log('Requested data from URL: '+data_source);
+	$.ajax({
+	    url: data_source,
+	    type: "POST",
+	    data: formData,
+	    processData: false,
+	    contentType: 'application/json'
 	})
+	// $.getJSON(data_source, function( json ){
+	// 	console.log('Requested data from URL: '+data_source);
+	// })
   .success(function( json ) {
-  	cc( "DONE: JSON Data Returned: \n" + json,'info' );
-  	var all_accounts = _.flatten(json);
-  	console.log(all_accounts);
-  	// var found_user = _.findWhere(json, {newsroom: "The New York Times"});
-    var first_account = json[0];
-    var first_user = first_account.users[0];
-    console.log(first_account.users);
-    cc( "Finding match for username:"+userEmail,'info' );
-    if (first_user.username == userEmail) {
-    	cc('SUCCESS: '+first_user.contact[0].given_name +' '+first_user.contact[0].surname+ ', with email: '+first_user.email[0].address+ ' is in the User.js file list of users','success');
-    }else{
-    	cc('FAIL: username not found','error');
-    }
-
+  	cc( "POST successful JSON Data Returned: \n" + json,'info' );
   })
   .fail(function( jqxhr, textStatus, error ) {
     var err = textStatus + ", " + error;
@@ -358,6 +484,7 @@ $( "#newAccount" ).submit(function( event ) {
 	});
 
 });
+
 
 /* =======================================
     Find Data within Array - Find a Needle in a Haystack
