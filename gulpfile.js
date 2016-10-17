@@ -27,7 +27,7 @@ var vendorFiles = [
 	'src/js/vendor/ScrollMagic.js',
 	'src/js/vendor/animation.gsap.js',
 	'src/js/vendor/jquery.waypoints.min.js',
-	'src/js/useful',
+	'src/js/vendor/useful.js',
 ];
 
 // var customFiles = [

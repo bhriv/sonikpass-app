@@ -36,8 +36,9 @@
     <meta name="msapplication-TileImage" content="http://www.sonikpass.com/html/assets/icons/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <!-- <link rel="shortcut icon" href="http://www.sonikpass.com/assets/icons/favicon.ico"> -->
-
-	<link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/style.min.css">
+	
 	<style type="text/css">
 		#testing-only{
 			z-index: 99999;
@@ -57,7 +58,18 @@
 			font-weight: bold;
 			border: 4px solid orange;
 		}
-
+		ul ul{
+			margin-bottom: 2em;
+		}
+		strong{
+			font-weight: 700;
+		}
+		a{
+			text-decoration: underline;
+		}
+		a:hover{
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body class="is-loading testing dashboard">
@@ -65,33 +77,36 @@
 	<div id="testing-only" style="border: 2px solid red;padding: 1em; width: 400px; float: none;margin: 0 auto;">
 
       <p><strong>Testing Area</strong></p>
-      <h2>Test Response Handling</h2>
-      <p>
-        <button class="trigger">Test Trigger</button>
-        <div class="result" style="display:none">
-        	<header></header>
-        	<p></p>
-        </div>
-        <!-- the result of the search will be rendered inside this div -->
-		<div id="result"></div>
-      </p>
-
-      <h2>Test New Account</h2>
-       	<form id="newAccount">
-		  <input type="email" name="u" placeholder="username (email)">
-		  <input type="submit" value="Check if username exists">
-		</form>
-
-		
+      <hr>
+      <div id="listData">	
+				<button id="listAllAccounts">listAllAccounts</button>
+				<button id="listAllUsers">listAllUsers</button>
+				<button id="listFirstAccount">listFirstAccount</button>
+			</div>
+			<hr>
+			<input type="text" name="checkForAccountID" placeholder="123456" value="">
+		  <button id="checkForAccountID">checkForAccountID</button><br>(Valid Tests: 123456,69328857,71896572)
+		  <hr>
+		  <input type="text" name="checkForUsername" placeholder="123456" value="">
+		  <button id="checkForUsername">checkForUsername</button><br>(Valid Tests: brichards@sonikpass.com,ipsum.veniam,culpa.aliqua)
+		  <hr>
 		  <input type="text" name="getUserByID" placeholder="15000035,66173435,15037230">
-		  <button id="getUserByID">getUserByID</button>
-		
-
-			
-			<button id="listAllAccounts">listAllAccounts</button>
-			<button id="listFirstAccount">listFirstAccount</button>
-			<button id="listAllUsers">listAllUsers</button>
-
+		  <button id="getUserByID">getUserByID</button><br>(Valid Tests: 15000035,66173435,15037230,16495943)
+		  <hr>
+		  <input type="text" name="getAccountByID" placeholder="123456,66173435,15037230">
+		  <button id="getAccountByID">getAccountByID</button><br>(Valid Tests: 123456,69328857,71896572)
+		  <hr>
+	  	<form id="newAccount">
+			  <input type="email" name="u" placeholder="username (email)">
+			  <input type="submit" value="Check if username exists">
+			</form>
+		  <hr>
+		  <p><strong>Results</strong></p>
+		  <div class="result" style="display:none">
+      	<header></header>
+      	<p></p>
+      </div>
+		  <ul id="response_details"></ul>
     </div>
 
 

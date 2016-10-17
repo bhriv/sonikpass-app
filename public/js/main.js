@@ -50,8 +50,9 @@ console.log('Sonikpass v1.1');
 // Define Static endpoints
 
 var api = {
-	accounts : 	'accounts.js',
-	users : 	'users.js'
+	account : 	'/api/v1/accounts/',
+	accounts : 	'/api/v1/accounts/all.js',
+	// users : 	'users.js'
 };
 
 $( "button.trigger" ).click(function( event ) {
@@ -60,11 +61,24 @@ $( "button.trigger" ).click(function( event ) {
 	// cc(api.users);
 });
 
-function getAllAccounts(chained_action) {
-	cc('getAllAccounts','run');
+$( "body.testing button" ).click(function( event ) {
+	event.preventDefault();
+	cc('clearing results','info');
+	$('#response_details').html('');
+	$('div.result').html('');
+});
+
+function processRequestedAction(chained_action,search_id,item_type) {
+	cc('processRequestedAction','run');
 	// event.preventDefault();
-	var request_done = $.getJSON(api.accounts, function( json ){
-		cc('Requesting data from endpoint: '+api.accounts);
+	var data_source = api.accounts;
+	if (chained_action == 'getAccountByID' || chained_action == 'listAllAccounts' || search_id == 'all') {
+		// @FIXME - testing only
+		data_source = api.account+search_id+'.js';
+	}
+
+	var request_done = $.getJSON(data_source, function( json ){
+		cc('Requesting data from endpoint: '+data_source);
 	})
 	.always(function( json ) {
   	// var data = _.flatten(json);
@@ -84,10 +98,11 @@ function getAllAccounts(chained_action) {
 
 	$.when(request_done).then(function(data){
 	  // After the error has been processed, display User friendly feedback with instructions. 
-	  cc('getAllAccounts request_done. chained_action = '+chained_action);
+	  cc('processRequestedAction request_done. chained_action = '+chained_action);
 	  switch(chained_action){
 	  	case 'listAllAccounts':
-	  				listAllAccounts(data);		
+	  				cc('listAllAccounts','highlight')
+	  				listAllAccounts(data);	
 	  				break
 	  	case 'listFirstAccount':
 	  				listFirstAccount(data);		
@@ -95,8 +110,44 @@ function getAllAccounts(chained_action) {
 	  	case 'listAllUsers':
 	  				listAllUsers(data);		
 	  				break
+	  	case 'checkForAccountID':
+	  				var found = findItemByID(data,search_id,item_type,false);		
+	  				cc('found_account data:','done');
+	  				if (found != undefined) {
+	  					listFoundAccountDetails(found);
+	  				}else{
+	  					cc('account was NOT found','info');
+	  				}
+	  				break
+	  	case 'checkForUsername':
+	  				var found = findItemByID(data,search_id,item_type,false);		
+	  				cc('found_username data:','done');
+	  				if (found != undefined) {
+	  					listFoundUserDetails(found);	
+	  				}else{
+	  					cc('username was NOT found','info');
+	  				}
+	  				break
+	  	case 'getUserByID':
+	  				var found = findItemByID(data,search_id,item_type,false);		
+	  				cc('found_user data:','done');
+	  				if (found != undefined) {
+	  					listFoundUserDetails(found);
+	  				}else{
+	  					cc('user was NOT found','info');
+	  				}
+	  				break
+	  	case 'getAccountByID':
+	  				var found = findItemByID(data,search_id,item_type,false);		
+	  				cc('found_account data:','done');
+	  				if (found != undefined) {
+	  					listFoundAccountDetails(found);
+	  				}else{
+	  					cc('account was NOT found','info');
+	  				}
+	  				break
 	  	default :
-	  				cc('No chained_action set for getAllAccounts','warning');
+	  				cc('No chained_action set for processRequestedAction','warning');
 	  				console.log(data);
 	  }
 	});
@@ -105,72 +156,146 @@ function getAllAccounts(chained_action) {
 function listFirstAccount(data) {
 	cc('listFirstAccount','run');
 	for (i = 0; i < 1; i++) { 
-		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+		cc('Account: '+data[i].name+' ID:'+data[i].id)
   }
 }
+
 function listAllAccounts(data) {
 	cc('listAllAccounts','run');
+	console.log(data);
+
 	for (i = 0; i < data.length; i++) { 
-		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+		cc('Account: '+data[i].name+' ID:'+data[i].id)
+		var content = '<li>ACCOUNT ID:'+data[i].id+' '+data[i].name+' <br>Billing ID'+data[i].billing_id+'<br>Contact: '+data[i].users[0].contact[0].given_name+' '+data[i].users[0].contact[0].surname+' ('+data[i].users[0].email[0].address+')<hr></li>'
+	$('#response_details').append(content)
   }
+}
+
+function listFoundAccountDetails(data) {
+	cc('listFoundAccountDetails','run');
+	console.log(data);
+	data = JSON.parse(data);
+	
+	var content = '<li>FOUND ACCOUNT with ID:'+data.id+'<br>'+data.name+' <br>Billing ID'+data.billing_id+'<br>Contact: '+data.users[0].contact[0].given_name+' '+data.users[0].contact[0].surname+' ('+data.users[0].email[0].address+')</li>'
+	$('#response_details').append(content)
+}
+
+
+function listFoundUserDetails(data) {
+	cc('listFoundUserDetails','run');
+	console.log(data);
+	data = JSON.parse(data);
+	$('#response_details').html('');
+	var content = '<li>FOUND USER with ID:'+data.id+'<br>'+data.username+' Contact: '+data.contact[0].given_name+' '+data.contact[0].surname+' ('+data.email[0].address+')<br> Telephone'+data.telephone[0].number+'</li>'
+	$('#response_details').append(content)
 }
 
 function listAllUsers(data) {
-	cc('listAllAccounts','run');
-	for (i = 0; i < data.length; i++) { 
-		cc('Account: '+data[i].name+' ID:'+data[i].account_id)
+	cc('listAllUsers (from all accounts)','run');
+	for (var i = 0; i < data.length; i++) { 
+		cc('Account: '+data[i].name+' ID:'+data[i].id)
+		var account_data = JSON.stringify( data[i]);
+		var content = '<li class="accounts" data-accountdata="'+account_data+'" id="account-'+data[i].id+'"><strong>Account</strong> ID: '+data[i].id+' <strong>Company</strong>:'+data[i].name+'</li>';
+		$('#response_details').append(content);
 		var users = data[i].users;
+		var sub_content = '';
 		for (u = 0; u < users.length; u++) { 
-			cc(' - Username: '+users[u].username+' ID:'+users[u].id,'done')
+			cc(' - Username: '+users[u].username+' ID:'+users[u].id,'done');
+			var user_data = JSON.stringify( users[u]);
+			sub_content = sub_content+ '<li data-userdata="'+user_data+'"> Username: '+users[u].username+' ID:'+users[u].id+'</li>';
 	  }
+	  $('#account-'+data[i].id).append('<ul></ul>');
+	  $('#account-'+data[i].id+' ul').append(sub_content);
   }
 }
 
 
-$( "body.dashboard button" ).click(function( event ) {
+$( "#listAllAccounts" ).click(function( event ) {
 	var id = $(this).attr("id");
 	cc(id,'run');
 	event.preventDefault();
-	getAllAccounts(id);
+	processRequestedAction(id,'all','accounts');	
 });
 
-// $( "#listAllAccounts" ).click(function( event ) {
+$( "#listAllUsers" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	event.preventDefault();
+	processRequestedAction(id,'all','accounts');	
+});
+
+$( "a.user-link" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	alert(id);
+	var dt = $(this).data( "options").name;
+	alert(dt);
+});
+
+// $( "#response_details li.accounts a" ).click(function( event ) {
 // 	var id = $(this).attr("id");
 // 	cc(id,'run');
-// 	event.preventDefault();
-// 	getAllAccounts(id);
+// 	// event.preventDefault();
+// 	// processRequestedAction(id);
+// 	alert(id)
 // });
 
-// $( "#listFirstAccount" ).click(function( event ) {
-// 	var id = $(this).attr("id");
-// 	cc(id,'run');
-// 	event.preventDefault();
-// 	getAllAccounts(id);
-// });
 
-// $( "#listAllUsers" ).click(function( event ) {
-// 	cc('listAllUsers','run');
-// 	event.preventDefault();
-// 	// cc(api.accounts);
-// 	// cc(api.users);
-// });
+$( "#checkForAccountID" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	event.preventDefault();
+	var a_id = $( "input[name='checkForAccountID']" ).val();
+	cc('submitted ID: '+a_id);
+	if (a_id == '') {
+		alert('Please enter an ID')
+	}else{
+		processRequestedAction(id,a_id,'account');	
+	}
+});
+
+$( "#checkForUsername" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	event.preventDefault();
+	var a_id = $( "input[name='checkForUsername']" ).val();
+	cc('submitted username: '+a_id);
+	if (a_id == '') {
+		alert('Please enter a username')
+	}else{
+		processRequestedAction(id,a_id,'username');	
+	}
+});
 
 $( "#getUserByID" ).click(function( event ) {
-	cc('getUserByID','run');
+	var id = $(this).attr("id");
+	cc(id,'run');
 	event.preventDefault();
-	var id = $( "input[name='getUserByID']" ).val();
-	cc('submitted ID: '+id);
-	// cc(api.users);
+	var a_id = $( "input[name='getUserByID']" ).val();
+	cc('submitted ID: '+a_id);
+	if (a_id == '') {
+		alert('Please enter an ID')
+	}else{
+		processRequestedAction(id,a_id,'user');	
+	}
 });
 
+$( "#getAccountByID" ).click(function( event ) {
+	var id = $(this).attr("id");
+	cc(id,'run');
+	event.preventDefault();
+	var a_id = $( "input[name='getAccountByID']" ).val();
+	cc('submitted ID: '+a_id);
+	if (a_id == '') {
+		alert('Please enter an ID')
+	}else{
+		processRequestedAction(id,a_id,'account');	
+	}
+});
 
 $( "#newAccount" ).submit(function( event ) {
 	// Stop form from submitting normally
   event.preventDefault();
-
-  var data_source = api.accounts;
-  // To test a FAIL, set the following: 
-  // var data_source = 'failtest.js';
 
   // Get some values from elements on the page:
   var $form = $(this);
@@ -203,6 +328,9 @@ $( "#newAccount" ).submit(function( event ) {
 	//     contentType: 'application/json'
 	// });
 	
+	var data_source = api.accounts;
+  // To test a FAIL, set the following: 
+  // var data_source = 'failtest.js';
 	$.getJSON(data_source, function( json ){
 		console.log('Requested data from URL: '+data_source);
 	})
@@ -220,6 +348,7 @@ $( "#newAccount" ).submit(function( event ) {
     }else{
     	cc('FAIL: username not found','error');
     }
+
   })
   .fail(function( jqxhr, textStatus, error ) {
     var err = textStatus + ", " + error;
@@ -230,8 +359,79 @@ $( "#newAccount" ).submit(function( event ) {
 
 });
 
+/* =======================================
+    Find Data within Array - Find a Needle in a Haystack
+* ======================================= */
 
+// given a data object (arr) and a value (query_item_id), check to see if the value is within the data.
+// if value found found in data object, return the data for the matching ID
+// Usage: If a Students ID (value) is found within a Course (arr), return the Student data so the Student ID and name can be displayed
 
+function findItemByID(data,item_ID,item_TYPE,disable_console_log){
+  cc('findItemByID(data,'+item_ID+','+item_TYPE+')','run',disable_console_log);
+  console.log('incoming data:\n',data);
+  var found = false;
+
+  if (item_TYPE == 'account' || item_TYPE == 'accounts') {
+    for(var i = 0; i < data.length; i++) {
+      if (data[i] != null && data[i] != undefined) {
+          if (data[i].id == item_ID) {
+              found = true;
+              cc('ID MATCHED in Data: '+found, 'success');
+              var json = JSON.stringify(data[i]);
+              // console.log('data to return: \n',json);
+              return json;
+              break;
+          }else{
+            cc('ID not matched in data['+i+'], moving on to the next node', 'warning');
+          }
+      }else{
+          cc('data['+i+'] is NULL or undefined', 'error');
+      }
+    } // end for // iterate through dataay
+  } // end check for account
+  else if (item_TYPE == 'user' || item_TYPE == 'user') {
+    for(var i = 0; i < data.length; i++) {
+    	//  only loop through required node
+      var users = data[i].users;
+			for (u = 0; u < users.length; u++) { 
+				cc(' Username: '+users[u].username+' ID:'+users[u].id,'done');
+				if (users[u].id == item_ID) {
+            found = true;
+            cc('ID MATCHED in Data: '+found, 'success');
+            var json = JSON.stringify(users[u]);
+            // console.log('data to return: \n',json);
+            return json;
+            break;
+        }else{
+          cc('ID not matched in users['+u+'], moving on to the next node', 'warning');
+        }
+		  }
+    } // end for // iterate through dataay
+  } // end check for user
+  else if (item_TYPE == 'username') {
+    for(var i = 0; i < data.length; i++) {
+    	//  only loop through required node
+      var users = data[i].users;
+			for (u = 0; u < users.length; u++) { 
+				cc(' Username: '+users[u].username+' ID:'+users[u].id,'done');
+				if (users[u].username == item_ID) {
+            found = true;
+            cc('username MATCHED in Data: '+found, 'success');
+            var json = JSON.stringify(users[u]);
+            // console.log('data to return: \n',json);
+            return json;
+            break;
+        }else{
+          cc('username not matched in users['+u+'], moving on to the next node', 'warning');
+        }
+		  }
+    } // end for // iterate through dataay
+  } // end check for user
+  else{
+    cc('Data type not found. Nothing specified to be done with the incoming data', 'error');
+  } 
+}
 
 
 /********** ERROR HANDLING *************/
