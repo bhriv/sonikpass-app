@@ -14,7 +14,6 @@ console.log('Sonikpass v1.1');
 
 	The 'base_url' is likely to be api.sonikpass.com/v1/ but this is not set in stone. Each session should request the name
 
-
 	GET:
 	Get version: 		base_url/version
 	Get users list	 /account/{accountid}/users
@@ -27,49 +26,65 @@ console.log('Sonikpass v1.1');
  	Delete user	  base_url/account/{accountid}/user/{user_id}
 
  	* Note - Sonikpass currently does not have any DELETE actions. Rather, the 'lifespan.is_enabled' is updated to = false
- 	
- 	Process:
-
-	define vars
- 	
- 	getEndpoint()
-
- 	UI Action Functions
- 	 - getAllEndpointsURIs
- 	 - getEndpoint
- 	 - getCurrentAccountID
- 	 - getCurrentUserID
- 	 - prepareDataToPost
- 	 - postData
- 	 - getData
- 	 - handleResponse
- 	 - updateUI
 
 */
 
 // Define Static endpoints
+// @FIXME - replace with call to api.sonikpass.com to fetch all endpoint definitions once available
+var api = [];
+var api_base_url = 'api.sonikpass.com.js';
 
-var api = {
-	account : 	'/api/v1/account/',
-	accounts : 	'/api/v1/account/all.js',
-	// users : 	'users.js'
-};
+//
+function defineEndpointURIs() {
+	var data_source = api_base_url;
 
-$( "button.trigger" ).click(function( event ) {
-	event.preventDefault();
-	// cc(api.accounts);
-	// cc(api.users);
-});
+	var request_done = $.getJSON(data_source, function( json ){
+		cc('Requesting data from endpoint: '+data_source);
+	})
+	.always(function( json ) {
+  	// cc( "Data Returned: \n",'info' );
+  	// console.log(json);
+  })
+  .success(function( json ) {
+  	var data = _.flatten(json);
+  	cc( "Success: API endpoints are defined \n",'success' );
+  	runApplication();
+  })
+  .fail(function( jqxhr, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    cc( "Request Failed: " + err,'error' );
+    cc('Response: \n',jqxhr,'error');
+    handleAjaxError(jqxhr);
+    $('#testing-only').hide();
+    $('#current-user').html('<p class="error">API Endpoint Loading Failed. Fix API Endpoints to proceed.</p>');
+	});
+  // If data returned, determine what to do next
+	$.when(request_done).then(function(data){
+	  cc('defineEndpointURIs request_done.');
+	  api = data[0];
+	  cc('API Base URL for Single Accounts: '+api.account);
+	  cc('API URL for All Accounts: '+api.accounts);
+	  cc('API URL for Version: '+api.version);
+	});
+}
 
-$( "body.testing button" ).click(function( event ) {
-	event.preventDefault();
-	cc('clearing results','info');
-	$('#response_details').html('');
-	$('div.result').html('');
-});
+// Run UI
 
-currentUserStatus();
+defineEndpointURIs();
 
+function runApplication(argument) {
+	currentUserStatus();
+}
+
+/*********************************
+* Core Function for Handling Main UI Actions
+*	--------------------------------
+* - accept the action request and parameters
+* - get data for the corresponding endpoint
+* - handle errors
+* - update UI
+*
+/*********************************/
 function processRequestedAction(chained_action,search_id,item_type,user_id) {
 	cc('processRequestedAction','run');
 	// event.preventDefault();
@@ -106,8 +121,8 @@ function processRequestedAction(chained_action,search_id,item_type,user_id) {
     handleAjaxError(jqxhr);
 	});
 
+  // If data returned, determine what to do next
 	$.when(request_done).then(function(data){
-	  // After the error has been processed, display User friendly feedback with instructions. 
 	  cc('processRequestedAction request_done. chained_action = '+chained_action);
 	  switch(chained_action){
 	  	case 'listAllAccounts':
@@ -167,6 +182,8 @@ function processRequestedAction(chained_action,search_id,item_type,user_id) {
 	});
 }
 
+// Various mock UI update functions 
+// - move to Backbone Collections and Item views once API server configured
 
 function listFirstAccount(data) {
 	cc('listFirstAccount','run');
@@ -194,7 +211,6 @@ function listFoundAccountDetails(data) {
 	var content = '<li>FOUND ACCOUNT with ID:'+data.id+'<br>'+data.name+' <br>Billing ID'+data.billing_id+'<br>Contact: '+data.users[0].contact[0].given_name+' '+data.users[0].contact[0].surname+' ('+data.users[0].email[0].address+')</li>'
 	$('#response_details').append(content)
 }
-
 
 function listFoundUserDetails(data) {
 	cc('listFoundUserDetails','run');
@@ -233,6 +249,42 @@ function listAllUsers(data) {
   }
 }
 
+function logoutAction() {
+	localStorage.removeItem('logged_in_user');
+	$('.user-actions').hide();
+	currentUserStatus();
+}
+
+function currentUserStatus(){
+	cc('currentUserStatus','run');
+	var data = localStorage.getItem('logged_in_user');
+	data = JSON.parse(data);
+	console.log(data);
+	if (data != null && data != undefined) {
+		$('body span.user-status').html('Logged In As: '+data.users[0].username+'<br>User Account Enabled:'+data.users[0].lifespan.is_enabled);
+		$('body .user-actions').show();
+		$('#tempLogin').hide();
+	}else{
+		$('body span.user-status').html('Not Logged In');
+		$('#tempLogin').show();
+	}
+}
+
+
+// User Interaction Specific Test Triggers
+
+// Sinple test for 
+$( "button.trigger" ).click(function( event ) {
+	event.preventDefault();
+	console.log('working');
+});
+
+$( "body.testing button" ).click(function( event ) {
+	event.preventDefault();
+	cc('clearing results','info');
+	$('#response_details').html('');
+	$('div.result').html('');
+});
 
 $( "#listAllAccounts" ).click(function( event ) {
 	var id = $(this).attr("id");
@@ -247,23 +299,6 @@ $( "#listAllUsers" ).click(function( event ) {
 	event.preventDefault();
 	processRequestedAction(id,'all','accounts');	
 });
-
-$( "a.user-link" ).click(function( event ) {
-	var id = $(this).attr("id");
-	cc(id,'run');
-	alert(id);
-	var dt = $(this).data( "options").name;
-	alert(dt);
-});
-
-// $( "#response_details li.accounts a" ).click(function( event ) {
-// 	var id = $(this).attr("id");
-// 	cc(id,'run');
-// 	// event.preventDefault();
-// 	// processRequestedAction(id);
-// 	alert(id)
-// });
-
 
 $( "#checkForAccountID" ).click(function( event ) {
 	var id = $(this).attr("id");
@@ -331,7 +366,6 @@ $( "#getUserByAccountIDandUserID" ).click(function( event ) {
 	}
 });
 
-
 $( "#logout" ).click(function( event ) {
 	var id = $(this).attr("id");
 	cc('logout','highlight')
@@ -340,12 +374,7 @@ $( "#logout" ).click(function( event ) {
 	logoutAction();
 });
 
-function logoutAction() {
-	localStorage.removeItem('logged_in_user');
-	$('.user-actions').hide();
-	currentUserStatus();
-}
-
+// Mock Test Example to Update User status. 
 $( ".deactivate_user" ).click(function( event ) {
 	var id = $(this).attr("class");
 	cc(id,'run');
@@ -379,7 +408,7 @@ $( ".deactivate_user" ).click(function( event ) {
 	currentUserStatus();
 });
 
-
+// Mock User Login - to provide tests for status handling
 $( "#tempLogin" ).submit(function( event ) {
 	var id = $(this).attr("class");
 	cc(id,'run');
@@ -417,33 +446,16 @@ $( "#tempLogin" ).submit(function( event ) {
 	currentUserStatus();
 });
 
-function currentUserStatus(){
-	cc('currentUserStatus','run');
-	var data = localStorage.getItem('logged_in_user');
-	data = JSON.parse(data);
-	console.log(data);
-	if (data != null && data != undefined) {
-		$('body span.user-status').html('Logged In As: '+data.users[0].username+'<br>User Account Enabled:'+data.users[0].lifespan.is_enabled);
-		$('body .user-actions').show();
-		$('#tempLogin').hide();
-	}else{
-		$('body span.user-status').html('Not Logged In');
-		$('#tempLogin').show();
-	}
-}
-
 
 $( "#setupNewAccount" ).submit(function( event ) {
-	// Stop form from submitting normally
-  event.preventDefault();
-
+	cc('setupNewAccount','run');
+  event.preventDefault();// Stop form from submitting normally
   // Get some values from elements on the page:
   var $form = $(this);
   var userEmail = $form.find( "input[name='newAccount']" ).val();
-
   // Add data to expected format
  	var formData = {
-	  account_id: '',
+	  account_id: '', // account ID is blank as this is a new account.
 	  users: [
 	    {
 	      username: userEmail,
@@ -457,7 +469,6 @@ $( "#setupNewAccount" ).submit(function( event ) {
 	    }
 	  ]  
 	};
-
 	localStorage.setItem('newAccount',JSON.stringify(formData));
 	// Send data to Add User endpoint
 	var data_source = api.account;
@@ -574,12 +585,12 @@ function findItemByID(data,item_ID,item_TYPE,disable_console_log){
 
 // var server_error_status_code = '403';
 // var server_error_status_string = 'rate_limit';
-// var processErrors = getErrorLabels(server_error_status_code,server_error_status_string);	
+// var processErrors = getResponseLabels(server_error_status_code,server_error_status_string);	
 
 
 
-function getErrorLabels(server_error_status_code,server_error_status_string){
-	console.log('getErrorLabels');
+function getResponseLabels(server_error_status_code,server_error_status_string){
+	console.log('getResponseLabels');
 	console.log(server_error_status_code);
 	console.log(server_error_status_string);
   // Look through predefined statusErrorFeedback details
@@ -594,6 +605,19 @@ function getErrorLabels(server_error_status_code,server_error_status_string){
 					status: 'error',
 					ui_title: 'Something went wrong.',
 					ui_instruction : 'Please contact support.'
+				}
+			]
+		},
+		{
+			error_code: '200',
+			label: 'OK',
+			ui_title : 'Response OK',
+			ui_class : 'success',
+			error_status : [
+				{
+					status: 'response_ok',
+					ui_title: 'Response OK',
+					ui_instruction : 'The response seems OK.'
 				}
 			]
 		},
@@ -692,13 +716,18 @@ function getErrorInstructions(data,server_error_status_string){
 function handleAjaxError(jqxhr) {
 	console.log('Response Code: '+jqxhr.status);
 	console.log('Response Text: '+jqxhr.statusText);
-	var processErrors = getErrorLabels(jqxhr.status,jqxhr.statusText);	
+	var processErrors = getResponseLabels(jqxhr.status,jqxhr.statusText);	
 	// If there was an error, get the custom response details, display details for User.
 	$.when(processErrors).then(function(data){
 	  // After the error has been processed, display User friendly feedback with instructions. 
+	  cc('processErrors','done');
+	  console.log(data);
 	  var ui_data = data[0];
-	  $('.result').addClass(ui_data.ui_class).html('<strong>'+ui_data.error_code+' Error: '+ui_data.ui_title+'</strong><br>');
-
+	  var error_class = ui_data.ui_class;
+	  if (error_class = undefined) {
+	  	error_class = 'error';
+	  }
+	  $('.result').addClass(error_class).html('<strong>'+ui_data.error_code+' Response: '+ui_data.ui_title+'</strong><br>');
 	  var s = data[0].error_status;
 	  var info = getErrorInstructions(s,jqxhr.statusText);
 	 	info = info[0];
