@@ -20,6 +20,7 @@
     users: [
           '{{repeat(2)}}',
             {
+              id : '{{integer(0, 99999999)}}', // Database generated (unique integer)
               username: '{{lorem(1, "words")}}.{{lorem(1, "words")}}', // UI string (UI - required field, text input, defaults to value of user.email.address) 
               need_facial_images: '{{bool()}}', // Database generated (boolean)
               contact : [{
@@ -30,6 +31,13 @@
                       label : 'primary',        // UI string (UI - dropdown with optional text input, defaults to 'Primary') 
                       address : '{{email()}}',  // UI string, email format  (UI - required email input at initial signup step, multiple emails can be added with unique labels) 
                       confirmed : '{{bool()}}'  // Database generated (boolean)
+              }],
+              lifespan: [{
+                        id : '{{integer(0, 99999999)}}', // Database generated (unique integer)
+                        created : '{{date(new Date(2016, 0, 1), new Date(2016, 2, 1), "YYYY-MM-ddThh:mm:ss Z")}}',      // Database timestamp (Automatically created as the time the record was created)
+                        active_time : '{{date(new Date(2016, 3, 3), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}',            // UI timestamp (UI - date/time input picker. UI defaults to current date/time i.e. "Now". If an authorization_device is currently enabled User gets warning that their current device will be disable upon Confirming the new device activation.)
+                        disable_time : '{{date(new Date(2017, 0, 1), new Date(2018, 2, 1), "YYYY-MM-ddThh:mm:ss Z")}}', // UI timestamp, Datbase default = null, (UI - date/time input picker can override. If "Deactivate Device" UI button is clicked then value defaults to current date/time i.e. "Now". If no authorization_devices have a pending active_time set user receives warning that they will have no active devices during a specified period.)
+                        is_enabled : '{{bool()}}' // Database boolean (UX - Only one device can be active at any time. UI - New devices can be scheduled to become active in the future at which point the previous device 'is_enabled' become false. User gets warning prior to confirming the 'enable' action.)
               }],
               telephone : [{
                       label : 'primary',                       // UI string (UI - dropdown with optional text input, Defaults to 'Primary')
