@@ -1,3 +1,63 @@
+/* =======================================
+    Find Data within Array - Find a Needle in a Haystack
+* ======================================= */
+
+// given a data object (arr) and a value (query_item_id), check to see if the value is within the data.
+// if value found found in data object, return the data for the matching ID
+// Usage: If a Students ID (value) is found within a Course (arr), return the Student data so the Student ID and name can be displayed
+
+function findItemByID(data,item_ID,item_TYPE,disable_console_log){
+  cc('findItemByID(data,'+item_ID+','+item_TYPE+')','run',disable_console_log);
+  console.log('findItemByID - below is the value of the incoming data:\n',data);
+  cc('is data NULL?','info');
+  isItemNullorUndefined(data,true);
+  cc('is item NULL?','info');
+  isItemNullorUndefined(item_ID,true);
+  // ----- TEST TO ENSURE DATA IS WORKING ------ // 
+  // var y = data[0];
+  // console.log(y);
+  // cc('data[0] ID = '+y.id,'success');
+  // cc('data[0] fullname = '+y.fullname,'success');
+  // ------------------------------------------ //
+
+  var found = false;
+  
+  if (item_TYPE == 'account' || item_TYPE == 'accounts') {
+    console.log('checking '+item_TYPE);
+    for(var i = 0; i < data.length; i++) {
+      cc('iterating through data COUNT = '+i, 'info',disable_console_log);
+      cc('data.length = '+data.length, 'info',disable_console_log);
+      
+      cc('node = data['+i+']:','info',disable_console_log);
+      console.log(data[i]);
+
+      if (data[i] != null && data[i] != undefined) {
+          if (data[i].id == item_ID) {
+              found = true;
+              cc('ID MATCHED!!!: '+found, 'success');
+              cc('Full Data Details: Course Name('+data[i], 'success',disable_console_log);
+              // return { // return dataay of data including labels for access
+              //     id: data[i].id,
+              //     category: data[i].category,
+              //     fullname: data[i].fullname,
+              //     shortname: data[i].shortname,
+              //     startdate: data[i].startdate
+              // };
+              break;
+          }
+          else{
+            cc('ID not matched in data['+i+'], moving on to the next node', 'warning');
+          }
+      }else{
+          cc('data['+i+'] is NULL or undefined', 'error');
+      }
+    } // end for // iterate through dataay
+  } // end check for course or courses
+  else{
+    cc('Data type not found. Nothing specified to be done with the incoming data', 'error');
+  } 
+}
+
 /*****************************************************************/
 /*************************** Data Type ***************************/
 /*****************************************************************/

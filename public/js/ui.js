@@ -1,3 +1,290 @@
+/* =======================================
+    Find Data within Array - Find a Needle in a Haystack
+* ======================================= */
+
+// given a data object (arr) and a value (query_item_id), check to see if the value is within the data.
+// if value found found in data object, return the data for the matching ID
+// Usage: If a Students ID (value) is found within a Course (arr), return the Student data so the Student ID and name can be displayed
+
+function findItemByID(data,item_ID,item_TYPE,disable_console_log){
+  cc('findItemByID(data,'+item_ID+','+item_TYPE+')','run',disable_console_log);
+  console.log('findItemByID - below is the value of the incoming data:\n',data);
+  cc('is data NULL?','info');
+  isItemNullorUndefined(data,true);
+  cc('is item NULL?','info');
+  isItemNullorUndefined(item_ID,true);
+  // ----- TEST TO ENSURE DATA IS WORKING ------ // 
+  // var y = data[0];
+  // console.log(y);
+  // cc('data[0] ID = '+y.id,'success');
+  // cc('data[0] fullname = '+y.fullname,'success');
+  // ------------------------------------------ //
+
+  var found = false;
+  
+  if (item_TYPE == 'account' || item_TYPE == 'accounts') {
+    console.log('checking '+item_TYPE);
+    for(var i = 0; i < data.length; i++) {
+      cc('iterating through data COUNT = '+i, 'info',disable_console_log);
+      cc('data.length = '+data.length, 'info',disable_console_log);
+      
+      cc('node = data['+i+']:','info',disable_console_log);
+      console.log(data[i]);
+
+      if (data[i] != null && data[i] != undefined) {
+          if (data[i].id == item_ID) {
+              found = true;
+              cc('ID MATCHED!!!: '+found, 'success');
+              cc('Full Data Details: Course Name('+data[i], 'success',disable_console_log);
+              // return { // return dataay of data including labels for access
+              //     id: data[i].id,
+              //     category: data[i].category,
+              //     fullname: data[i].fullname,
+              //     shortname: data[i].shortname,
+              //     startdate: data[i].startdate
+              // };
+              break;
+          }
+          else{
+            cc('ID not matched in data['+i+'], moving on to the next node', 'warning');
+          }
+      }else{
+          cc('data['+i+'] is NULL or undefined', 'error');
+      }
+    } // end for // iterate through dataay
+  } // end check for course or courses
+  else{
+    cc('Data type not found. Nothing specified to be done with the incoming data', 'error');
+  } 
+}
+
+/*****************************************************************/
+/*************************** Data Type ***************************/
+/*****************************************************************/
+
+function dataType(data,convert_to){
+  cc('dataType', 'run');
+  var data_return = 'not sure';
+
+  if (_.isObject(data)) {
+    cc('original data type is object','info');
+    if(convert_to == 'string' || convert_to == 'JSON'){
+      new_data_object = JSON.stringify(data);
+      if (_.isString(new_data_object)) {
+        cc('data is NOW converted from object to string','success');
+        return new_data_object;
+      }
+      else{
+        return data;
+      }
+    }
+  }
+  else if (_.isString(data)) {
+    cc('original data type is string','info');
+    if(convert_to == 'object'){
+      new_data_object = JSON.parse(data);
+      if (_.isObject(new_data_object)) {
+        cc('data is NOW converted from string to object','success');
+        return new_data_object;
+      }
+      else{
+        return data;
+      }
+    }
+  }
+  else{
+    return data;
+  }
+}
+
+
+/*************************************************************/
+/******************** Check for Existence of Value ****************/
+/*************************************************************/
+
+
+function isItemNullorUndefined(item,disable_console_log){
+  // cc('isItemNullorUndefined: '+item,'run');
+  cc('isItemNullorUndefined: ','run',disable_console_log)
+  if (item == null || item == 'null' || item == undefined || item == 'undefined') {
+    cc('ITEM is - '+item,'error');
+    return true
+  }else{
+    cc('ITEM is not Null or Underfined','success');
+    return false
+  }
+}
+
+/********** ERROR HANDLING *************/
+/* Gracefully deal with request errors 
+	 Provide meaningful, friendly feedback to the user
+*/
+// Example: Error: 403, error.status: 'rate_limit';
+
+// How to Run Tests: 
+//  - specify an server_error_status_code
+//  - specify a specific status server_error_status_string
+//  - uncomment the following 3 lines: 
+
+// var server_error_status_code = '403';
+// var server_error_status_string = 'rate_limit';
+// var processErrors = getResponseLabels(server_error_status_code,server_error_status_string);	
+
+var result_holder = 'div.result';
+
+function getResponseLabels(server_error_status_code,server_error_status_string){
+	console.log('getResponseLabels');
+	console.log(server_error_status_code);
+	console.log(server_error_status_string);
+  // Look through predefined statusErrorFeedback details
+  // error responses located in /js/error-handling.js
+  var data = statusErrorFeedbackDetails; // feedback object
+  console.log(data);
+  data = $.grep(data, function(e){ 
+     return e.error_code == server_error_status_code; // Find labels based on Error Code
+  });
+  return data;
+}
+
+function getErrorInstructions(data,server_error_status_string){
+	console.log('getErrorInstructions\n',data);
+	console.log('server_error_status_string\n',server_error_status_string);
+  // Look through predefined statusErrorFeedback details
+  var data = $.grep(data, function(e){ 
+  		// console.log('this status: '+e.status);
+     return e.status == server_error_status_string; // Find labels based on Error Code
+  });
+  return data;
+}
+
+function handleAjaxError(jqxhr) {
+	console.log('Response Code: '+jqxhr.status);
+	console.log('Response Text: '+jqxhr.statusText);
+	var processErrors = getResponseLabels(jqxhr.status,jqxhr.statusText);	
+	// If there was an error, get the custom response details, display details for User.
+	$.when(processErrors).then(function(data){
+	  // After the error has been processed, display User friendly feedback with instructions. 
+	  cc('processErrors','done');
+	  console.log(data);
+	  var ui_data = data[0];
+	  var error_class = ui_data.ui_class;
+	  if (error_class = undefined) {
+	  	error_class = 'error';
+	  }
+	  $(result_holder).addClass(error_class).html('<strong>'+ui_data.error_code+' Response: '+ui_data.ui_title+'</strong><br>');
+	  var s = data[0].error_status;
+	  var info = getErrorInstructions(s,jqxhr.statusText);
+	 	info = info[0];
+	 	// If not a 503 Error, Display additional instructions
+	 	if (info != undefined) {
+	 		$(result_holder).append('<span>'+info.ui_title+'. '+info.ui_instruction+'</span>');	
+	 	}
+	 	$(result_holder).show();
+	});
+}
+console.log('error-handling loaded');
+
+
+var statusErrorFeedbackDetails = [
+	{
+		error_code: '0',
+		label: 'Fatal Error',
+		ui_title : 'Fatal Error',
+		ui_class : 'fatal',
+		error_status :  [
+			{
+				status: 'error',
+				ui_title: 'Something went wrong.',
+				ui_instruction : 'Please contact support.'
+			}
+		]
+	},
+	{
+		error_code: '200',
+		label: 'OK',
+		ui_title : 'Response OK',
+		ui_class : 'success',
+		error_status : [
+			{
+				status: 'response_ok',
+				ui_title: 'Response OK',
+				ui_instruction : 'The response seems OK.'
+			}
+		]
+	},
+	{
+		error_code: '400',
+		label: 'Bad Request',
+		ui_title : 'Value Invalid',
+		ui_class : 'error',
+		error_status : [
+			{
+				status: 'value_invalid',
+				ui_title: 'Value Invalid',
+				ui_instruction : 'Usually this is a server issue. Try refreshing your browser and resubmitting.'
+			}
+		]
+	},
+	{
+		error_code: '403',
+		label: 'Forbidden',
+		ui_title : 'Forbidden',
+		ui_class : 'error',
+		error_status :  [
+			{
+				status: 'account_disabled',
+				ui_title: 'Account Disabled',
+				ui_instruction : 'This account disabled. Please contact your account administrator.'
+			},
+			{
+				status: 'permission_denied',
+				ui_title: 'Permission Denied',
+				ui_instruction : 'You do not have sufficient permissions to complete this request.'
+			},
+			{
+				status: 'rate_limit',
+				ui_title: 'Rate Limit Exceeded',
+				ui_instruction : 'The rate limit for this request has been exceeded in the given timeframe.'
+			},
+			{ 
+				status: 'user_disabled',
+				ui_title: 'User Disabled',
+				ui_instruction : 'This user has been disabled.'
+			},
+			{ 
+				status: 'username_exists',
+				ui_title: 'Address Not Available',
+				ui_instruction : 'The submitted email address already exists. Please submit a new email address or if you have previously signed up to Sonikpass using this email address please login. '
+			}
+		]
+	},
+	{
+		error_code: '404',
+		label: 'Not Found',
+		ui_title : 'Not Found',
+		ui_class : 'error',
+		error_status :  [
+			{
+				status: 'Not Found',
+				ui_title: 'Resource Not Found',
+				ui_instruction : 'The requested resource was not found.'
+			}
+		]
+	},
+	{
+		error_code: '503',
+		label: 'Service Unavailable',
+		ui_title : 'Service Unavailable',
+		ui_class : 'fatal',
+		error_status : [
+			{
+				status: null,
+				ui_title: 'Service Unavailable. Try Again Later.',
+				ui_instruction : 'Usually this means you have lost network or server connectivity. Please try again in a few minutes.'
+			}
+		]
+	}
+];
 // Reset Page Scroll
 console.log('Sonikpass v1.1');
 

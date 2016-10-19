@@ -27,18 +27,17 @@ var vendorFiles = [
 	'src/js/vendor/ScrollMagic.js',
 	'src/js/vendor/animation.gsap.js',
 	'src/js/vendor/jquery.waypoints.min.js',
-	'src/js/vendor/useful.js',
 ];
 
-// var customFiles = [
-//     'src/js/main',
-// ];
+var customFiles = [
+	'src/js/useful.js',
+    'src/js/error-handling.js',
+    'src/js/main.js',
+];
 
 gulp.task('vendors', function(){
 	gulp.src(vendorFiles)
 		.pipe(concat('bundle.js'))
-		// .pipe(uglify())
-		// .pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('public/js/vendor'))
 		.pipe(browserSync.reload({stream:true}));
 });
@@ -55,15 +54,15 @@ gulp.task('vendors_production', function(){
 
 /* Version 1.0 task for main.js */
 gulp.task('scripts', function(){
-	gulp.src('src/js/main.js')
-		// .pipe(uglify())
-		// .pipe(rename({suffix: '.min'}))
+	gulp.src(customFiles)
+		.pipe(concat('ui.js'))
 		.pipe(gulp.dest('public/js'))
 		.pipe(browserSync.reload({stream:true}));
 });
 
 gulp.task('scripts_production', function(){
-	gulp.src('src/js/main.js')
+	gulp.src(customFiles)
+		.pipe(concat('ui.js'))
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('public/js/dist'))
