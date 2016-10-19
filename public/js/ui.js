@@ -285,13 +285,9 @@ var statusErrorFeedbackDetails = [
 		]
 	}
 ];
-// Reset Page Scroll
-console.log('Sonikpass v1.1');
-
 // @author: BHRIV
 
-
-/********** FRONTEND API ENDPOINT NOTES *************/
+/********* FRONTEND API ENDPOINT NOTES *************/
 /* 
 
 	Use the ajax request type specifies the action (GET, POST, DELETE)
@@ -873,7 +869,8 @@ function findItemByID(data,item_ID,item_TYPE,disable_console_log){
 }
 
 // end @author: BHRIV
-
+// Reset Page Scroll
+console.log('Sonikpass v1.1');
 window.onunload = function(){ window.scrollTo(0,0); } 
 
 window.mobilecheck = function(){

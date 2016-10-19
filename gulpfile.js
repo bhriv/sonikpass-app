@@ -32,7 +32,8 @@ var vendorFiles = [
 var customFiles = [
 	'src/js/useful.js',
     'src/js/error-handling.js',
-    'src/js/main.js',
+    'src/js/dashboard.js',
+    'src/js/landing.js',
 ];
 
 gulp.task('vendors', function(){
